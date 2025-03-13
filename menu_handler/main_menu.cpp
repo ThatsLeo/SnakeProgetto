@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "main_menu.h"
 
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
