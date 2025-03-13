@@ -9,6 +9,7 @@ class Menu {
         void print_menu();
         void process_input(int c);
         int handle_user_input();
+        void close_menu();
         void start_menu();
     
     private:

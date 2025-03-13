@@ -11,6 +11,7 @@ Menu::Menu()
     initialize_ncurses();
 
     
+    
     int height = 10;
     int width = 30;
     int starty = (LINES - height) / 2;
@@ -34,7 +35,7 @@ void Menu::initialize_ncurses() {
 }
 
 void Menu::print_menu() {
-    int x = 2, y = 2;  // offset scritte per esempio y piu e alto il numero piu in basso e la scritta, stessa cosa per x
+    int x = 3, y = 2;  // offset scritte per esempio y piu e alto il numero piu in basso e la scritta, stessa cosa per x
     box(menu_win, 0, 0);
     for(int i = 0; i < n_choices; ++i) {
         if(highlight == i + 1) { 
@@ -84,6 +85,7 @@ int Menu::handle_user_input() {
     return choice;
 }
 
+
 void Menu::start_menu() {
     while (true) {
         highlight = 1; 
@@ -113,5 +115,6 @@ void Menu::start_menu() {
             break;
         }
     }
+    
     endwin();
 }
