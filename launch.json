@@ -5,7 +5,7 @@
             "name": "Debug automatico con ncurses",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Progetto.exe",
+            "program": "${workspaceFolder}/NOME_FILE.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
