@@ -1,4 +1,4 @@
 #include <ncurses/ncurses.h>
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <ctime>
