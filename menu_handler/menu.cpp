@@ -6,7 +6,7 @@ void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_ch
     y = 2;
     box(menu_win, 0, 0);
     for(i = 0; i < n_choices; ++i) {
-        if(highlight == i + 1) { // Highlight the present choice
+        if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
             mvwprintw(menu_win, y, x, "%s", choices[i]);
             wattroff(menu_win, A_REVERSE);
@@ -19,10 +19,10 @@ void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_ch
 }
 
 void initialize_ncurses() {
-    initscr();            // Initialize ncurses
+    initscr();            
     clear();
     noecho();
-    cbreak();             // Line buffering disabled. Pass on everything
+    cbreak();             
 }
 
 WINDOW* create_menu_window(int height, int width, int starty, int startx) {
@@ -45,7 +45,7 @@ void process_input(int c, int &highlight, int n_choices, int &choice) {
             else 
                 ++highlight;
             break;
-        case 10: // Enter key
+        case 10: 
             choice = highlight;
             break;
         default:
@@ -62,7 +62,7 @@ int handle_user_input(WINDOW *menu_win, const char *choices[], int n_choices) {
         c = wgetch(menu_win);
         process_input(c, highlight, n_choices, choice);
         print_menu(menu_win, highlight, choices, n_choices);
-        if(choice != 0) // User did a choice come out of the infinite loop
+        if(choice != 0) 
             break;
     }
     return choice;
