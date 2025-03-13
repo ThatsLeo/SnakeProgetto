@@ -4,7 +4,7 @@
         {
             "label": "Compila automaticamente",
             "type": "shell",
-            "command": "g++ -I/mingw64/include/ncurses -o Progetto.exe Progetto.cpp -lncurses -L/mingw64/bin -static",
+            "command": "g++ -I/mingw64/include/ncurses -o NOME_FILE.exe NOME_FILE.cpp -lncurses -L/mingw64/bin -static",
             "group": {
                 "kind": "build",
                 "isDefault": true
