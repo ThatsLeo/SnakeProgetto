@@ -86,23 +86,23 @@ int Menu::handle_user_input() {
 
 void Menu::start_menu() {
     while (true) {
-        highlight = 1; // Reset highlight
-        choice = 0;    // Reset choice
-        clear(); // Clear the entire screen
-        //refresh(); // Refresh the screen
-        wclear(menu_win); // Clear the menu window
-        wrefresh(menu_win); // Refresh the menu window
+        highlight = 1; 
+        choice = 0;    
+        clear(); 
+        //refresh(); 
+        wclear(menu_win); 
+        wrefresh(menu_win); 
         int choice = handle_user_input();
         mvprintw(0, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
         clrtoeol();
         refresh();
         int c = getch();
-        if (c == 27) { // ESC key
+        if (c == 27) { 
             clear();
             refresh();
-            continue; // Go back to the main menu
+            continue; 
         } else {
-            break; // Exit the loop and end the program
+            break;
         }
     }
     endwin();
