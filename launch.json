@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug automatico con ncurses",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Progetto.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "text": "-gdb-set new-console on",
+                    "description": "Forza l'apertura di una nuova console",
+                    "ignoreFailures": false
+                }
+            ],
+            "preLaunchTask": "Compila automaticamente"
+        }
+    ]
+}
