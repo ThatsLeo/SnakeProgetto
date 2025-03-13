@@ -12,10 +12,9 @@ int main() {
     WINDOW *menu_win = create_menu_window(height, width, starty, startx);
 
     const char *choices[] = {
-        "Choice 1",
-        "Choice 2",
-        "Choice 3",
-        "Choice 4",
+        "Gioca",
+        "Classifica",
+        "Livelli",
         "Exit",
     };
     int n_choices = sizeof(choices) / sizeof(char *);
