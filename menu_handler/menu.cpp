@@ -1,4 +1,4 @@
-#include <../main.h>
+#include "../includes/include.h"
 
 void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_choices) {
     int x, y, i;
