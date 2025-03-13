@@ -1,11 +1,42 @@
-#include "../includes/include.h"
+#include "menu.h"
 
-void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_choices) {
-    int x, y, i;
-    x = 2;
-    y = 2;
+Menu::Menu() 
+    : highlight(1), choice(0), n_choices(4) {
+    choices[0] = "Gioca";
+    choices[1] = "Classifica";
+    choices[2] = "Livelli";
+    choices[3] = "Exit";
+
+    // Initialize ncurses
+    initialize_ncurses();
+
+    // Get the screen size
+    int height = 10;
+    int width = 30;
+    int starty = (LINES - height) / 2;
+    int startx = (COLS - width) / 2;
+
+    // Create the window for the menu
+    menu_win = newwin(height, width, starty, startx);
+    keypad(menu_win, TRUE);
+}
+
+Menu::~Menu() {
+    delwin(menu_win);
+    endwin();
+}
+
+void Menu::initialize_ncurses() {
+    initscr();            
+    clear();
+    noecho();
+    cbreak();             
+}
+
+void Menu::print_menu() {
+    int x = 2, y = 2;
     box(menu_win, 0, 0);
-    for(i = 0; i < n_choices; ++i) {
+    for(int i = 0; i < n_choices; ++i) {
         if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
             mvwprintw(menu_win, y, x, "%s", choices[i]);
@@ -18,20 +49,7 @@ void print_menu(WINDOW *menu_win, int highlight, const char *choices[], int n_ch
     wrefresh(menu_win);
 }
 
-void initialize_ncurses() {
-    initscr();            
-    clear();
-    noecho();
-    cbreak();             
-}
-
-WINDOW* create_menu_window(int height, int width, int starty, int startx) {
-    WINDOW *menu_win = newwin(height, width, starty, startx);
-    keypad(menu_win, TRUE);
-    return menu_win;
-}
-
-void process_input(int c, int &highlight, int n_choices, int &choice) {
+void Menu::process_input(int c) {
     switch(c) {
         case KEY_UP:
             if(highlight == 1)
@@ -53,46 +71,23 @@ void process_input(int c, int &highlight, int n_choices, int &choice) {
     }
 }
 
-int handle_user_input(WINDOW *menu_win, const char *choices[], int n_choices) {
-    int highlight = 1;
-    int choice = 0;
+int Menu::handle_user_input() {
     int c;
-    print_menu(menu_win, highlight, choices, n_choices);
+    print_menu();
     while(1) {
         c = wgetch(menu_win);
-        process_input(c, highlight, n_choices, choice);
-        print_menu(menu_win, highlight, choices, n_choices);
+        process_input(c);
+        print_menu();
         if(choice != 0) 
             break;
     }
     return choice;
 }
 
-
-void start_menu(){
-    
-
-    int startx, starty, width, height;
-    height = 10;
-    width = 30;
-    starty = (LINES - height) / 2; // Calculate for a center placement
-    startx = (COLS - width) / 2;   // Calculate for a center placement
-    WINDOW *menu_win = create_menu_window(height, width, starty, startx);
-
-    const char *choices[] = {
-        "Gioca",
-        "Classifica",
-        "Livelli",
-        "Exit",
-    };
-    int n_choices = sizeof(choices) / sizeof(char *);
-
-    int choice = handle_user_input(menu_win, choices, n_choices);
-
+void Menu::start_menu() {
+    int choice = handle_user_input();
     mvprintw(0, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
     clrtoeol();
     refresh();
     getch();
-    // End ncurses
-
 }

@@ -1,11 +1,8 @@
 #include "main.h"
 
 int main() {
-    initialize_ncurses();
-
-    start_menu();
-
-    endwin();  
+    Menu menu = Menu();
+    menu.start_menu();
 
     return 0;
 }
