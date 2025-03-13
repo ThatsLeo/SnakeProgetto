@@ -1,4 +1,4 @@
-#include <ncurses/ncurses.h>
+#include "includes/include.h"
 
 int main() {
     initscr();            // Initialize ncurses
