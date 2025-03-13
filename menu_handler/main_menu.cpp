@@ -7,10 +7,10 @@ Menu::Menu()
     choices[2] = "Livelli";
     choices[3] = "Exit";
 
-    // Initialize ncurses
+    
     initialize_ncurses();
 
-    // Get the screen size
+    
     int height = 10;
     int width = 30;
     int starty = (LINES - height) / 2;
@@ -34,15 +34,15 @@ void Menu::initialize_ncurses() {
 }
 
 void Menu::print_menu() {
-    int x = 2, y = 2;
+    int x = 2, y = 2;  // offset scritte per esempio y piu e alto il numero piu in basso e la scritta, stessa cosa per x
     box(menu_win, 0, 0);
     for(int i = 0; i < n_choices; ++i) {
         if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
             mvwprintw(menu_win, y, x, "%s", choices[i]);
-            wattroff(menu_win, A_REVERSE);
+            wattroff(menu_win, A_REVERSE); // wattroff effetto highlight
         } else {
-            mvwprintw(menu_win, y, x, "%s", choices[i]);
+            mvwprintw(menu_win, y, x, "%s", choices[i]); // senza effetto highlight
         }
         ++y;
     }
@@ -92,12 +92,20 @@ void Menu::start_menu() {
         //refresh(); 
         wclear(menu_win); 
         wrefresh(menu_win); 
-        int choice = handle_user_input();
-        mvprintw(0, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
+        int choice = handle_user_input(); // usate la scelta
+
+        // Fate qualcosa con la scelta per esempio se fai gioca (1)
+        // aggiungete la vostra classe con la griglia e snake etc.
+
+        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
+
+        mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
+        // invece che printare sta linea usate il vostro.
+
         clrtoeol();
         refresh();
         int c = getch();
-        if (c == 27) { 
+        if (c == 27) {   // 27 ovvero esc usatelo nel vostro codice pure per tornare al menu
             clear();
             refresh();
             continue; 
