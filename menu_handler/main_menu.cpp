@@ -9,13 +9,14 @@ Menu::Menu()
 
     
     initialize_ncurses();
-
     
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
     
-    int height = 10;
-    int width = 30;
+    int height = yMax/2;
+    int width = xMax/3;
     int starty = (LINES - height) / 2;
-    int startx = (COLS - width) / 2;
+    int startx = (COLS - width) / 2; // per centrare la finestra
 
     // Create the window for the menu
     menu_win = newwin(height, width, starty, startx);

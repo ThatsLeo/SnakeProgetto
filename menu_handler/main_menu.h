@@ -2,17 +2,18 @@
 
 
 class Menu {
-    public:
+    public:  // lasciamo usare solo chiudi ed apri menu
         Menu();
         ~Menu();
-        void initialize_ncurses();
-        void print_menu();
-        void process_input(int c);
-        int handle_user_input();
         void close_menu();
         void start_menu();
     
     private:
+        void initialize_ncurses();
+        void print_menu();
+        void process_input(int c);
+        int handle_user_input();
+
         WINDOW *menu_win;
         int highlight;
         int choice;
