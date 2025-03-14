@@ -7,8 +7,7 @@ Menu::Menu()
     choices[2] = "Livelli";
     choices[3] = "Exit";
 
-    
-    initialize_ncurses();
+    //initialize_ncurses();
     
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -21,6 +20,7 @@ Menu::Menu()
     // Create the window for the menu
     menu_win = newwin(height, width, starty, startx);
     keypad(menu_win, TRUE);
+    refresh();
 }
 
 Menu::~Menu() {
@@ -28,7 +28,7 @@ Menu::~Menu() {
     endwin();
 }
 
-void Menu::initialize_ncurses() {
+void initialize_ncurses() {
     initscr();            
     clear();
     noecho();

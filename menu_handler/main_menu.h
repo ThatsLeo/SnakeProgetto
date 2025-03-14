@@ -7,9 +7,10 @@ class Menu {
         ~Menu();
         void close_menu();
         void start_menu();
+
+        //void initialize_ncurses();
     
     private:
-        void initialize_ncurses();
         void print_menu();
         void process_input(int c);
         int handle_user_input();
