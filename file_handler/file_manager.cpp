@@ -1,13 +1,20 @@
 #include "file_manager.h"
 
-void writeFile(std::string toWrite) {
+void FileManager::writeFile(std::string toWrite) {
     std::ofstream outputFile; 
     outputFile.open("SaveFile.txt"); 
     outputFile << toWrite;
     outputFile.close();
 }
 
-void readFile(char* buffer, int bufferSize) {
+void FileManager::writeFileAppend(const std::string toWrite) {
+    std::ofstream outputFile; 
+    outputFile.open("SaveFile.txt", std::ios_base::app); // Open in append mode
+    outputFile << toWrite;
+    outputFile.close();
+}
+
+void FileManager::readFile(char* buffer, int bufferSize) {
     std::ifstream inputFile; 
     inputFile.open("SaveFile.txt");
     if (!inputFile.is_open()) {
