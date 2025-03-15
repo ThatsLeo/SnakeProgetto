@@ -96,7 +96,7 @@ void Menu::start_menu() {
         wclear(menu_win); 
         wrefresh(menu_win); 
         int choice = handle_user_input(); // usate la scelta
-
+        Menu_Choice = choice;
         // Fate qualcosa con la scelta per esempio se fai gioca (1)
         // aggiungete la vostra classe con la griglia e snake etc.
 
