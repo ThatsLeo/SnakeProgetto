@@ -9,6 +9,7 @@
 class Utils {
 public:
     static WINDOW* CreateBoxWindowCentered(WINDOW* boxForFile, int heightDivisor, int widthDivisor);
+    static WINDOW* CreateTextBox(WINDOW* boxForFile, int characters, int starty, int startx);
 };
 
 #endif // UTILS_H

@@ -19,3 +19,18 @@ WINDOW* Utils::CreateBoxWindowCentered(WINDOW* boxForFile, int heightDivisor, in
     
     return boxForFile;
 }
+
+WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int characters, int starty, int startx){
+
+
+    
+    int height = 5;
+    int width = characters *1;
+
+    // Create the window for the menu
+    boxForFile = newwin(height, width, starty, startx);
+    refresh();
+    box(boxForFile, 0, 0);
+    
+    return boxForFile;
+}

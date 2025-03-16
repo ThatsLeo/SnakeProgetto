@@ -14,14 +14,17 @@ void FileManager::writeFileAppend(const std::string toWrite) {
     outputFile.close();
 }
 
-void FileManager::readFile(char* buffer, int bufferSize) {
+int FileManager::readFile(char* buffer, int bufferSize) {
     std::ifstream inputFile; 
     inputFile.open("SaveFile.txt");
     if (!inputFile.is_open()) {
         buffer[0] = '\0'; 
-        return;
+        return 0;
     }
     inputFile.read(buffer, bufferSize - 1); // Read up to bufferSize - 1 characters (null-terminator)
     buffer[inputFile.gcount()] = '\0'; 
     inputFile.close();
+
+    int charsRead = inputFile.gcount();
+    return charsRead;
 }
