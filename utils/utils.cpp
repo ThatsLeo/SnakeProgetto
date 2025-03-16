@@ -1,4 +1,7 @@
 #include "utils.h"
+#pragma once
+
+
 // use reference instead to make the method a void and remove complications
 WINDOW* Utils::CreateBoxWindowCentered(WINDOW* boxForFile, int heightDivisor, int widthDivisor) {
     int yMax, xMax;

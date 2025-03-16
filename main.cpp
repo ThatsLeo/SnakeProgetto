@@ -8,7 +8,7 @@ int main() {
     Menu menu = Menu();
 
 
-    fileManager.writeFile("Hello World\n  ORCODIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+    fileManager.writeFile("Hello World\n");
     fileManager.writeFileAppend("P O R C O D I O\n");
     
     const int bufferSize = 1024; // massimo 1024 caratteri compreso null-terminator

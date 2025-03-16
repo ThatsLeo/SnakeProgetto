@@ -1,5 +1,6 @@
 #include "../includes/include.h"
-
+#include "../utils/utils.cpp"
+#pragma once
 
 class Menu {
     public:  // lasciamo usare solo chiudi ed apri menu
