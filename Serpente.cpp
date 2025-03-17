@@ -1,22 +1,28 @@
-#include "main.h"
+#include "Serpente.h"
 
 int main(int argc, char ** argv){
 
     initscr();
+    
     int xMax, yMax;
     
-    WINDOW * win;
-    win = newwin(11, 25, 5, 30);
-    getmaxyx(win, yMax, xMax);
-    refresh();
-    win = newwin(11, 25, yMax, xMax);
+    getmaxyx(stdscr, yMax, xMax);
+    
+    WINDOW * win = newwin(yMax/2, xMax/5, yMax/4, xMax/5);
+    
     box(win, 0, 0);
     
     wrefresh(win);
     
-    getch();
-    getch();
-
+    Serpente *serp = new Serpente(win, yMax/2, xMax/2, '@');
+    while(serp->getMove() != 'x'){
+        serp->blank();
+        serp->display();
+        wrefresh(win);
+    }
+    
+    
+    
     endwin();
     return 0;
 }
