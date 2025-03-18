@@ -3,18 +3,28 @@
 #define Maxy 20
 #define Maxx 50
 
-struct matrixHeight{
-    bool yPos[Maxy]{};
-    bool head[Maxy]{};
-    bool tail[Maxy]{};
+// Dizionario per tenere traccia della direzione del serpente.
+enum Direction {UP, DOWN, LEFT, RIGHT};
+
+// Struttura del corpo del serpente.
+struct body{
+    int y;
+    int x;
+    body * next;
 };
 
 // Classe del serpente.
 class Serpente { 
     public:
-        Serpente(WINDOW * win, int y, int x, char c);
+        Serpente(WINDOW * win, char c, int lenght);
 
         void blank();
+
+        body *prevTail();
+
+        body *addBody(int y, int x);
+
+        body* tail();
         
         void moveUp();
 
@@ -29,95 +39,175 @@ class Serpente {
         void display();
 
     private:
-        matrixHeight xPos[Maxx]{};
-        int y, x, yMax, xMax;
+        Direction dir;
+        int headX, headY;
+        body *head;
         char character;
         WINDOW * win;
 };
-
-//Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
-Serpente::Serpente(WINDOW * win, int y, int x, char c){
+// Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
+Serpente::Serpente(WINDOW * win, char c, int lenght){
+    
+    dir = RIGHT;
     this->win = win; 
-    this->y = y;
-    this->x = x;
-    getmaxyx(this->win, yMax, xMax);
+    character = c;
+    head = new body{Maxx/2, Maxy/2, nullptr};
+    headX = Maxx/2;
+    headY = Maxy/2;
+    body* current = head;
+    // Il serpente ha inizialmente ogni pezzo alle stesse coordinate.
+    for (int i = 1; i < lenght; i++) {
+        body* newbody = new body{Maxy/2, Maxx/2, nullptr};
+        current->next = newbody;
+        current = newbody;
+    }
+
     keypad(this->win, true);
     character = c;
 }
 
-// movimento in alto.
-void Serpente::moveUp(){
-    blank();
-    y = y-1;
-    if(y < 1){
-        y = yMax-2;
+// Movimento in alto.
+void Serpente::moveUp(){ 
+    headY -= 1; 
+    
+    if(headY < 1){
+        headY = Maxy-2;
     }
+    
+    head = addBody(headY, headX);
+    body *delTail = tail();
+    body *newTail = prevTail();
+    delete delTail;
+    newTail->next = nullptr;
 }
 
-// movimento in basso.
+// Movimento in basso.
 void Serpente::moveDown(){
-    blank();
-    y = y+1;
-    if(y > yMax-2){
-        y = 1;
+    headY += 1; 
+    
+    if(headY > Maxy-2){
+        headY = 1;
     }
+    
+    head = addBody(headY, headX);
+    body *delTail = tail();
+    body *newTail = prevTail();
+    delete delTail;
+    newTail->next = nullptr;
 }
 
-// movimento a sinistra.
+// Movimento a sinistra.
 void Serpente::moveLeft(){
-    blank();
-    x = x-1;
-    if(x < 1){
-        x = xMax-2;
+    headX -= 1; 
+    
+    if(headX < 1){
+        headX = Maxx-2;
     }
+    
+    head = addBody(headY, headX);
+    body *delTail = tail();
+    body *newTail = prevTail();
+    delete delTail;
+    newTail->next = nullptr;
 }
 
-// movimento a destra.
+// Movimento a destra.
 void Serpente::moveRight(){
-    blank();
-    x = x+1;
-    if(x > xMax-2){
-        x = 1;
+    headX += 1; 
+    
+    if(headX > Maxx-2){
+        headX = 1;
     }
+    
+    head = addBody(headY, headX);
+    body *delTail = tail();
+    body *newTail = prevTail();
+    delete delTail;
+    newTail->next = nullptr;
 }
 
-// funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
+// Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
 int Serpente::getMove(){
     int moveKey = wgetch(this->win);
     switch(moveKey){
         case KEY_UP:
-            
+            if(dir == DOWN) break;
+            blank();
+            dir = UP;
             moveUp();
-            
             break;
+
         case KEY_DOWN:
-            
+            if(dir == UP) break;
+            blank();
+            dir = DOWN;
             moveDown();
-            
             break;
+
         case KEY_LEFT:
-            
+            if(dir == RIGHT) break;
+            blank();
+            dir = LEFT;
             moveLeft();
-                  
             break;
+
         case KEY_RIGHT:
-            
+            if(dir == LEFT) break;
+            blank();
+            dir = RIGHT;
             moveRight();
-            
             break;
+
         default:
+
             break;
     }
 
     return moveKey;
 }
 
-// aggiorna in memoria della finestra il carattere con le coordinate.
+// Aggiorna le coordinate del serpente sulla matrice del display
 void Serpente::display(){
-    mvwaddch(this->win, y, x, character);
+    body *current = head;
+    mvwaddch(win, headY, headX, '@');  // Testa = '@'
+    current = current->next;
+
+    // Corpo
+    while(current != nullptr) {
+            mvwaddch(win, current->y, current->x, character); 
+            current = current->next;
+    }
+    wrefresh(win);  // aggiorna finestra per mostrare il serpente
 }
 
-// rimpiazza il carattere presente con uno spazio bianco(ci sto lavorando -_-).
-void Serpente::blank(){
-    mvwaddch(this->win, y, x, ' ');
+// Ritorna un puntatore al blocco precedente alla coda.
+body *Serpente::prevTail(){
+    body *temp = head;
+    while(temp->next->next != nullptr){
+        temp = temp->next;
+    }
+    return temp;
 }
+
+// Ritorna un puntatore alla coda del serpente
+body* Serpente::tail(){
+    body *temp = head;
+    while(temp->next != nullptr){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+// Aggiunge un blocco in testa al serpente. 
+body * Serpente::addBody(int y, int x){
+    body *temp = new body{y, x, nullptr};
+    temp->next = head;
+    return temp;
+}
+
+// Sovrascrive un carattere nel display con uno spazio vuoto(ci elimino la vecchia coda).
+void Serpente::blank(){
+    body *tempTail = tail();
+    mvwaddch(win, tempTail->y, tempTail->x, ' ');
+}
+
