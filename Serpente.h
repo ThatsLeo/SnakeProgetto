@@ -1,5 +1,13 @@
-#include "main.h"
+#include "includes/include.h"
 #pragma once
+#define Maxy 20
+#define Maxx 50
+
+struct matrixHeight{
+    bool yPos[Maxy]{};
+    bool head[Maxy]{};
+    bool tail[Maxy]{};
+};
 
 // Classe del serpente.
 class Serpente { 
@@ -21,6 +29,7 @@ class Serpente {
         void display();
 
     private:
+        matrixHeight xPos[Maxx]{};
         int y, x, yMax, xMax;
         char character;
         WINDOW * win;
@@ -28,7 +37,7 @@ class Serpente {
 
 //Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
 Serpente::Serpente(WINDOW * win, int y, int x, char c){
-    this->win = win;
+    this->win = win; 
     this->y = y;
     this->x = x;
     getmaxyx(this->win, yMax, xMax);
@@ -38,6 +47,7 @@ Serpente::Serpente(WINDOW * win, int y, int x, char c){
 
 // movimento in alto.
 void Serpente::moveUp(){
+    blank();
     y = y-1;
     if(y < 1){
         y = yMax-2;
@@ -46,6 +56,7 @@ void Serpente::moveUp(){
 
 // movimento in basso.
 void Serpente::moveDown(){
+    blank();
     y = y+1;
     if(y > yMax-2){
         y = 1;
@@ -54,6 +65,7 @@ void Serpente::moveDown(){
 
 // movimento a sinistra.
 void Serpente::moveLeft(){
+    blank();
     x = x-1;
     if(x < 1){
         x = xMax-2;
@@ -62,6 +74,7 @@ void Serpente::moveLeft(){
 
 // movimento a destra.
 void Serpente::moveRight(){
+    blank();
     x = x+1;
     if(x > xMax-2){
         x = 1;
