@@ -18,6 +18,10 @@ class Serpente {
     public:
         Serpente(WINDOW * win, char c, int lenght);
 
+        inline void wait(int milliseconds);
+
+        void defaultMove();
+
         void blank();
 
         body *prevTail();
@@ -48,7 +52,6 @@ class Serpente {
 // Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
 Serpente::Serpente(WINDOW * win, char c, int lenght){
     
-    dir = RIGHT;
     this->win = win; 
     character = c;
     head = new body{Maxx/2, Maxy/2, nullptr};
@@ -126,40 +129,76 @@ void Serpente::moveRight(){
     newTail->next = nullptr;
 }
 
+
+void Serpente::defaultMove(){
+    switch(dir){
+        case UP:
+            blank();
+            moveUp();
+            break;
+        
+        case DOWN:
+            blank();
+            moveDown();
+            break;
+
+        case LEFT:
+            blank();    
+            moveLeft();
+            break;
+
+        case RIGHT:
+            blank();
+            moveRight();
+            break;
+        default:
+            break;
+        
+    }
+}
+
+
+
 // Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
 int Serpente::getMove(){
     int moveKey = wgetch(this->win);
     switch(moveKey){
         case KEY_UP:
-            if(dir == DOWN) break;
+            if(dir == DOWN || dir == UP) break;
             blank();
             dir = UP;
             moveUp();
             break;
 
         case KEY_DOWN:
-            if(dir == UP) break;
+            if(dir == UP || dir == DOWN) break;
             blank();
             dir = DOWN;
             moveDown();
             break;
 
         case KEY_LEFT:
-            if(dir == RIGHT) break;
+            if(dir == RIGHT || dir == LEFT) break;
             blank();
             dir = LEFT;
             moveLeft();
             break;
 
         case KEY_RIGHT:
-            if(dir == LEFT) break;
+            if(dir == LEFT || dir == RIGHT) break;
             blank();
             dir = RIGHT;
             moveRight();
             break;
-
+        
         default:
-
+            if(dir == UP || dir == DOWN){
+                wait(160);
+            }
+            else{
+                wait(100);
+            }   
+            defaultMove();
             break;
     }
 
@@ -211,3 +250,12 @@ void Serpente::blank(){
     mvwaddch(win, tempTail->y, tempTail->x, ' ');
 }
 
+// Una funzione sleep() in millisecondi con ctime.
+inline void Serpente::wait(int milliseconds){
+    clock_t start_time = clock();
+    clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
+
+    while (clock() < end_time) {
+        
+    }
+}
