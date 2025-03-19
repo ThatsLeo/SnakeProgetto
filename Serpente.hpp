@@ -1,7 +1,6 @@
 #include "includes/include.h"
+#include "Mela.hpp"
 #pragma once
-#define Maxy 20
-#define Maxx 50
 
 // Dizionario per tenere traccia della direzione del serpente.
 enum Direction {UP, DOWN, LEFT, RIGHT};
@@ -216,13 +215,12 @@ void Serpente::display(){
             mvwaddch(win, current->y, current->x, character); 
             current = current->next;
     }
-    wrefresh(win);  // aggiorna finestra per mostrare il serpente
 }
 
 // Ritorna un puntatore al blocco precedente alla coda.
 body *Serpente::prevTail(){
     body *temp = head;
-    while(temp->next->next != nullptr){
+    while(temp->next != nullptr && temp->next->next != nullptr){
         temp = temp->next;
     }
     return temp;

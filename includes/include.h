@@ -9,5 +9,9 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+
+// Grandezza della matrice del display.
+#define Maxy 20
+#define Maxx 50
 #pragma once
 
