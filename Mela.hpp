@@ -15,7 +15,7 @@ class Mela{
 
         void off();
 
-
+        void check();
 
 
     private:
@@ -66,3 +66,5 @@ inline void Mela::wait(int milliseconds){
         
     }
 }
+
+

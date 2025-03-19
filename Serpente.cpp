@@ -25,7 +25,7 @@ int main(int argc, char ** argv){
 
     bool firstMove = true;
     int fruitX;
-    int fruitY;  // Evita bordi: 1 ... Maxy-2
+    int fruitY;
     
     Serpente *serpent = new Serpente(win, '~', 7);
     Mela *frutto = new Mela(win, -1, -1, '$');

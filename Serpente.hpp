@@ -17,6 +17,8 @@ class Serpente {
     public:
         Serpente(WINDOW * win, char c, int lenght);
 
+        body *getHeadPos();
+
         inline void wait(int milliseconds);
 
         void defaultMove();
@@ -248,6 +250,12 @@ void Serpente::blank(){
     mvwaddch(win, tempTail->y, tempTail->x, ' ');
 }
 
+// Ritorna la struttura della testa del serpente.
+body *Serpente::getHeadPos(){
+    body *temp = head;
+    return temp;
+}
+
 // Una funzione sleep() in millisecondi con ctime.
 inline void Serpente::wait(int milliseconds){
     clock_t start_time = clock();
@@ -257,3 +265,5 @@ inline void Serpente::wait(int milliseconds){
         
     }
 }
+
+
