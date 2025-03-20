@@ -14,6 +14,8 @@ struct body{
 // Classe del serpente.
 class Serpente { 
     public:
+        Direction dir;
+
         Serpente(WINDOW * win, char c, int lenght);
 
         body *getHeadPos();
@@ -43,7 +45,7 @@ class Serpente {
         void display();
 
     private:
-        Direction dir;
+        
         int headX, headY;
         body *head;
         char character;
@@ -142,51 +144,76 @@ void Serpente::defaultMove(){
     }
 }
 
+static Direction getDesiredDirection(int key, Direction current) {
+    struct Mapping {
+        int key;
+        Direction newDir;
+        Direction opposite;
+    };
 
+    // Lookup table for keys and their associated direction and opposite.
+    static const Mapping mappings[] = {
+        { KEY_UP,    UP,    DOWN },
+        { KEY_DOWN,  DOWN,  UP },
+        { KEY_LEFT,  LEFT,  RIGHT },
+        { KEY_RIGHT, RIGHT, LEFT }
+    };
+
+    // Iterate through the mappings and if the key matches, check for a reversal.
+    for (const auto& m : mappings) {
+        if (m.key == key) {
+            return (current == m.opposite) ? current : m.newDir;
+        }
+    }
+    return current;
+}
+
+// Helper function that executes the move corresponding to the new direction.
+static void performMove(Serpente* self, Direction newDir) {
+    switch(newDir) {
+        case UP:
+            self->moveUp();
+            break;
+        case DOWN:
+            self->moveDown();
+            break;
+        case LEFT:
+            self->moveLeft();
+            break;
+        case RIGHT:
+            self->moveRight();
+            break;
+        default:
+            break;
+    }
+}
+
+// Refactored updateDirection: it tries to update the direction based on key press,
+// and if a valid change is found it updates the state and performs the proper move.
+static bool updateDirection(Serpente* self, int key) {
+    Direction desiredDir = getDesiredDirection(key, self->dir);
+    if (desiredDir != self->dir) {
+        self->blank();
+        self->dir = desiredDir;
+        performMove(self, desiredDir);
+        return true;
+    }
+    return false;
+}
 
 // Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
 int Serpente::getMove(){
     int moveKey = wgetch(this->win);
-    switch(moveKey){
-        case KEY_UP:
-            if(dir == DOWN || dir == UP) break;
-            blank();
-            dir = UP;
-            moveUp();
-            break;
-
-        case KEY_DOWN:
-            if(dir == UP || dir == DOWN) break;
-            blank();
-            dir = DOWN;
-            moveDown();
-            break;
-
-        case KEY_LEFT:
-            if(dir == RIGHT || dir == LEFT) break;
-            blank();
-            dir = LEFT;
-            moveLeft();
-            break;
-
-        case KEY_RIGHT:
-            if(dir == LEFT || dir == RIGHT) break;
-            blank();
-            dir = RIGHT;
-            moveRight();
-            break;
-        
-        default:
-            if(dir == UP || dir == DOWN){
-                wait(160);
-            }
-            else{
-                wait(100);
-            }   
-            defaultMove();
-            break;
+    // If updateDirection returns false, then no valid change occurred.
+    if (!updateDirection(this, moveKey)) {
+        // Wait for a short delay before performing the default move.
+        if (dir == UP || dir == DOWN){
+            wait(160);
+        } else {
+            wait(100);
+        }   
+        defaultMove();
     }
-
     return moveKey;
 }
 
