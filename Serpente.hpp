@@ -48,6 +48,8 @@ class Serpente {
         body *head;
         char character;
         WINDOW * win;
+
+        void moveBy(int dx, int dy);
 };
 // Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
 Serpente::Serpente(WINDOW * win, char c, int lenght){
@@ -69,64 +71,47 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     character = c;
 }
 
-// Movimento in alto.
-void Serpente::moveUp(){ 
-    headY -= 1; 
+void Serpente::moveBy(int dx, int dy) {
+    headX += dx;
+    headY += dy;
     
-    if(headY < 1){
-        headY = Maxy-2;
-    }
-    
-    head = addBody(headY, headX);
-    body *delTail = tail();
-    body *newTail = prevTail();
-    delete delTail;
-    newTail->next = nullptr;
-}
-
-// Movimento in basso.
-void Serpente::moveDown(){
-    headY += 1; 
-    
-    if(headY > Maxy-2){
-        headY = 1;
-    }
-    
-    head = addBody(headY, headX);
-    body *delTail = tail();
-    body *newTail = prevTail();
-    delete delTail;
-    newTail->next = nullptr;
-}
-
-// Movimento a sinistra.
-void Serpente::moveLeft(){
-    headX -= 1; 
-    
-    if(headX < 1){
-        headX = Maxx-2;
-    }
-    
-    head = addBody(headY, headX);
-    body *delTail = tail();
-    body *newTail = prevTail();
-    delete delTail;
-    newTail->next = nullptr;
-}
-
-// Movimento a destra.
-void Serpente::moveRight(){
-    headX += 1; 
-    
-    if(headX > Maxx-2){
+    // Wrap-around horizontal boundaries.
+    if (headX < 1) {
+        headX = Maxx - 2;
+    } else if (headX > Maxx - 2) {
         headX = 1;
     }
     
+    // Wrap-around vertical boundaries.
+    if (headY < 1) {
+        headY = Maxy - 2;
+    } else if (headY > Maxy - 2) {
+        headY = 1;
+    }
+    
+    // Update the body.
     head = addBody(headY, headX);
     body *delTail = tail();
     body *newTail = prevTail();
     delete delTail;
     newTail->next = nullptr;
+}
+
+// Movimento in alto.
+void Serpente::moveUp(){
+    moveBy(0, -1);
+}
+
+void Serpente::moveDown(){
+    moveBy(0, 1);
+}
+
+void Serpente::moveLeft(){
+    moveBy(-1, 0);
+}
+
+void Serpente::moveRight(){
+    moveBy(1, 0);
 }
 
 

@@ -66,6 +66,7 @@ int start_game() {
             // Clear the message by overwriting with spaces
             mvwprintw(win, 1, 10, "                         ");
             wrefresh(win);
+            
             firstMove = false;
             nodelay(win, true);
         }
