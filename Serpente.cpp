@@ -2,26 +2,36 @@
 #include "Serpente.hpp"
 #include "Mela.hpp"
 
+
+// Returns true if the cell at (y, x) in the window is empty (a space)
 bool isCellEmpty(WINDOW* win, int y, int x) {
     chtype ch = mvwinch(win, y, x);
     char currentChar = ch & A_CHARTEXT;
     return (currentChar == ' ');
 }
 
+// Initializes the serpent and fruit objects
 void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto) {
     serpent = new Serpente(win, '~', 7);
     frutto = new Mela(win, -1, -1, '$');
 }
 
+// Displays the start message, waits for a key press, then clears it.
+// Only uses a single input parameter.
 void displayStartMessage(WINDOW* win) {
     mvwprintw(win, 1, 10, "Press something to start\n");
     wrefresh(win);
     wgetch(win); // Wait for user input
-    mvwprintw(win, 1, 10, "                         "); // Clear the message
+    // Clear the message by overwriting with spaces
+    mvwprintw(win, 1, 10, "                         ");
     wrefresh(win);
 }
 
-void spawnFruit(WINDOW* win, Mela* frutto, int& fruitX, int& fruitY, int Maxx, int Maxy) {
+// Spawns the fruit ensuring the cell is empty
+// Uses exactly four parameters: the game window, the fruit object,
+// and two integer references for the fruit's coordinates.
+// The boundaries are determined using global constants Maxx and Maxy.
+void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
     fruitX = rand() % (Maxx - 2) + 1;
     fruitY = rand() % (Maxy - 2) + 1;
     while (!isCellEmpty(win, fruitY, fruitX)) {
@@ -31,7 +41,8 @@ void spawnFruit(WINDOW* win, Mela* frutto, int& fruitX, int& fruitY, int Maxx, i
     frutto->Spawn(fruitX, fruitY);
 }
 
-void start_game() {
+// The main game function is now a void function with no input parameters.
+int start_game() {
     srand(time(NULL));
     initscr();
     curs_set(0);
@@ -40,15 +51,15 @@ void start_game() {
     int xMax, yMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    WINDOW* win = newwin(Maxy, Maxx, yMax / 2 - Maxy / 2, xMax / 2 - Maxx / 2);
+    // Create the game window with dimensions based on global constants.
+    WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
     box(win, 0, 0);
 
     bool firstMove = true;
-    int fruitX;
-    int fruitY;
+    int fruitX, fruitY;
 
-    Serpente* serpent;
-    Mela* frutto;
+    Serpente *serpent;
+    Mela *frutto;
     initializeGame(win, serpent, frutto);
 
     displayStartMessage(win);
@@ -60,7 +71,7 @@ void start_game() {
         }
 
         if (!frutto->isOn()) {
-            spawnFruit(win, frutto, fruitX, fruitY, Maxx, Maxy);
+            spawnFruit(win, frutto, fruitX, fruitY);
         }
 
         serpent->display();
@@ -68,9 +79,11 @@ void start_game() {
     }
 
     endwin();
+    return 0;
 }
 
-// bool screen [Maxy][Maxx]{}; 
+
+bool screen [Maxy][Maxx]{}; 
 // int main(int argc, char ** argv){
 //     srand(time(NULL));
 //     initscr();
