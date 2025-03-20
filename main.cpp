@@ -14,7 +14,7 @@ int main() {
     const int bufferSize = 1024; // massimo 1024 caratteri compreso null-terminator
     char buffer[bufferSize];
     int chNumber = fileManager.readFile(buffer, bufferSize);
-    mvprintw(0, 0, "Press enter to start (duicane) also this is whats in the save file:\n \n");
+    mvprintw(0, 0, "OPress enter to start (duicane) also this is whats in the save file:\n \n");
 
     WINDOW * boxForFile;
     boxForFile = Utils::CreateBoxWindowCentered(boxForFile, 5, 2); 

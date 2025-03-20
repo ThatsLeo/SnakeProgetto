@@ -39,7 +39,7 @@ void start_game(){
             
             fruitX = rand() % (Maxx - 2) + 1;
             fruitY = rand() % (Maxy - 2) + 1;
-            while(!isCellEmpty(win, fruitY, fruitX)){
+            if(!isCellEmpty(win, fruitY, fruitX)){
                 fruitX = rand() % (Maxx - 2) + 1;
                 fruitY = rand() % (Maxy - 2) + 1;
             }
