@@ -8,7 +8,8 @@ int main() {
     Menu menu = Menu();
 
     fileManager.writeFile("Hello World\n");
-    fileManager.writeFileAppend("Appeso \n");
+    fileManager.writeFileAppend("Fra:200 \n");
+    fileManager.writeFileAppend("leo:100 \n");
     
     clear();
     refresh();
