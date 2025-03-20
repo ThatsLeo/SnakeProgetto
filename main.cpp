@@ -20,7 +20,7 @@ int main() {
     menu.start_menu();
     
     std::cout << "Menu chiuso, clicca qualcosa per chiudere" << std::endl;
-    int cs = getch();
+    getch();
 
     return 0;
 }
