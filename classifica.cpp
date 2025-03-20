@@ -19,7 +19,7 @@ void Classifica::start_classifica(){
     insideBox = Utils::CreateTextBox(insideBox, chNumber, 6, 4); 
     // mvwprintw(insideBox, 1, 1, ("%s", buffer) );
 
-    Utils::InlinedTextWindow(insideBox, 5, 1, chNumber, buffer);
+    Utils::InlinedTextWindow(insideBox, 5, 1, buffer);
 
 
     wrefresh(insideBox); 

@@ -35,9 +35,9 @@ WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int characters, int starty, int
     return boxForFile;
 }
 
-void Utils::InlinedTextWindow( WINDOW* insideBox, int x, int y, int chNumber, char* buffer) {
+void Utils::InlinedTextWindow( WINDOW* insideBox, int x, int y, char* buffer) {
     int tempX = x;
-    for (int i = 0; i < chNumber; ++i) {
+    for (int i = 0; buffer[i] != '\0'; ++i) {
         
         if (buffer[i] == '\n') {
             y++;

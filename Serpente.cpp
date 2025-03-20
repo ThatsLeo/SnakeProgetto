@@ -62,7 +62,7 @@ int start_game(){
 }
 
 
-bool screen [Maxy][Maxx]{}; 
+// bool screen [Maxy][Maxx]{}; 
 // int main(int argc, char ** argv){
 //     srand(time(NULL));
 //     initscr();
