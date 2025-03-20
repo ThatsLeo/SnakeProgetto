@@ -28,9 +28,16 @@ int start_game(){
     Serpente *serpent = new Serpente(win, '~', 7);
     Mela *frutto = new Mela(win, -1, -1, '$');
     
+
+    mvwprintw(win, 1, 10, "Press something to start\n" );
+    wrefresh(win);
+
     while(serpent->getMove() != (char)27){
         
+
         if(firstMove){
+            mvwprintw(win, 1, 10, "                         " );
+            wrefresh(win);
             firstMove = false;
             nodelay(win, true);
         }

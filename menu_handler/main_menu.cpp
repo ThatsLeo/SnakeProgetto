@@ -104,6 +104,7 @@ void Menu::start_menu() {
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) { 
             game_state = start_game();
+            
             if(game_state == 0){
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(2, startx, "Press esc to return to menu\n");
