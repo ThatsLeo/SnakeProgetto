@@ -1,5 +1,6 @@
 #pragma once
 #include "classifica.h"
+#include "utils/utils.h"
 
 void Classifica::start_classifica(){
     srand(time(NULL));
@@ -16,6 +17,10 @@ void Classifica::start_classifica(){
 
     WINDOW * insideBox;
     insideBox = Utils::CreateTextBox(insideBox, chNumber, 6, 4); 
-    mvwprintw(insideBox, 1, 1, ("%s", buffer) );
+    // mvwprintw(insideBox, 1, 1, ("%s", buffer) );
+
+    Utils::InlinedTextWindow(insideBox, 5, 1, chNumber, buffer);
+
+
     wrefresh(insideBox); 
 }

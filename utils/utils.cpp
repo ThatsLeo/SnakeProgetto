@@ -34,3 +34,16 @@ WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int characters, int starty, int
     
     return boxForFile;
 }
+
+void Utils::InlinedTextWindow( WINDOW* insideBox, int x, int y, int chNumber, char* buffer) {
+    int tempX = x;
+    for (int i = 0; i < chNumber; ++i) {
+        
+        if (buffer[i] == '\n') {
+            y++;
+            x = tempX; // Reset x to default for the new line
+        } else {
+            mvwaddch(insideBox, y, x++, buffer[i]);
+        }
+    }
+}

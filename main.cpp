@@ -7,7 +7,7 @@ int main() {
     FileManager fileManager = FileManager();
     Menu menu = Menu();
 
-    fileManager.writeFile("Hello World\n");
+    fileManager.writeFile("Classifica\n");
     fileManager.writeFileAppend("Fra:200 \n");
     fileManager.writeFileAppend("leo:100 \n");
     
