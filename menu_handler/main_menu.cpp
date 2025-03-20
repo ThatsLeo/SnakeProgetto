@@ -2,6 +2,13 @@
 #include "../Serpente.cpp"
 #include "../classifica.cpp"
 
+void initialize_ncurses() {
+    initscr();            
+    clear();
+    noecho();
+    cbreak();             
+}
+
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
     choices[0] = "Gioca";
@@ -30,12 +37,6 @@ Menu::~Menu() {
     endwin();
 }
 
-void initialize_ncurses() {
-    initscr();            
-    clear();
-    noecho();
-    cbreak();             
-}
 
 void Menu::print_menu() {
     int x = 3, y = 2;  // offset scritte per esempio y piu e alto il numero piu in basso e la scritta, stessa cosa per x
