@@ -1,5 +1,4 @@
 #include "includes/include.h"
-#include "Mela.hpp"
 #pragma once
 
 // Dizionario per tenere traccia della direzione del serpente.

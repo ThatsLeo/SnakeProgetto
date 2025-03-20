@@ -1,4 +1,4 @@
-#include "includes/include.h"
+#pragma once
 #include "Serpente.hpp"
 #include "Mela.hpp"
 
