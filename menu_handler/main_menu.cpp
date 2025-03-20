@@ -1,5 +1,7 @@
 #include "main_menu.h"
 #include "../Serpente.cpp"
+#include "../classifica.cpp"
+
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
     choices[0] = "Gioca";
@@ -102,14 +104,19 @@ void Menu::start_menu() {
         // aggiungete la vostra classe con la griglia e snake etc.
 
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
-        if (choice == 1) { 
+        if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
             game_state = start_game();
             
             if(game_state == 0){
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(2, startx, "Press esc to return to menu\n");
             }
-        } else{
+        }else if (choice == 2) { 
+            Classifica::start_classifica();
+        }
+         else if (choice == 4) { 
+            break;
+        }else{
             mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         }
 

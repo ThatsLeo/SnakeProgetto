@@ -4,6 +4,8 @@
 
 // Also make global variables here and global functions
 // --------------------------------------------------------------
+#pragma once
+
 #include <ncurses/ncurses.h>
 #include <iostream>
 #include <ctime>
@@ -13,5 +15,5 @@
 // Grandezza della matrice del display.
 #define Maxy 20
 #define Maxx 50
-#pragma once
+
 

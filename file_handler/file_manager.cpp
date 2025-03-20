@@ -1,3 +1,4 @@
+#pragma once
 #include "file_manager.h"
 
 void FileManager::writeFile(std::string toWrite) {

@@ -12,5 +12,6 @@ public:
     static WINDOW* CreateTextBox(WINDOW* boxForFile, int characters, int starty, int startx);
 };
 
+
 #endif // UTILS_H
 
