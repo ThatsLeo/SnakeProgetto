@@ -57,5 +57,6 @@
         "algorithm": "cpp",
         "optional": "cpp",
         "sstream": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
