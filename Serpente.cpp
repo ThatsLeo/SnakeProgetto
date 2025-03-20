@@ -21,10 +21,7 @@ void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto) {
 void displayStartMessage(WINDOW* win) {
     mvwprintw(win, 1, 10, "Press something to start\n");
     wrefresh(win);
-    wgetch(win); // Wait for user input
-    // Clear the message by overwriting with spaces
-    mvwprintw(win, 1, 10, "                         ");
-    wrefresh(win);
+   
 }
 
 // Spawns the fruit ensuring the cell is empty
@@ -66,6 +63,9 @@ int start_game() {
 
     while (serpent->getMove() != (char)27) {
         if (firstMove) {
+            // Clear the message by overwriting with spaces
+            mvwprintw(win, 1, 10, "                         ");
+            wrefresh(win);
             firstMove = false;
             nodelay(win, true);
         }
