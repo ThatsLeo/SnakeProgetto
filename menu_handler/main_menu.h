@@ -9,6 +9,9 @@ class Menu {
         void close_menu();
         void start_menu();
 
+
+        
+
         //void initialize_ncurses();
     
     private:
@@ -21,5 +24,8 @@ class Menu {
         int choice;
         int n_choices;
         const char *choices[4];
+
+        int starty;
+        int startx; // per centrare la finestra
     };
     

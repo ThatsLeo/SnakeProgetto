@@ -8,7 +8,7 @@ bool isCellEmpty(WINDOW* win, int y, int x) {
     return (currentChar == ' ');
 }
 
-void start_game(){
+int start_game(){
     srand(time(NULL));
     initscr();
     curs_set(0);
@@ -50,6 +50,8 @@ void start_game(){
         serpent->display();
         wrefresh(win);
     }
+    endwin();
+    return 0;
 }
 
 

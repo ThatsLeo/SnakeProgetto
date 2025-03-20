@@ -14,8 +14,8 @@ Menu::Menu()
     
     int height = yMax/2;
     int width = xMax/3;
-    int starty = (LINES - height) / 2;
-    int startx = (COLS - width) / 2; // per centrare la finestra
+    starty = (LINES - height) / 2;
+    startx = (COLS - width) / 2; // per centrare la finestra
 
     // Create the window for the menu
     menu_win = newwin(height, width, starty, startx);
@@ -86,36 +86,50 @@ int Menu::handle_user_input() {
     return choice;
 }
 
-
+bool pressed_exit = 0;
+int game_state;
 void Menu::start_menu() {
     while (true) {
         highlight = 1; 
         choice = 0;    
         clear(); 
-        //refresh(); 
+        refresh(); 
         wclear(menu_win); 
         wrefresh(menu_win); 
+
         int choice = handle_user_input(); // usate la scelta
         // Fate qualcosa con la scelta per esempio se fai gioca (1)
         // aggiungete la vostra classe con la griglia e snake etc.
 
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) { 
-            start_game();
-        } 
+            game_state = start_game();
+            if(game_state == 0){
+                mvprintw(0, startx, "Game Over\n");
+                mvprintw(2, startx, "Press esc to return to menu\n");
+            }
+        } else{
+            mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
+        }
 
-        mvprintw(0, 0, "APer la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         // invece che printare sta linea usate il vostro.
 
         clrtoeol();
         refresh();
-        int c = getch();
-        if (c == 27) {   // 27 ovvero esc usatelo nel vostro codice pure per tornare al menu
+        int c;
+        
+        c = getch();
+        
+        
+        if (c == 27 ) {   // 27 ovvero esc 
+            pressed_exit = !pressed_exit;
             clear();
             refresh();
+            wclear(menu_win); 
+            wrefresh(menu_win);
             continue; 
         } else {
-            break;
+            break; //exit everything
         }
     }
     
