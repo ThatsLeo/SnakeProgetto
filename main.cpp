@@ -1,4 +1,4 @@
-#pragma once
+
 #include "main.h"
 #include "menu_handler/main_menu.cpp"
 #include "file_handler/file_manager.cpp"
