@@ -1,5 +1,5 @@
 #include "main_menu.h"
-
+#include "../Serpente.cpp"
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
     choices[0] = "Gioca";
@@ -100,8 +100,11 @@ void Menu::start_menu() {
         // aggiungete la vostra classe con la griglia e snake etc.
 
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
+        if (choice == 1) { 
+            start_game();
+        } 
 
-        mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
+        mvprintw(0, 0, "APer la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         // invece che printare sta linea usate il vostro.
 
         clrtoeol();

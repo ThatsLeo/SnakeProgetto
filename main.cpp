@@ -9,7 +9,7 @@ int main() {
 
 
     fileManager.writeFile("Hello World\n");
-    fileManager.writeFileAppend("P O R C O D I O\n");
+    fileManager.writeFileAppend("AP O R C O D I O\n");
     
     const int bufferSize = 1024; // massimo 1024 caratteri compreso null-terminator
     char buffer[bufferSize];
