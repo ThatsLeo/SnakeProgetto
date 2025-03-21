@@ -28,7 +28,7 @@ bool isCellEmpty(WINDOW* win, int y, int x) {
 
 // Initializes the serpent and fruit objects
 void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto) {
-    serpent = new Serpente(win, '~', 7);
+    serpent = new Serpente(win, 'o', 7);
     frutto = new Mela(win, -1, -1, '$');
 }
 
@@ -45,11 +45,11 @@ void displayStartMessage(WINDOW* win) {
 // and two integer references for the fruit's coordinates.
 // The boundaries are determined using global constants Maxx and Maxy.
 void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
-    fruitX = rand() % (Maxx - 2) + 1;
-    fruitY = rand() % (Maxy - 2) + 1;
+    fruitX = rand() % (Maxx - 3) + 1;
+    fruitY = rand() % (Maxy - 3) + 1;
     while (!isCellEmpty(win, fruitY, fruitX)) {
-        fruitX = rand() % (Maxx - 2) + 1;
-        fruitY = rand() % (Maxy - 2) + 1;
+        fruitX = rand() % (Maxx - 3) + 1;
+        fruitY = rand() % (Maxy - 3) + 1;
     }
     frutto->Spawn(fruitX, fruitY);
 }
@@ -77,9 +77,8 @@ int start_game() {
 
     displayStartMessage(win);
     clock_t startTimeFromGame;
-
     while (serpent->getMove() != (char)27) {
-         
+        frutto->check(serpent);
         if (firstMove) {
             // Clear the message by overwriting with spaces
             startTimeFromGame = clock();
