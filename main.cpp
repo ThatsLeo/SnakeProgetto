@@ -18,9 +18,6 @@ int main() {
     refresh();
 
     menu.start_menu();
-    
-    std::cout << "Menu chiuso, clicca qualcosa per chiudere" << std::endl;
-    getch();
 
     return 0;
 }

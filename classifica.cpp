@@ -10,7 +10,7 @@ void Classifica::start_classifica(){
 
     FileManager fileManager = FileManager();
 
-    const int bufferSize = 1024; // massimo 1024 caratteri compreso null-terminator
+    const int bufferSize = 1024; // massimo 1024 caratteri 
     char buffer[bufferSize];
 
     int chNumber = fileManager.readFile(buffer, bufferSize);
