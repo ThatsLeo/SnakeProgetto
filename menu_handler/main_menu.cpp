@@ -1,5 +1,5 @@
 #include "main_menu.h"
-#include "../Serpente.cpp"
+#include "../gioco/Serpente.cpp"
 #include "../classifica.cpp"
 
 void initialize_ncurses() {

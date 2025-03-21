@@ -1,4 +1,4 @@
-#include "includes/include.h"
+#include "../includes/include.h"
 #pragma once
 
 // Dizionario per tenere traccia della direzione del serpente.
@@ -10,6 +10,8 @@ struct body{
     int x;
     body * next;
 };
+
+
 
 // Classe del serpente.
 class Serpente { 
@@ -144,6 +146,7 @@ void Serpente::defaultMove(){
     }
 }
 
+
 static Direction getDesiredDirection(int key, Direction current) {
     struct Mapping {
         int key;
@@ -210,7 +213,7 @@ int Serpente::getMove(){
         if (dir == UP || dir == DOWN){
             wait(160);
         } else {
-            wait(100);
+            wait(160);
         }   
         defaultMove();
     }
@@ -276,5 +279,3 @@ inline void Serpente::wait(int milliseconds){
         
     }
 }
-
-
