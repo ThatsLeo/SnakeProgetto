@@ -92,6 +92,14 @@ int Menu::handle_user_input() {
 bool pressed_exit = 0;
 int game_state;
 void Menu::start_menu() {
+    
+    //Mosso creazione file iniziale dal main
+    FileManager fileManager = FileManager();
+
+    fileManager.writeFile("Classifica\n");
+    fileManager.writeFileAppend("Fra:200 \n");
+    fileManager.writeFileAppend("leo:100 \n");
+
     while (true) {
         highlight = 1; 
         choice = 0;    
