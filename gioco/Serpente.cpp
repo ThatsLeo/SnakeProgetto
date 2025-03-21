@@ -7,7 +7,7 @@ int tempoPassato = 0;
 void punteggio() {
     mvprintw(Maxy/2, Maxx/3, "Punteggio:");
     if(tempoPassato > 10 ){
-        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15);
+        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15 - 5*10);
     }else{
         mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*10);
     }
@@ -72,20 +72,20 @@ int start_game() {
     initializeGame(win, serpent, frutto);
 
     displayStartMessage(win);
-    
+    clock_t startTimeFromGame;
 
     while (serpent->getMove() != (char)27) {
 
         if (firstMove) {
             // Clear the message by overwriting with spaces
-            clock_t startTimeFromGame = clock();
+            startTimeFromGame = clock();
             mvwprintw(win, 1, 10, "                         ");
             wrefresh(win);
             
             firstMove = false;
             nodelay(win, true);
         }
-        
+
         tempoPassato = getElapsedTime(startTimeFromGame);
         punteggio();
 
