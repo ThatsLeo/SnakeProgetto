@@ -45,11 +45,11 @@ void displayStartMessage(WINDOW* win) {
 // and two integer references for the fruit's coordinates.
 // The boundaries are determined using global constants Maxx and Maxy.
 void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
-    fruitX = rand() % (Maxx - 3) + 1;
-    fruitY = rand() % (Maxy - 3) + 1;
+    fruitX = (rand() % (Maxx - 3)) + 1;
+    fruitY = (rand() % (Maxy - 3)) + 1;
     while (!isCellEmpty(win, fruitY, fruitX)) {
         fruitX = rand() % (Maxx - 3) + 1;
-        fruitY = rand() % (Maxy - 3) + 1;
+        fruitY = (rand() % (Maxy - 3)) + 1;
     }
     frutto->Spawn(fruitX, fruitY);
 }
@@ -61,6 +61,8 @@ int start_game() {
     curs_set(0);
     noecho();
 
+    clock_t lastAppleCheck;
+    int appleDelay = CLOCKS_PER_SEC;
     int xMax, yMax;
     getmaxyx(stdscr, yMax, xMax);
 
@@ -77,8 +79,19 @@ int start_game() {
 
     displayStartMessage(win);
     clock_t startTimeFromGame;
+    
     while (serpent->getMove() != (char)27) {
-        frutto->check(serpent);
+        
+        if(!frutto->isOn()){
+            mvprintw(Maxy/2 + 2, Maxx/3, "         ");
+            mvprintw(Maxy/2 + 2, Maxx/3, "Mangiato!");
+        }
+        else {
+            mvprintw(Maxy/2 + 2, Maxx/3, "         ");
+            mvprintw(Maxy/2 + 2, Maxx/3, "Non");
+        }
+
+        clock_t now = clock();
         if (firstMove) {
             // Clear the message by overwriting with spaces
             startTimeFromGame = clock();
@@ -92,7 +105,13 @@ int start_game() {
         tempoPassato = getElapsedTime(startTimeFromGame);
         punteggio();
 
-        if (!frutto->isOn()) {
+        if(frutto->check(serpent)){
+            mvwaddch(win, frutto->yPos(), frutto->xPos(), ' ');
+            lastAppleCheck = clock();
+            frutto->off();
+        }
+
+        if (!frutto->isOn() && now - lastAppleCheck >= appleDelay) {
             spawnFruit(win, frutto, fruitX, fruitY);
         }
 
