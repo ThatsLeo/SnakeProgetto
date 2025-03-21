@@ -1,4 +1,5 @@
 #include "../includes/include.h"
+#include "../utils/utils.h"
 #pragma once
 
 // Dizionario per tenere traccia della direzione del serpente.
@@ -278,4 +279,9 @@ inline void Serpente::wait(int milliseconds){
     while (clock() < end_time) {
         
     }
+}
+
+inline int getElapsedTime(clock_t start_time) {
+    clock_t now = clock();
+    return static_cast<int>((now - start_time) / CLOCKS_PER_SEC);
 }

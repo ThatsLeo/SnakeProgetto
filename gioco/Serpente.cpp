@@ -2,6 +2,18 @@
 #include "Serpente.hpp"
 #include "Mela.hpp"
 
+int tempoPassato = 0;
+
+void punteggio() {
+    mvprintw(Maxy/2, Maxx/3, "Punteggio:");
+    if(tempoPassato > 10 ){
+        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15);
+    }else{
+        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*10);
+    }
+    
+    refresh();
+}
 
 // Returns true if the cell at (y, x) in the window is empty (a space)
 bool isCellEmpty(WINDOW* win, int y, int x) {
@@ -60,8 +72,11 @@ int start_game() {
     initializeGame(win, serpent, frutto);
 
     displayStartMessage(win);
+    clock_t startTimeFromGame = clock();
 
     while (serpent->getMove() != (char)27) {
+        tempoPassato = getElapsedTime(startTimeFromGame);
+
         if (firstMove) {
             // Clear the message by overwriting with spaces
             mvwprintw(win, 1, 10, "                         ");
@@ -70,6 +85,7 @@ int start_game() {
             firstMove = false;
             nodelay(win, true);
         }
+        punteggio();
 
         if (!frutto->isOn()) {
             spawnFruit(win, frutto, fruitX, fruitY);
