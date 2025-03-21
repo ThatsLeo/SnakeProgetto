@@ -2,12 +2,7 @@
 #include "../gioco/Serpente.cpp"
 #include "../classifica.cpp"
 
-void initialize_ncurses() {
-    initscr();            
-    clear();
-    noecho();
-    cbreak();             
-}
+
 
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
@@ -92,7 +87,7 @@ int Menu::handle_user_input() {
 bool pressed_exit = 0;
 int game_state;
 void Menu::start_menu() {
-    
+
     //Mosso creazione file iniziale dal main
     FileManager fileManager = FileManager();
 
@@ -117,8 +112,8 @@ void Menu::start_menu() {
             game_state = start_game();
             
             if(game_state == 0){
-                mvprintw(0, startx, "Game Over\n");
-                mvprintw(2, startx, "Press esc to return to menu\n");
+                mvprintw(2, startx +3, "Game Over\n");
+                mvprintw(3, startx +3, "Press esc to return to menu\n");
                 
             }else{
                 mvprintw(0, startx, "Game Over\n");

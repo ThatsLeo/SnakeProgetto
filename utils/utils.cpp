@@ -1,6 +1,13 @@
 #include "utils.h"
 #pragma once
 
+void initialize_ncurses() {
+    initscr();            
+    clear();
+    noecho();
+    cbreak();             
+}
+
 // Initialize colors for ncurses.
 void Utils::initColors() {
     start_color();

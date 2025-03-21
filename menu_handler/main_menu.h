@@ -9,11 +9,6 @@ class Menu {
         ~Menu();
         void close_menu();
         void start_menu();
-
-
-        
-
-        //void initialize_ncurses();
     
     private:
         void print_menu();
