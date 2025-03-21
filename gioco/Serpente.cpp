@@ -34,7 +34,7 @@ void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto) {
 // Displays the start message, waits for a key press, then clears it.
 // Only uses a single input parameter.
 void displayStartMessage(WINDOW* win) {
-    mvwprintw(win, 1, 10, "Press something to start\n");
+    mvwprintw(win, 1, 10, "Press something to start..");
     wrefresh(win);
    
 }
@@ -82,7 +82,7 @@ int start_game() {
         if (firstMove) {
             // Clear the message by overwriting with spaces
             startTimeFromGame = clock();
-            mvwprintw(win, 1, 10, "                         ");
+            mvwprintw(win, 1, 10, "                          ");
             wrefresh(win);
             
             firstMove = false;
