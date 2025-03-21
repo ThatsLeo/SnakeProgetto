@@ -6,7 +6,7 @@ int tempoPassato = 0;
 int scoreSnake = 0;
 
 void punteggio() {
-    
+
     mvprintw(Maxy/2, Maxx/3, "Punteggio:");
     if(tempoPassato > 10 ){
         mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15 - 5*10);
@@ -79,7 +79,7 @@ int start_game() {
     clock_t startTimeFromGame;
 
     while (serpent->getMove() != (char)27) {
-
+         
         if (firstMove) {
             // Clear the message by overwriting with spaces
             startTimeFromGame = clock();
@@ -99,6 +99,7 @@ int start_game() {
 
         serpent->display();
         wrefresh(win);
+        
     }
 
     endwin();

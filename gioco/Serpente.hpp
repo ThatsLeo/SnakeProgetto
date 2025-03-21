@@ -47,12 +47,20 @@ class Serpente {
         
         void display();
 
+        int getSleepTime(){
+            return SleepTime;
+        }
+        void setSleepTime(int time){
+            SleepTime = time;
+        }
+
     private:
         
         int headX, headY;
         body *head;
         char character;
         WINDOW * win;
+        int SleepTime = 0;
 
         void moveBy(int dx, int dy);
 };
@@ -205,17 +213,19 @@ static bool updateDirection(Serpente* self, int key) {
     return false;
 }
 
+int timeGameSpeed = 300;
+
 // Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
 int Serpente::getMove(){
     int moveKey = wgetch(this->win);
     // If updateDirection returns false, then no valid change occurred.
     if (!updateDirection(this, moveKey)) {
         // Wait for a short delay before performing the default move.
-        if (dir == UP || dir == DOWN){
-            wait(300);
-        } else {
-            wait(300);
-        }   
+        flushinp(); 
+        wait(timeGameSpeed);
+        setSleepTime(timeGameSpeed);
+        
+
         defaultMove();
     }
     return moveKey;
@@ -280,9 +290,11 @@ inline void Serpente::wait(int milliseconds){
     clock_t start_time = clock();
     clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
 
+
     while (clock() < end_time) {
         
     }
+
 }
 
 inline int getElapsedTime(clock_t start_time) {
