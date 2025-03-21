@@ -72,19 +72,21 @@ int start_game() {
     initializeGame(win, serpent, frutto);
 
     displayStartMessage(win);
-    clock_t startTimeFromGame = clock();
+    
 
     while (serpent->getMove() != (char)27) {
-        tempoPassato = getElapsedTime(startTimeFromGame);
 
         if (firstMove) {
             // Clear the message by overwriting with spaces
+            clock_t startTimeFromGame = clock();
             mvwprintw(win, 1, 10, "                         ");
             wrefresh(win);
             
             firstMove = false;
             nodelay(win, true);
         }
+        
+        tempoPassato = getElapsedTime(startTimeFromGame);
         punteggio();
 
         if (!frutto->isOn()) {
