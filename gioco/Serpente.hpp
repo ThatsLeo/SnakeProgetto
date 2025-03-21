@@ -224,7 +224,11 @@ int Serpente::getMove(){
 // Aggiorna le coordinate del serpente sulla matrice del display
 void Serpente::display(){
     body *current = head;
+    Utils::initColors();
+    wattron(win, COLOR_PAIR(1));
     mvwaddch(win, headY, headX, '@');  // Testa = '@'
+    wattroff(win, COLOR_PAIR(1));
+
     current = current->next;
 
     // Corpo
