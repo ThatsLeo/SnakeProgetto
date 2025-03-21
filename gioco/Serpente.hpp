@@ -212,9 +212,9 @@ int Serpente::getMove(){
     if (!updateDirection(this, moveKey)) {
         // Wait for a short delay before performing the default move.
         if (dir == UP || dir == DOWN){
-            wait(160);
+            wait(300);
         } else {
-            wait(160);
+            wait(300);
         }   
         defaultMove();
     }

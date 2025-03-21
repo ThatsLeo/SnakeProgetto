@@ -122,6 +122,7 @@ void Menu::start_menu() {
                 fileManager.writeFileAppend(ssssss);
             }
         }else if (choice == 2) { 
+            Utils::initColors();
             Classifica::start_classifica();
         }
          else if (choice == 4) { 
