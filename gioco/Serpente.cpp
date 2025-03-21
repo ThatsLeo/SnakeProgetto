@@ -3,13 +3,16 @@
 #include "Mela.hpp"
 
 int tempoPassato = 0;
+int scoreSnake = 0;
 
 void punteggio() {
     mvprintw(Maxy/2, Maxx/3, "Punteggio:");
     if(tempoPassato > 10 ){
         mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15 - 5*10);
+        scoreSnake = tempoPassato*15 - 5*10;
     }else{
         mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*10);
+        scoreSnake = tempoPassato*10;
     }
     
     refresh();
@@ -98,6 +101,9 @@ int start_game() {
     }
 
     endwin();
+    if(tempoPassato > 0){
+        return scoreSnake;
+    }
     return 0;
 }
 

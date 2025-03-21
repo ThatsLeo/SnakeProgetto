@@ -21,10 +21,8 @@ WINDOW* Utils::CreateBoxWindowCentered(WINDOW* boxForFile, int heightDivisor, in
 }
 
 WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int characters, int starty, int startx){
-
-
     
-    int height = 5;
+    int height = 7;
     int width = characters *1;
 
     // Create the window for the menu

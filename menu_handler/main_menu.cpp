@@ -111,6 +111,15 @@ void Menu::start_menu() {
             if(game_state == 0){
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(2, startx, "Press esc to return to menu\n");
+                
+            }else{
+                mvprintw(0, startx, "Game Over\n");
+                mvprintw(1, startx, "New Record!\n");
+                mvprintw(2, startx, "Press esc to return to menu\n");
+                FileManager fileManager = FileManager();
+                char  ssssss[100];
+                sprintf(ssssss, "Guest:%d \n",game_state);
+                fileManager.writeFileAppend(ssssss);
             }
         }else if (choice == 2) { 
             Classifica::start_classifica();
