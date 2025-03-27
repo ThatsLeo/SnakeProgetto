@@ -1,5 +1,5 @@
 #include "Livelli.hpp"
-#include "../includes/includes.h"
+#include "../includes/include.h"
 
 // Crea una lista bidirezionale di 10 livelli
 level::level(){
@@ -13,23 +13,30 @@ level::level(){
     }
     tail = tmphead;
 }
-level::nextLevel(){
+void level::nextLevel(){
     if (currentlvl->next != NULL){
         currentlvl = currentlvl->next;
     }
 }
-level::prevLevel(){
+void level::prevLevel(){
     if (currentlvl->prev != NULL){
         currentlvl = currentlvl->prev;
     }
 }
-level::setLevel(int id){         // Cerca il livello con id specificato e lo imposta come currentlvl
+void level::setLevel(int id){         // Cerca il livello con id specificato e lo imposta come currentlvl
     level *tmp = head;              
     while (tmp != NULL){
         if (tmp->id == id){
             currentlvl = tmp;
             return;
         }
+        tmp = tmp->next;
+    }
+}
+void level::PrintLevels(){
+    level *tmp = head;
+    while (tmp != NULL){
+        mvprintw(0, 0, "Livello %d", tmp->id);
         tmp = tmp->next;
     }
 }

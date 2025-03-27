@@ -3,7 +3,6 @@
 #include "../classifica.cpp"
 
 
-
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4) {
     choices[0] = "Gioca";
@@ -127,6 +126,8 @@ void Menu::start_menu() {
         }else if (choice == 2) { 
             Utils::initColors();
             Classifica::start_classifica();
+        }else if (choice == 3){
+            mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         }
          else if (choice == 4) { 
             break;
