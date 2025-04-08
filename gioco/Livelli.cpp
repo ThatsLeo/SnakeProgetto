@@ -35,8 +35,10 @@ void level::setLevel(int id){         // Cerca il livello con id specificato e l
 }
 void level::PrintLevels(){
     level *tmp = head;
+    int row = 0;
     while (tmp != NULL){
-        mvprintw(0, 0, "Livello %d", tmp->id);
+        mvprintw(row++, 0, "Livello %d", tmp->id);
         tmp = tmp->next;
     }
+    refresh();
 }
