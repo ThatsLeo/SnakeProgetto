@@ -127,10 +127,12 @@ void Menu::start_menu() {
             Utils::initColors();
             Classifica::start_classifica();
         }else if (choice == 3){
+            wclear(menu_win);
+            wrefresh(menu_win);
             levelMenu.PrintLevels();
             int c;
             while (true) {
-                c = getch();
+                c = wgetch(menu_win);
                 if (c == KEY_UP) {
                     levelMenu.prevLevel();
                 } else if (c == KEY_DOWN) {

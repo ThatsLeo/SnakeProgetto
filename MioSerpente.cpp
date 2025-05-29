@@ -1,6 +1,9 @@
 #include "includes/include.h"
 #include "MioSerpente.hpp"
 #include "gioco/Mela.hpp"
+#include "gioco/Livelli.hpp"
+
+
 
 bool isCellEmpty(WINDOW* win, int y, int x) {
     chtype ch = mvwinch(win, y, x);
@@ -8,10 +11,14 @@ bool isCellEmpty(WINDOW* win, int y, int x) {
     return (currentChar == ' ');
 }
 
+    level *ProvaLivelli;
+
     clock_t lastAppleCheck;
     clock_t lastMoveCheck;
+    clock_t lastLevelCheck;
     int appleDelay = CLOCKS_PER_SEC * 5;
-    int moveDelay = CLOCKS_PER_SEC / 10;
+    int moveDelay = (CLOCKS_PER_SEC / 2);
+    int levelDelay = CLOCKS_PER_SEC * 3;
 
 bool screen [Maxy][Maxx]{}; 
 int main(int argc, char ** argv){
@@ -19,6 +26,10 @@ int main(int argc, char ** argv){
     initscr();
     curs_set(0);
     noecho();
+
+    ProvaLivelli = new level();
+    ProvaLivelli->setLevel(1);
+    
     
     int xMax, yMax;
     
@@ -34,10 +45,11 @@ int main(int argc, char ** argv){
     Serpente *serpent = new Serpente(win, 'o', 7);
     Mela *frutto = new Mela(win, -1, -1, '$');
     
-    while(serpent->getMove() != (char)27){
+    while(true){
         clock_t now = clock();
 
         if(now - lastMoveCheck >= moveDelay){
+            serpent->getMove();
             lastMoveCheck = now;
         }
 
@@ -80,6 +92,17 @@ int main(int argc, char ** argv){
                 mvwaddch(win, frutto->yPos(), frutto->xPos(), ' ');
                 lastAppleCheck = now;
             }
+        }
+
+        if(now - lastLevelCheck >= levelDelay){
+
+            if(ProvaLivelli->getId() == 10) ProvaLivelli->setLevel(1);
+            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "         ");
+            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "Livello %d", ProvaLivelli->getId());
+            
+            ProvaLivelli->nextLevel();
+            moveDelay = (CLOCKS_PER_SEC / 2) / ProvaLivelli->getId();
+            lastLevelCheck = now;
         }
 
         serpent->display();

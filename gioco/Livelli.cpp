@@ -43,3 +43,7 @@ void level::PrintLevels(){
     }
     refresh();
 }
+
+int level::getId(){
+    return currentlvl->id;
+}

@@ -18,4 +18,5 @@ public:
     void prevLevel();
     void setLevel(int id);
     void PrintLevels();     // Funzione per stampare i livelli nel menu
+    int getId();
 };
