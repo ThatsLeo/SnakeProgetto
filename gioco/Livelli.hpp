@@ -1,3 +1,4 @@
+#pragma once
 class level{        // Classe per la gestione dei livelli
 private:
     int id;         // Identificatore del livello

@@ -1,5 +1,6 @@
 #include "Livelli.hpp"
 #include "../includes/include.h"
+#pragma once
 
 // Crea una lista bidirezionale di 10 livelli
 level::level(){
