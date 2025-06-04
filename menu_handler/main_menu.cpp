@@ -129,20 +129,26 @@ void Menu::start_menu() {
         }else if (choice == 3){
             wclear(menu_win);
             wrefresh(menu_win);
-            levelMenu.PrintLevels();
-            int c;
-            while (true) {
-                c = wgetch(menu_win);
-                if (c == KEY_UP) {
-                    levelMenu.prevLevel();
-                } else if (c == KEY_DOWN) {
-                    levelMenu.nextLevel();
-                } else if (c == 10) { // Enter key
-                    break; // Exit the loop to return to the menu
-                }
-                clear();
-                levelMenu.PrintLevels();
-            }
+            WINDOW * insideBox;
+            insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
+            levelMenu.PrintLevels(insideBox);
+            wrefresh(insideBox);
+            // wclear(menu_win);
+            // wrefresh(menu_win);
+            // levelMenu.PrintLevels();
+            // int c;
+            // while (true) {
+            //     c = wgetch(menu_win);
+            //     if (c == KEY_UP) {
+            //         levelMenu.prevLevel();
+            //     } else if (c == KEY_DOWN) {
+            //         levelMenu.nextLevel();
+            //     } else if (c == 10) { // Enter key
+            //         break; // Exit the loop to return to the menu
+            //     }
+            //     clear();
+            //     levelMenu.PrintLevels();
+            // }
         }
          else if (choice == 4) { 
             break;
@@ -157,7 +163,6 @@ void Menu::start_menu() {
         int c;
         
         c = getch();
-        
         
         if (c == 27 ) {   // 27 ovvero esc 
             pressed_exit = !pressed_exit;
