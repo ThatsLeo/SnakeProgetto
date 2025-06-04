@@ -80,6 +80,7 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
         current = newbody;
     }
 
+    dir = RIGHT;
     keypad(this->win, true);
     character = c;
 }
@@ -220,10 +221,6 @@ int Serpente::getMove(){
     int moveKey = wgetch(this->win);
     // If updateDirection returns false, then no valid change occurred.
     if (!updateDirection(this, moveKey)) {
-        // Wait for a short delay before performing the default move.
-        flushinp(); 
-        wait(timeGameSpeed);
-        setSleepTime(timeGameSpeed);
         
         defaultMove();
     }
