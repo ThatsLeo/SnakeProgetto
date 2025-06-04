@@ -12,9 +12,6 @@ int main() {
 
     return 0;
 }
-<<<<<<< HEAD
-
-=======
 // int main() {
 //     initialize_ncurses();
 //     clear();
@@ -35,4 +32,3 @@ int main() {
 //         wrefresh(menuwin);
 //     }
 // }
->>>>>>> 9c300ad93bec23069a58843565696a75d00d6dea

@@ -127,22 +127,22 @@ void Menu::start_menu() {
             Utils::initColors();
             Classifica::start_classifica();
         }else if (choice == 3){
-            wclear(menu_win);
-            wrefresh(menu_win);
-            levelMenu.PrintLevels();
-            int c;
-            while (true) {
-                c = wgetch(menu_win);
-                if (c == KEY_UP) {
-                    levelMenu.prevLevel();
-                } else if (c == KEY_DOWN) {
-                    levelMenu.nextLevel();
-                } else if (c == 10) { // Enter key
-                    break; // Exit the loop to return to the menu
-                }
-                clear();
-                levelMenu.PrintLevels();
-            }
+            // wclear(menu_win);
+            // wrefresh(menu_win);
+            // levelMenu.PrintLevels();
+            // int c;
+            // while (true) {
+            //     c = wgetch(menu_win);
+            //     if (c == KEY_UP) {
+            //         levelMenu.prevLevel();
+            //     } else if (c == KEY_DOWN) {
+            //         levelMenu.nextLevel();
+            //     } else if (c == 10) { // Enter key
+            //         break; // Exit the loop to return to the menu
+            //     }
+            //     clear();
+            //     levelMenu.PrintLevels();
+            // }
         }
          else if (choice == 4) { 
             break;
