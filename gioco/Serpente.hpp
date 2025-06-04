@@ -225,7 +225,6 @@ int Serpente::getMove(){
         wait(timeGameSpeed);
         setSleepTime(timeGameSpeed);
         
-
         defaultMove();
     }
     return moveKey;
