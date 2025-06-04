@@ -127,6 +127,12 @@ void Menu::start_menu() {
             Utils::initColors();
             Classifica::start_classifica();
         }else if (choice == 3){
+            wclear(menu_win);
+            wrefresh(menu_win);
+            WINDOW * insideBox;
+            insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
+            levelMenu.PrintLevels(insideBox);
+            wrefresh(insideBox);
             // wclear(menu_win);
             // wrefresh(menu_win);
             // levelMenu.PrintLevels();
@@ -157,7 +163,6 @@ void Menu::start_menu() {
         int c;
         
         c = getch();
-        
         
         if (c == 27 ) {   // 27 ovvero esc 
             pressed_exit = !pressed_exit;

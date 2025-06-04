@@ -17,6 +17,6 @@ public:
     void nextLevel();       // Metodi per scorrere la lista
     void prevLevel();
     void setLevel(int id);
-    void PrintLevels();     // Funzione per stampare i livelli nel menu
+    void PrintLevels(WINDOW * win);     // Funzione per stampare i livelli nel menu
     int getId();
 };

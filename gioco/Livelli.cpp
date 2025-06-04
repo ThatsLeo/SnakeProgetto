@@ -34,11 +34,11 @@ void level::setLevel(int id){         // Cerca il livello con id specificato e l
         tmp = tmp->next;
     }
 }
-void level::PrintLevels(){
+void level::PrintLevels(WINDOW *win){ // Stampa i livelli nel menu
     level *tmp = head;
     int row = 0;
     while (tmp != NULL){
-        mvprintw(row++, 0, "Livello %d", tmp->id);
+        mvwprintw(win, 1 + row++, 2, "Livello %d", tmp->id);
         tmp = tmp->next;
     }
     refresh();
