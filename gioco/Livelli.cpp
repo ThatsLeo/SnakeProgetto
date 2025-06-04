@@ -2,8 +2,7 @@
 #include "../includes/include.h"
 #pragma once
 
-// Crea una lista bidirezionale di 10 livelli
-level::level(){
+level::level(){          // Crea una lista bidirezionale di 10 livelli
     head = new level{1, NULL, NULL};
     level *tmphead = head;
     currentlvl = head;
@@ -34,7 +33,7 @@ void level::setLevel(int id){         // Cerca il livello con id specificato e l
         tmp = tmp->next;
     }
 }
-void level::PrintLevels(WINDOW *win){ // Stampa i livelli nel menu
+void level::PrintLevels(WINDOW *win){         // Stampa i livelli nel menu
     level *tmp = head;
     int row = 0;
     while (tmp != NULL){
@@ -43,7 +42,6 @@ void level::PrintLevels(WINDOW *win){ // Stampa i livelli nel menu
     }
     refresh();
 }
-
 int level::getId(){
     return currentlvl->id;
 }
