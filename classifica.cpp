@@ -200,7 +200,7 @@ void Classifica::start_classifica(){
 
     // insideBox = Utils::CreateTextBox(insideBox, display_chNumber, 6, 4); // La tua chiamata originale
     // Usiamo una finestra con dimensioni calcolate:
-    insideBox = newwin(win_h, win_w, start_y_ncurses, start_x_ncurses);
+    insideBox = newwin(win_h, win_w, 8, 5);
     box(insideBox, 0, 0);
     refresh(); // Aggiorna stdscr
     wrefresh(insideBox); // Aggiorna la nuova finestra

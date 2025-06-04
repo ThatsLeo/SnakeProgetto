@@ -1,4 +1,5 @@
 Classifica
 Fra:200
-Guest:130
 leo:100
+Guest:60
+Guest:20
