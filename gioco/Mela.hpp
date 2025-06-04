@@ -15,8 +15,11 @@ class Mela{
 
         void off();
 
-        void check();
+        bool check(Serpente *serp);
 
+        int xPos();
+
+        int yPos();
 
     private:
         WINDOW * win;
@@ -43,7 +46,6 @@ void Mela::randPos(int x, int y){
 void Mela::off(){
     x = -1;
     y = -1;
-    wait(10000);
 }
 
 bool Mela::isOn(){
@@ -67,4 +69,19 @@ inline void Mela::wait(int milliseconds){
     }
 }
 
+// Controlla se la posizione della mela e' la stessa della testa del serpente, se true disattiva la mela dalla griglia.
+bool Mela::check(Serpente *serp){
+    body temp = *serp->getHeadPos();
+    if(this->x == temp.x && this->y == temp.y){ 
+        return true;
+    }
+    return false;
+}
 
+int Mela::xPos(){
+    return x;
+}
+
+int Mela::yPos(){
+    return y;
+}
