@@ -56,7 +56,7 @@ bool Mela::isOn(){
 
 void Mela::Spawn(int x, int y){
     randPos(x,y);
-    mvwaddch(this->win, x, y, character);
+    mvwaddch(this->win, y, x, character);
 }
 
 

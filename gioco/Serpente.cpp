@@ -79,7 +79,6 @@ int start_game() {
     WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
     box(win, 0, 0);
 
-    bool firstMove = true;
     int fruitX, fruitY;
 
     Serpente *serpent;
@@ -88,8 +87,23 @@ int start_game() {
     initializeGame(win, serpent, frutto, livello);
 
     displayStartMessage(win);
-    clock_t startTimeFromGame;
+
+    int firstKey = wgetch(win);
+    if (firstKey == (char)27) {  // Se è ESC, esci subito
+        endwin();
+        return 0;
+    }
+
+    clock_t startTimeFromGame = clock();
+    lastMoveCheck = clock();
+    nodelay(win, true);  // Abilita input non bloccante
+    
+    // Pulisci il messaggio iniziale
+    mvwprintw(win, 1, 10, "                          ");
+    wrefresh(win);
+
     bool gameOver = false;
+
     while (true) {
         clock_t now = clock();
         
@@ -111,16 +125,6 @@ int start_game() {
             mvprintw(Maxy/2 + 3, Maxx/3, "         ");
             mvprintw(Maxy/2 + 3, Maxx/3, "%d %d", frutto->xPos(), frutto->yPos());
             wrefresh(stdscr);
-        }
-
-        if (firstMove) {
-            // Clear the message by overwriting with spaces
-            startTimeFromGame = clock();
-            mvwprintw(win, 1, 10, "                          ");
-            wrefresh(win);
-            
-            firstMove = false;
-            nodelay(win, true);
         }
 
         tempoPassato = getElapsedTime(startTimeFromGame);

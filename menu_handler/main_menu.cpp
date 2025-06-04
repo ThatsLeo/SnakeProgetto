@@ -171,9 +171,7 @@ void Menu::start_menu() {
             wclear(menu_win); 
             wrefresh(menu_win);
             continue; 
-        } else {
-            break; //exit everything
-        }
+        } 
     }
     
     endwin();

@@ -80,7 +80,6 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
         current = newbody;
     }
 
-    dir = RIGHT;
     keypad(this->win, true);
     character = c;
 }
@@ -214,7 +213,6 @@ static bool updateDirection(Serpente* self, int key) {
     return false;
 }
 
-int timeGameSpeed = 300;
 
 // Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
 int Serpente::getMove(){
