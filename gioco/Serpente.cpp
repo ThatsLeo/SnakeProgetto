@@ -1,221 +1,248 @@
-#pragma once
+#include "../utils/utils.h"
 #include "Serpente.hpp"
-#include "Mela.hpp"
-#include "Livelli.hpp"
 
-int tempoPassato = 0;
-int scoreSnake = 0;
-
-void punteggio() {
-
-    mvprintw(Maxy/2, Maxx/3, "Punteggio:");
-    if(tempoPassato > 10 ){
-        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*15 - 5*10);
-        scoreSnake = tempoPassato*15 - 5*10;
-    }else{
-        mvprintw(Maxy/2 + 1, Maxx/3, "%d", tempoPassato*10);
-        scoreSnake = tempoPassato*10;
-    }
+// Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
+Serpente::Serpente(WINDOW * win, char c, int lenght){
     
-    refresh();
-}
-
-// Returns true if the cell at (y, x) in the window is empty (a space)
-bool isCellEmpty(WINDOW* win, int y, int x) {
-    chtype ch = mvwinch(win, y, x);
-    char currentChar = ch & A_CHARTEXT;
-    return (currentChar == ' ');
-}
-
-// Initializes the serpent and fruit objects
-void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& livello) {
-    serpent = new Serpente(win, 'o', 7);
-    frutto = new Mela(win, -1, -1, '$');
-    livello = new level();
-    livello->setLevel(1);
-    
-}
-
-// Displays the start message, waits for a key press, then clears it.
-// Only uses a single input parameter.
-void displayStartMessage(WINDOW* win) {
-    mvwprintw(win, 1, 10, "Press something to start..");
-    wrefresh(win);
-   
-}
-
-// Spawns the fruit ensuring the cell is empty
-// Uses exactly four parameters: the game window, the fruit object,
-// and two integer references for the fruit's coordinates.
-// The boundaries are determined using global constants Maxx and Maxy.
-void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
-    fruitX = (rand() % (Maxx - 3)) + 1;
-    fruitY = (rand() % (Maxy - 3)) + 1;
-    while (!isCellEmpty(win, fruitY, fruitX)) {
-        fruitX = rand() % (Maxx - 3) + 1;
-        fruitY = (rand() % (Maxy - 3)) + 1;
-    }
-    frutto->Spawn(fruitX, fruitY);
-}
-
-// The main game function is now a void function with no input parameters.
-int start_game() {
-    srand(time(NULL));
-    initscr();
-    curs_set(0);
-    noecho();
-
-    clock_t lastAppleCheck = clock();
-    clock_t lastMoveCheck = clock();
-    clock_t lastLevelCheck = clock();
-    int appleDelay = CLOCKS_PER_SEC * 5;
-    int moveDelay = (CLOCKS_PER_SEC / 2);
-    int levelDelay = CLOCKS_PER_SEC * 3;
-
-    int xMax, yMax;
-    getmaxyx(stdscr, yMax, xMax);
-
-    // Create the game window with dimensions based on global constants.
-    WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
-    box(win, 0, 0);
-
-    int fruitX, fruitY;
-
-    Serpente *serpent;
-    Mela *frutto;
-    level *livello;
-    initializeGame(win, serpent, frutto, livello);
-
-    displayStartMessage(win);
-
-    int firstKey = wgetch(win);
-    if (firstKey == (char)27) {  // Se è ESC, esci subito
-        endwin();
-        return 0;
+    this->win = win; 
+    character = c;
+    head = new body{Maxx/2, Maxy/2, nullptr};
+    headX = Maxx/2;
+    headY = Maxy/2;
+    body* current = head;
+    // Il serpente ha inizialmente ogni pezzo alle stesse coordinate.
+    for (int i = 1; i < lenght; i++) {
+        body* newbody = new body{Maxy/2, Maxx/2, nullptr};
+        current->next = newbody;
+        current = newbody;
     }
 
-    clock_t startTimeFromGame = clock();
-    lastMoveCheck = clock();
-    nodelay(win, true);  // Abilita input non bloccante
-    
-    // Pulisci il messaggio iniziale
-    mvwprintw(win, 1, 10, "                          ");
-    wrefresh(win);
-
-    bool gameOver = false;
-
-    while (true) {
-        clock_t now = clock();
-        
-        if (gameOver) break;
-
-        if(now - lastMoveCheck >= moveDelay){
-            if (serpent->getMove() == 27) break;;
-            lastMoveCheck = now;
-        }
-        
-        if(!frutto->isOn()){
-            mvwprintw(stdscr, Maxy/2 + 2, Maxx/3, "         ");
-            mvwprintw(stdscr, Maxy/2 + 2, Maxx/3, "Mangiato!");
-            wrefresh(stdscr);
-        }
-        else {
-            mvprintw(Maxy/2 + 2, Maxx/3, "         ");
-            mvprintw(Maxy/2 + 2, Maxx/3, "%d %d", fruitX, fruitY);
-            mvprintw(Maxy/2 + 3, Maxx/3, "         ");
-            mvprintw(Maxy/2 + 3, Maxx/3, "%d %d", frutto->xPos(), frutto->yPos());
-            wrefresh(stdscr);
-        }
-
-        tempoPassato = getElapsedTime(startTimeFromGame);
-        punteggio();
-
-        if(frutto->check(serpent)){
-            mvwaddch(win, frutto->yPos(), frutto->xPos(), ' ');
-            lastAppleCheck = clock();
-            frutto->off();
-        }
-
-        if (!frutto->isOn() && now - lastAppleCheck >= appleDelay) {
-            spawnFruit(win, frutto, fruitX, fruitY);
-        }
-
-        if(now - lastLevelCheck >= levelDelay){
-
-            if(livello->getId() == 10) livello->setLevel(1);
-            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "         ");
-            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "Livello %d", livello->getId());
-            
-            livello->nextLevel();
-            moveDelay = (CLOCKS_PER_SEC / 2) / livello->getId();
-            lastLevelCheck = now;
-        }
-
-        serpent->display();
-        box(win, 0, 0);
-        wrefresh(win);
-        
-    }
-
-    endwin();
-    if(tempoPassato > 0){
-        return scoreSnake;
-    }
-    return 0;
+    keypad(this->win, true);
+    character = c;
 }
 
- 
-// int main(int argc, char ** argv){
-//     srand(time(NULL));
-//     initscr();
-//     curs_set(0);
-//     noecho();
+void Serpente::moveBy(int dx, int dy) {
+    headX += dx;
+    headY += dy;
     
-//     int xMax, yMax;
+    // Wrap-around horizontal boundaries.
+    if (headX < 1) {
+        headX = Maxx - 2;
+    } else if (headX > Maxx - 2) {
+        headX = 1;
+    }
     
-//     getmaxyx(stdscr, yMax, xMax);
+    // Wrap-around vertical boundaries.
+    if (headY < 1) {
+        headY = Maxy - 2;
+    } else if (headY > Maxy - 2) {
+        headY = 1;
+    }
     
-//     WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
-//     box(win, 0, 0);
+    // Update the body.
+    head = addBody(headY, headX);
+    body *delTail = tail();
+    body *newTail = prevTail();
+    delete delTail;
+    newTail->next = nullptr;
+}
 
-//     bool firstMove = true;
-//     int fruitX;
-//     int fruitY;
-    
-//     Serpente *serpent = new Serpente(win, '~', 7);
-//     Mela *frutto = new Mela(win, -1, -1, '$');
-    
-//     while(serpent->getMove() != (char)27){
+// Movimento in alto.
+void Serpente::moveUp(){
+    moveBy(0, -1);
+}
+
+void Serpente::moveDown(){
+    moveBy(0, 1);
+}
+
+void Serpente::moveLeft(){
+    moveBy(-1, 0);
+}
+
+void Serpente::moveRight(){
+    moveBy(1, 0);
+}
+
+
+void Serpente::defaultMove(){
+    switch(dir){
+        case UP:
+            blank();
+            moveUp();
+            break;
         
-//         if(firstMove){
-//             firstMove = false;
-//             nodelay(win, true);
-//         }
+        case DOWN:
+            blank();
+            moveDown();
+            break;
 
-//         if(!frutto->isOn()){
-            
-//             fruitX = rand() % (Maxx - 2) + 1;
-//             fruitY = rand() % (Maxy - 2) + 1;
-//             while(!isCellEmpty(win, fruitY, fruitX)){
-//                 fruitX = rand() % (Maxx - 2) + 1;
-//                 fruitY = rand() % (Maxy - 2) + 1;
-//             }
-//             frutto->Spawn(fruitX, fruitY);
+        case LEFT:
+            blank();    
+            moveLeft();
+            break;
 
-//         }
+        case RIGHT:
+            blank();
+            moveRight();
+            break;
+        default:
+            break;
         
-//         serpent->display();
-//         wrefresh(win);
-//     }
-    
-
-    
-
-    
-    
-//     endwin();
-//     return 0;
-// }
+    }
+}
 
 
+static Direction getDesiredDirection(int key, Direction current) {
+    struct Mapping {
+        int key;
+        Direction newDir;
+        Direction opposite;
+    };
 
+    // Lookup table for keys and their associated direction and opposite.
+    static const Mapping mappings[] = {
+        { KEY_UP,    UP,    DOWN },
+        { KEY_DOWN,  DOWN,  UP },
+        { KEY_LEFT,  LEFT,  RIGHT },
+        { KEY_RIGHT, RIGHT, LEFT }
+    };
+
+    // Iterate through the mappings and if the key matches, check for a reversal.
+    for (const auto& m : mappings) {
+        if (m.key == key) {
+            return (current == m.opposite) ? current : m.newDir;
+        }
+    }
+    return current;
+}
+
+// Helper function that executes the move corresponding to the new direction.
+static void performMove(Serpente* self, Direction newDir) {
+    switch(newDir) {
+        case UP:
+            self->moveUp();
+            break;
+        case DOWN:
+            self->moveDown();
+            break;
+        case LEFT:
+            self->moveLeft();
+            break;
+        case RIGHT:
+            self->moveRight();
+            break;
+        default:
+            break;
+    }
+}
+
+// Refactored updateDirection: it tries to update the direction based on key press,
+// and if a valid change is found it updates the state and performs the proper move.
+static bool updateDirection(Serpente* self, int key) {
+    Direction desiredDir = getDesiredDirection(key, self->dir);
+    if (desiredDir != self->dir) {
+        self->blank();
+        self->dir = desiredDir;
+        performMove(self, desiredDir);
+        return true;
+    }
+    return false;
+}
+
+
+// Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
+int Serpente::getMove(){
+    int moveKey = wgetch(this->win);
+    // If updateDirection returns false, then no valid change occurred.
+    if (!updateDirection(this, moveKey)) {
+        
+        defaultMove();
+    }
+    return moveKey;
+}
+
+// Aggiorna le coordinate del serpente sulla matrice del display
+void Serpente::display(){
+    body *current = head;
+    Utils::initColors();
+    wattron(win, COLOR_PAIR(1));
+    mvwaddch(win, headY, headX, '@');  // Testa = '@'
+    wattroff(win, COLOR_PAIR(1));
+
+    current = current->next;
+
+    // Corpo
+    while(current != nullptr) {
+            mvwaddch(win, current->y, current->x, character); 
+            current = current->next;
+    }
+}
+
+// Ritorna un puntatore al blocco precedente alla coda.
+body *Serpente::prevTail(){
+    body *temp = head;
+    while(temp->next != nullptr && temp->next->next != nullptr){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+// Ritorna un puntatore alla coda del serpente
+body* Serpente::tail(){
+    body *temp = head;
+    while(temp->next != nullptr){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+// Aggiunge un blocco in testa al serpente. 
+body * Serpente::addBody(int y, int x){
+    body *temp = new body{y, x, nullptr};
+    temp->next = head;
+    return temp;
+}
+
+// Sovrascrive un carattere nel display con uno spazio vuoto(ci elimino la vecchia coda).
+void Serpente::blank(){
+    body *tempTail = tail();
+    mvwaddch(win, tempTail->y, tempTail->x, ' ');
+}
+
+// Ritorna la struttura della testa del serpente.
+body *Serpente::getHeadPos(){
+    body *temp = head;
+    return temp;
+}
+
+// Una funzione sleep() in millisecondi con ctime.
+inline void Serpente::wait(int milliseconds){
+    clock_t start_time = clock();
+    clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
+
+
+    while (clock() < end_time) {
+        
+    }
+
+}
+
+
+bool Serpente::firstMove(){
+    body *corpo = head->next;
+    while(corpo != nullptr){
+        if(headX != corpo->x || headY != corpo->y) return false;
+        corpo = corpo->next;
+    }
+    return true;
+}
+
+bool Serpente::autoCollision() {
+    body *corpo = head->next;
+    while (corpo != nullptr) {
+        if (headX == corpo->x && headY == corpo->y) return true;
+        corpo = corpo->next;
+    }
+    return false;
+}

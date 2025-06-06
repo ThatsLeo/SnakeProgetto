@@ -3,10 +3,12 @@
 #pragma once
 
 level::level(){          // Crea una lista bidirezionale di 10 livelli
+    n_levels = 10;
+
     head = new level{1, NULL, NULL};
     level *tmphead = head;
     currentlvl = head;
-    for (int i = 2; i <= 10; i++){
+    for (int i = 2; i <= n_levels; i++){
         level *tmp = new level{i, NULL, tmphead};
         tmphead->next = tmp;
         tmphead = tmp;
@@ -37,7 +39,7 @@ void level::PrintLevels(WINDOW *win){         // Stampa i livelli nel menu
     level *tmp = head;
     int row = 0;
     while (tmp != NULL){
-        mvwprintw(win, 1 + row++, 2, "Livello %d", tmp->id);
+        mvwprintw(win, getmaxy(win) / 2 - n_levels / 2 + row++ , getmaxx(win) / 2 - (9 + std::to_string(tmp->id).length()) / 2, "Livello %d", tmp->id);
         tmp = tmp->next;
     }
     refresh();

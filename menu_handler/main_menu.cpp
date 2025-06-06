@@ -1,10 +1,10 @@
 #include "main_menu.h"
-#include "../gioco/Serpente.cpp"
+#include "../gioco/game.cpp"
 #include "../classifica.cpp"
 #include "../gioco/Livelli.cpp"
 
 Menu::Menu() 
-    : highlight(1), choice(0), n_choices(4) {
+    : highlight(1), choice(0), n_choices(4), old_choice(0) {
     choices[0] = "Gioca";
     choices[1] = "Classifica";
     choices[2] = "Livelli";
@@ -33,9 +33,12 @@ Menu::~Menu() {
 
 
 void Menu::print_menu() {
-    int x = 3, y = 2;  // offset scritte per esempio y piu e alto il numero piu in basso e la scritta, stessa cosa per x
     box(menu_win, 0, 0);
     for(int i = 0; i < n_choices; ++i) {
+        
+        int x = getmaxx(menu_win) /2 - std::strlen(choices[i]) / 2;
+        int y = getmaxy(menu_win)/ 2 + i - n_choices /2;
+        
         if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
             mvwprintw(menu_win, y, x, "%s", choices[i]);
@@ -85,6 +88,7 @@ int Menu::handle_user_input() {
 level levelMenu; // Creazione della lista dei livelli
 bool pressed_exit = 0;
 int game_state;
+
 void Menu::start_menu() {
 
     //Mosso creazione file iniziale dal main
@@ -95,8 +99,10 @@ void Menu::start_menu() {
     fileManager.writeFileAppend("leo:100 \n");
 
     while (true) {
-        highlight = 1; 
-        choice = 0;    
+        curs_set(0); // Nascondi il cursore
+        noecho(); // Non mostrare l'input dell'utente
+        highlight = old_choice; 
+        choice = 0;
         clear(); 
         refresh(); 
         wclear(menu_win); 
@@ -105,6 +111,7 @@ void Menu::start_menu() {
         int choice = handle_user_input(); // usate la scelta
         // Fate qualcosa con la scelta per esempio se fai gioca (1)
         // aggiungete la vostra classe con la griglia e snake etc.
+        old_choice = choice; // Salva la scelta precedente per il refresh del menu
 
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte

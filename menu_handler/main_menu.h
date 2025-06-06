@@ -18,6 +18,7 @@ class Menu {
         WINDOW *menu_win;
         int highlight;
         int choice;
+        int old_choice;
         int n_choices;
         const char *choices[4];
 

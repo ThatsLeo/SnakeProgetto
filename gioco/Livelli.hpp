@@ -7,6 +7,7 @@ private:
     level *currentlvl;
     level *head;
     level *tail;
+    
 public:
     level();
     level(int id, level *next, level *prev){
@@ -19,4 +20,5 @@ public:
     void setLevel(int id);
     void PrintLevels(WINDOW * win);     // Funzione per stampare i livelli nel menu
     int getId();
+    int n_levels;
 };
