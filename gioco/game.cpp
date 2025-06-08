@@ -3,18 +3,21 @@
 #include "Mela.cpp"
 #include "Livelli.cpp"
 
+int wrapY = Maxy + 3;
+int wrapX = Maxx + 3;
+
 int tempoPassato = 0;
 int scoreSnake = 0;
 
 
-void punteggio() {
-    mvprintw(Maxy/2, Maxx/3, "Punteggio: %d", scoreSnake);
-    refresh();
+void punteggio(WINDOW* win) {
+    mvwprintw(win, wrapY - 1, 2, "Punteggio: %d", scoreSnake);
+    wrefresh(win);
 }
 
-void tempo() {
-    mvprintw(Maxy/2 + 1, Maxx/3, "Tempo: %d", tempoPassato);
-    refresh();
+void tempo(WINDOW* win) {
+    mvwprintw(win, wrapY - 1, wrapX - 15, "Tempo: %d", tempoPassato);
+    wrefresh(win);
 }
 
 // Returns true if the cell at (y, x) in the window is empty (a space)
@@ -73,6 +76,8 @@ int start_game() {
 
     // Create the game window with dimensions based on global constants.
     WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
+    WINDOW *wrap = newwin(wrapY, wrapX, yMax/2 - Maxy/2 - 2, xMax/2 - Maxx/2 - 1);
+    wrefresh(wrap);
     box(win, 0, 0);
 
     int fruitX, fruitY;
@@ -103,7 +108,6 @@ int start_game() {
     bool gameOver = false;
 
     while (true) {
-        curs_set(0);
         
         clock_t now = clock();
 
@@ -129,8 +133,8 @@ int start_game() {
             tempoPassato++;
             lastTime = now;
         }
-        punteggio();
-        tempo();
+        punteggio(wrap);
+        tempo(wrap);
 
         if (serpent->autoCollision() && !serpent->firstMove()) {
             gameOver = true;
