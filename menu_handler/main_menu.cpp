@@ -139,6 +139,7 @@ void Menu::start_menu() {
             WINDOW * insideBox;
             insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
             levelMenu.PrintLevels(insideBox);
+
             wrefresh(insideBox);
             // wclear(menu_win);
             // wrefresh(menu_win);
@@ -157,7 +158,7 @@ void Menu::start_menu() {
             //     levelMenu.PrintLevels();
             // }
         }
-         else if (choice == 4) { 
+         else if (choice == 4) {
             break;
         }else{
             mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);

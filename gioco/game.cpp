@@ -41,10 +41,7 @@ void displayStartMessage(WINDOW* win) {
    
 }
 
-// Spawns the fruit ensuring the cell is empty
-// Uses exactly four parameters: the game window, the fruit object,
-// and two integer references for the fruit's coordinates.
-// The boundaries are determined using global constants Maxx and Maxy.
+// Genera il frutto in una posizione casuale e vuota.
 void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
     fruitX = (rand() % (Maxx - 3)) + 1;
     fruitY = (rand() % (Maxy - 3)) + 1;
@@ -109,8 +106,6 @@ int start_game() {
         curs_set(0);
         
         clock_t now = clock();
-        
-        if (gameOver) break;
 
         if(now - lastMoveCheck >= moveDelay){
             if (serpent->getMove() == 27) break;
@@ -166,6 +161,14 @@ int start_game() {
         serpent->display();
         box(win, 0, 0);
         wrefresh(win);
+
+        if (gameOver){
+            delete serpent;
+            delete frutto;
+            delete livello;
+            delwin(win);
+            break;
+        }
         
     }
 
