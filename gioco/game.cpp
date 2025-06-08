@@ -63,7 +63,7 @@ int start_game() {
     clock_t lastMoveCheck = clock();
     clock_t lastLevelCheck = clock();
     int appleDelay = CLOCKS_PER_SEC * 5;
-    int moveDelay = (CLOCKS_PER_SEC / 2);
+    int moveDelay = CLOCKS_PER_SEC / 4;
     int levelDelay = CLOCKS_PER_SEC * 3;
 
     scoreSnake = 0;
@@ -108,7 +108,7 @@ int start_game() {
         clock_t now = clock();
 
         if(now - lastMoveCheck >= moveDelay){
-            if (serpent->getMove() == 27) break;
+            if (serpent->getMove() == (char)27) break;
             lastMoveCheck = now;
         }
         
@@ -153,8 +153,8 @@ int start_game() {
             mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "         ");
             mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "Livello %d", livello->getId());
             
-            livello->nextLevel();
-            moveDelay = (CLOCKS_PER_SEC / 2) / livello->getId();
+            //livello->nextLevel();
+            moveDelay = ((CLOCKS_PER_SEC / 4) / livello->getId());
             lastLevelCheck = now;
         }
 
