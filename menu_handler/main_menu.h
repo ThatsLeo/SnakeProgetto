@@ -14,6 +14,7 @@ class Menu {
         void print_menu();
         void process_input(int c);
         int handle_user_input();
+        void gameOver(int game_state);
 
         WINDOW *menu_win;
         int highlight;

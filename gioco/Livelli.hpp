@@ -1,7 +1,7 @@
 #pragma once
 class level{        // Classe per la gestione dei livelli
 private:
-    int id;         // Identificatore del livello
+    int id;          // ID del livello         
     level *next;
     level *prev;
     level *currentlvl;
@@ -19,6 +19,7 @@ public:
     void prevLevel();
     void setLevel(int id);
     void PrintLevels(WINDOW * win);     // Funzione per stampare i livelli nel menu
+    int processInput(int c);
     int getId();
     int n_levels;
 };

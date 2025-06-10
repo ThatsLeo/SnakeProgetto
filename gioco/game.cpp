@@ -3,12 +3,19 @@
 #include "Mela.cpp"
 #include "Livelli.cpp"
 
-int wrapY = Maxy + 3;
+int wrapY = Maxy + 2;
 int wrapX = Maxx + 3;
 
 int tempoPassato = 0;
 int scoreSnake = 0;
 
+// Initializes the serpent and fruit objects
+void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& livello) {
+    serpent = new Serpente(win, 'o', 7);
+    frutto = new Mela(win, -1, -1, '$');
+    livello = new level();
+    livello->setLevel(levelChoosen);
+}
 
 void punteggio(WINDOW* win) {
     mvwprintw(win, wrapY - 1, 2, "Punteggio: %d", scoreSnake);
@@ -20,6 +27,11 @@ void tempo(WINDOW* win) {
     wrefresh(win);
 }
 
+void printLivello(WINDOW *win, level* livello){
+    mvwprintw(win, 0, 2, "Livello: %d", levelChoosen);
+    wrefresh(win);
+}
+
 // Returns true if the cell at (y, x) in the window is empty (a space)
 bool isCellEmpty(WINDOW* win, int y, int x) {
     chtype ch = mvwinch(win, y, x);
@@ -27,14 +39,6 @@ bool isCellEmpty(WINDOW* win, int y, int x) {
     return (currentChar == ' ');
 }
 
-// Initializes the serpent and fruit objects
-void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& livello) {
-    serpent = new Serpente(win, 'o', 7);
-    frutto = new Mela(win, -1, -1, '$');
-    livello = new level();
-    livello->setLevel(1);
-    
-}
 
 // Displays the start message, waits for a key press, then clears it.
 // Only uses a single input parameter.
@@ -60,32 +64,31 @@ int start_game() {
     srand(time(NULL));
     initscr();
     curs_set(0);
-    
-
-    clock_t lastAppleCheck = clock();
-    clock_t lastMoveCheck = clock();
-    clock_t lastLevelCheck = clock();
-    int appleDelay = CLOCKS_PER_SEC * 5;
-    int moveDelay = CLOCKS_PER_SEC / 4;
-    int levelDelay = CLOCKS_PER_SEC * 3;
+    noecho();
 
     scoreSnake = 0;
     tempoPassato = 0;
     int xMax, yMax;
     getmaxyx(stdscr, yMax, xMax);
+    int fruitX, fruitY;
 
     // Create the game window with dimensions based on global constants.
     WINDOW *win = newwin(Maxy, Maxx, yMax/2 - Maxy/2, xMax/2 - Maxx/2);
-    WINDOW *wrap = newwin(wrapY, wrapX, yMax/2 - Maxy/2 - 2, xMax/2 - Maxx/2 - 1);
+    WINDOW *wrap = newwin(wrapY, wrapX, yMax/2 - Maxy/2 - 1, xMax/2 - Maxx/2 - 1);
     wrefresh(wrap);
     box(win, 0, 0);
-
-    int fruitX, fruitY;
 
     Serpente *serpent;
     Mela *frutto;
     level *livello;
     initializeGame(win, serpent, frutto, livello);
+
+    clock_t lastAppleCheck = clock();
+    clock_t lastMoveCheck = clock();
+    clock_t lastLevelCheck = clock();
+    int appleDelay = CLOCKS_PER_SEC * 5;
+    int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
+    int levelDelay = CLOCKS_PER_SEC * 90 / (levelChoosen); 
 
     displayStartMessage(win);
 
@@ -106,6 +109,7 @@ int start_game() {
     wrefresh(win);
 
     bool gameOver = false;
+    int bonusPoints = 100 * livello->getId();
 
     while (true) {
         
@@ -135,6 +139,7 @@ int start_game() {
         }
         punteggio(wrap);
         tempo(wrap);
+        printLivello(wrap, livello);
 
         if (serpent->autoCollision() && !serpent->firstMove()) {
             gameOver = true;
@@ -144,22 +149,22 @@ int start_game() {
             mvwaddch(win, frutto->yPos(), frutto->xPos(), ' ');
             lastAppleCheck = clock();
             frutto->off();
-            scoreSnake += 100 * livello->getId();
+            scoreSnake += bonusPoints;
         }
 
         if (!frutto->isOn() && now - lastAppleCheck >= appleDelay) {
             spawnFruit(win, frutto, fruitX, fruitY);
         }
 
-        if(now - lastLevelCheck >= levelDelay){
-
-            if(livello->getId() == livello->n_levels) livello->setLevel(1);
-            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "         ");
-            mvwprintw(stdscr, Maxy/2 - 1, Maxx/3, "Livello %d", livello->getId());
-            
-            //livello->nextLevel();
-            moveDelay = ((CLOCKS_PER_SEC / 4) / livello->getId());
-            lastLevelCheck = now;
+        if(tempoPassato >= levelDelay){
+            gameOver = true;
+            werase(win);
+            box(win, 0, 0);
+            mvwprintw(win, Maxy/2, Maxx/2 - 10, "Level Completed!");
+            mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Bonus: %d", bonusPoints);
+            scoreSnake += bonusPoints;
+            getch();
+            wrefresh(win);
         }
 
         serpent->display();
@@ -170,14 +175,12 @@ int start_game() {
             delete serpent;
             delete frutto;
             delete livello;
-            delwin(win);
             break;
         }
         
     }
-
-
-    endwin();
+    delwin(win);
+    delwin(wrap);
     if(tempoPassato > 0){
         return scoreSnake;
     }
