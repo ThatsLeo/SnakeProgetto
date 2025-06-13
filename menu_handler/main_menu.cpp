@@ -116,40 +116,7 @@ void Menu::gameOver(int game_state) {
         // New high score achieved
         mvprintw(0, startx, "Game Over\n");
         mvprintw(1, startx, "New Record!\n");
-        mvprintw(2, startx, "Press esc to return to menu\n");
-        SalvaPunteggio(game_state);
-    }
-// ========== SCORE SAVING FUNCTION ==========
-// Save player score to file (only if score is positive)
-void SalvaPunteggio(int score) {
-    if(score <= 0) return; // Don't save non-positive scores
-    
-    FileManager fileManager = FileManager();
-    char scoreEntry[100];
-    sprintf(scoreEntry, "%s:%d \n", playerName, score);
-    fileManager.writeFileAppend(scoreEntry);
-}
-
-// ========== GAME OVER HANDLING ==========
-// Handle different game ending scenarios and display appropriate messages
-void Menu::gameOver(int game_state) {
-    if(game_state == 0) {
-        // Game ended due to collision
-        SalvaPunteggio(punteggioFinale);
-        mvprintw(2, startx + 3, "Game Over\n");
-        mvprintw(3, startx + 3, "Press esc to return to menu\n");
-    } 
-    else if(game_state == BYPASSGAMEOVER) {
-        // Player returned to menu or completed level - save score
-        SalvaPunteggio(punteggioFinale);
-        SkipInput = 1; // Skip menu input to return directly to menu
-    } 
-    else {
-        // New high score achieved
-        mvprintw(0, startx, "Game Over\n");
-        mvprintw(1, startx, "New Record!\n");
-        mvprintw(2, startx, "Press esc to return to menu\n");
-        SalvaPunteggio(game_state);
+        mvprintw(2, startx, "Press esc to return to menu\n");        SalvaPunteggio(game_state);
     }
 }
 
