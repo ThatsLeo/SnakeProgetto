@@ -1,11 +1,15 @@
-// ----------------- IMPORTANTE ---------------------------------------------
-// usate sto file per aggiungere tutte le librerie che vi servono in tutti i file
-// in modo da non doverle aggiungere ogni volta
+#ifndef INCLUDE_H
+#define INCLUDE_H
 
-// Also make global variables here and global functions
-// --------------------------------------------------------------
-#pragma once
+/**
+ * @brief Global includes and definitions
+ * 
+ * This file contains all common library includes, global constants,
+ * and shared definitions used throughout the Snake game project.
+ */
 
+
+// ========== LIBRARY INCLUDES ==========
 // ----------------- IMPORTANTE ---------------------------------------------
 // usate sto file per aggiungere tutte le librerie che vi servono in tutti i file
 // in modo da non doverle aggiungere ogni volta
@@ -25,6 +29,7 @@
 #define Maxx 50                 // Game area width
 
 // ========== GLOBAL VARIABLES ==========
-static int levelChosen = 1;    // Currently selected level (default: 1)
+static int levelChoosen = 1;    // Currently selected level (default: 1)
 
 #endif // INCLUDE_H
+
