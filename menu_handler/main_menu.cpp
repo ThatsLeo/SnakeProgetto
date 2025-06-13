@@ -119,6 +119,38 @@ void Menu::gameOver(int game_state) {
         mvprintw(2, startx, "Press esc to return to menu\n");
         SalvaPunteggio(game_state);
     }
+// ========== SCORE SAVING FUNCTION ==========
+// Save player score to file (only if score is positive)
+void SalvaPunteggio(int score) {
+    if(score <= 0) return; // Don't save non-positive scores
+    
+    FileManager fileManager = FileManager();
+    char scoreEntry[100];
+    sprintf(scoreEntry, "%s:%d \n", playerName, score);
+    fileManager.writeFileAppend(scoreEntry);
+}
+
+// ========== GAME OVER HANDLING ==========
+// Handle different game ending scenarios and display appropriate messages
+void Menu::gameOver(int game_state) {
+    if(game_state == 0) {
+        // Game ended due to collision
+        SalvaPunteggio(punteggioFinale);
+        mvprintw(2, startx + 3, "Game Over\n");
+        mvprintw(3, startx + 3, "Press esc to return to menu\n");
+    } 
+    else if(game_state == BYPASSGAMEOVER) {
+        // Player returned to menu or completed level - save score
+        SalvaPunteggio(punteggioFinale);
+        SkipInput = 1; // Skip menu input to return directly to menu
+    } 
+    else {
+        // New high score achieved
+        mvprintw(0, startx, "Game Over\n");
+        mvprintw(1, startx, "New Record!\n");
+        mvprintw(2, startx, "Press esc to return to menu\n");
+        SalvaPunteggio(game_state);
+    }
 }
 
 
@@ -198,8 +230,11 @@ void Menu::start_menu() {
         wrefresh(menu_win); 
 
         int choice = handle_user_input(); // usate la scelta
+        // Fate qualcosa con la scelta per esempio se fai gioca (1)
+        // aggiungete la vostra classe con la griglia e snake etc.
         old_choice = choice; // Salva la scelta precedente per il refresh del menu
 
+        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
             game_state = start_game();
             gameOver(game_state);
@@ -225,6 +260,22 @@ void Menu::start_menu() {
             }
             
             wrefresh(insideBox);
+            // wclear(menu_win);
+            // wrefresh(menu_win);
+            // levelMenu.PrintLevels();
+            // int c;
+            // while (true) {
+            //     c = wgetch(menu_win);
+            //     if (c == KEY_UP) {
+            //         levelMenu.prevLevel();
+            //     } else if (c == KEY_DOWN) {
+            //         levelMenu.nextLevel();
+            //     } else if (c == 10) { // Enter key
+            //         break; // Exit the loop to return to the menu
+            //     }
+            //     clear();
+            //     levelMenu.PrintLevels();
+            // }
         }
          else if (choice == 4) {
             break;
@@ -232,49 +283,8 @@ void Menu::start_menu() {
             mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         }
 
-        // Fate qualcosa con la scelta per esempio se fai gioca (1)
-        // aggiungete la vostra classe con la griglia e snake etc.
-        old_choice = choice; // Salva la scelta precedente per il refresh del menu        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
-        switch (choice) {
-            case 1:
-                game_state = start_game();
-                gameOver(game_state);
-                break;
-                
-            case 2:
-                Utils::initColors();
-                Classifica::start_classifica();
-                break;
-                
-            case 3:
-                wclear(menu_win);
-                wrefresh(menu_win);
-                WINDOW * insideBox;
-                insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
-                keypad(insideBox, TRUE);
-                while(true){
-                    levelMenu.PrintLevels(insideBox);
-                    int c = levelMenu.processInput(wgetch(insideBox));
-                    if (c > 0){
-                        game_state = start_game();
-                        gameOver(game_state);
-                        break;
-                    }
-                    else if (c == -2) break;
-                }
-                
-                wrefresh(insideBox);
-                delwin(insideBox); // Clean up the window
-                break;
-                
-            case 4:
-                return; // Exit the menu loop
-                
-            default:
-                mvprintw(0, 0, "Per la scelta n: %d o %s out of bound bug \n", choice, choices[choice - 1]);
-                break;        }
+        // invece che printare sta linea usate il vostro.
 
-        // Clear and refresh for next iteration
         clrtoeol();
         refresh();
         int c;
