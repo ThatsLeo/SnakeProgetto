@@ -11,7 +11,7 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     headY = Maxy/2;
     
     // Set initial direction to RIGHT
-    dir = RIGHT;
+    dir = UP;
     
     body* current = head;
     // Il serpente ha inizialmente ogni pezzo alle stesse coordinate.
