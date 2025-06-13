@@ -161,8 +161,9 @@ int start_game() {
     clock_t lastMoveCheck = clock();
     clock_t lastTime = clock();
     int appleDelay = CLOCKS_PER_SEC;
-    int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
-    int levelDelay = 45;     displayStartMessage(win);
+    double moveDelay = CLOCKS_PER_SEC / (6.0 + (levelChoosen - 1) * 0.666);
+    int levelDelay = 45;     
+    displayStartMessage(win);
 
     int firstKey = wgetch(win);
     if (firstKey == (char)27) {  // If ESC is pressed, show pause menu
@@ -175,7 +176,6 @@ int start_game() {
         }
     }
 
-    clock_t lastTime = clock();
     clock_t startTimeFromGame = clock();
     lastMoveCheck = clock();
     
@@ -188,6 +188,7 @@ int start_game() {
     wrefresh(win);
 
     bool gameOver = false;
+    bool levelCompleted = false;
     int bonusPoints = 100 * livello->getId();    while (true) {
         punteggioFinale = scoreSnake;
         clock_t now = clock();
@@ -224,11 +225,15 @@ int start_game() {
             gameOver = true;
             werase(win);
             box(win, 0, 0);
-            mvwprintw(win, Maxy/2, Maxx/2 - 10, "Level Completed!");
-            mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Bonus: %d", bonusPoints);
+            mvwprintw(win, Maxy/2 - 1, Maxx/2 - 10, "Level Completed!");
+            mvwprintw(win, Maxy/2, Maxx/2 - 10, "Bonus: %d", bonusPoints);
+            mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Press ESC to continue");
             scoreSnake += bonusPoints;
             wrefresh(win);
-            getch();
+            while(1){
+                int c = wgetch(win);
+                if (c == (char)27 || c == (char)10)break;
+            }
         }
 
         serpent->display();
