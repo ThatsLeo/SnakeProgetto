@@ -91,7 +91,7 @@ int start_game() {
     clock_t lastMoveCheck = clock();
     clock_t lastLevelCheck = clock();    
     int appleDelay = CLOCKS_PER_SEC;
-    int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
+    double moveDelay = CLOCKS_PER_SEC / (6.0 + (levelChoosen - 1) * 0.666);
     int levelDelay = 45;     displayStartMessage(win);
 
     int firstKey = wgetch(win);
@@ -118,6 +118,7 @@ int start_game() {
     wrefresh(win);
 
     bool gameOver = false;
+    bool levelCompleted = false;
     int bonusPoints = 100 * livello->getId();    while (true) {
         punteggioFinale = scoreSnake;
 
@@ -180,21 +181,25 @@ int start_game() {
         }
 
         if(tempoPassato >= levelDelay){
-            gameOver = true;
+            levelCompleted = true;
             werase(win);
             box(win, 0, 0);
-            mvwprintw(win, Maxy/2, Maxx/2 - 10, "Level Completed!");
-            mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Bonus: %d", bonusPoints);
+            mvwprintw(win, Maxy/2 - 1, Maxx/2 - 10, "Level Completed!");
+            mvwprintw(win, Maxy/2, Maxx/2 - 10, "Bonus: %d", bonusPoints);
+            mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Press ESC to continue");
             scoreSnake += bonusPoints;
             wrefresh(win);
-            getch();
+            while(1){
+                int c = wgetch(win);
+                if (c == (char)27 || c == (char)10) break;
+            }
         }
 
         serpent->display();
         box(win, 0, 0);
         wrefresh(win);
 
-        if (gameOver){
+        if (gameOver || levelCompleted) {
             delete serpent;
             delete frutto;
             delete livello;
