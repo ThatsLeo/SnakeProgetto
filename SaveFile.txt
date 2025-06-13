@@ -1,4 +1,3 @@
 Classifica
-Guest:11200
-Fra:200
-leo:100
+Fra:200 
+leo:100 

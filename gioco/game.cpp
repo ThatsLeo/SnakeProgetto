@@ -2,6 +2,10 @@
 #include "Serpente.cpp"
 #include "Mela.cpp"
 #include "Livelli.cpp"
+#include <cstring>
+
+// Function declaration
+bool showPauseMenu(WINDOW* gameWin);
 
 int wrapY = Maxy + 2;
 int wrapX = Maxx + 3;
@@ -65,16 +69,6 @@ int start_game() {
     initscr();
     curs_set(0);
     noecho();
-<<<<<<< HEAD
-
-    clock_t lastAppleCheck = clock();
-    clock_t lastMoveCheck = clock();
-    clock_t lastLevelCheck = clock();
-    int appleDelay = CLOCKS_PER_SEC * 5;
-    int moveDelay = CLOCKS_PER_SEC / 4;
-    int levelDelay = CLOCKS_PER_SEC * 3;
-=======
->>>>>>> eec15c15ed74a862fd9a2ee26f7e40d4ac2e5082
 
     scoreSnake = 0;
     tempoPassato = 0;
@@ -95,17 +89,19 @@ int start_game() {
 
     clock_t lastAppleCheck = clock();
     clock_t lastMoveCheck = clock();
-    clock_t lastLevelCheck = clock();
-    int appleDelay = CLOCKS_PER_SEC * 5;
+    clock_t lastLevelCheck = clock();    int appleDelay = CLOCKS_PER_SEC * 5;
     int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
     int levelDelay = CLOCKS_PER_SEC * 90 / (levelChoosen); 
 
     displayStartMessage(win);
 
     int firstKey = wgetch(win);
-    if (firstKey == (char)27) {  // Se è ESC, esci subito
-        endwin();
-        return 0;
+    if (firstKey == (char)27) {  // If ESC is pressed, show pause menu
+        bool shouldResume = showPauseMenu(win);
+        if (!shouldResume) {
+            endwin();
+            return 0;
+        }
     }
 
     clock_t lastTime = clock();
@@ -123,10 +119,16 @@ int start_game() {
 
     while (true) {
         
-        clock_t now = clock();
-
-        if(now - lastMoveCheck >= moveDelay){
-            if (serpent->getMove() == (char)27) break;
+        clock_t now = clock();        if(now - lastMoveCheck >= moveDelay){
+            int key = serpent->getMove();
+            if (key == (char)27) {
+                // Show pause menu instead of breaking
+                bool shouldResume = showPauseMenu(win);
+                if (!shouldResume) {
+                    break; // Exit game if user chose "Exit Game"
+                }
+                // If resuming, continue the game loop
+            }
             lastMoveCheck = now;
         }
         
@@ -195,6 +197,70 @@ int start_game() {
         return scoreSnake;
     }
     return 0;
+}
+
+bool showPauseMenu(WINDOW* gameWin) {
+    // Create pause menu window
+    int menuHeight = 8;
+    int menuWidth = 20;
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+    int startY = (yMax - menuHeight) / 2;
+    int startX = (xMax - menuWidth) / 2;
+    
+    WINDOW* pauseWin = newwin(menuHeight, menuWidth, startY, startX);
+    keypad(pauseWin, TRUE);
+    
+    const char* options[] = {"Resume", "Exit Game"};
+    int numOptions = 2;
+    int highlight = 1;
+    int choice = 0;
+    
+    while (true) {
+        // Draw pause menu
+        werase(pauseWin);
+        box(pauseWin, 0, 0);
+        mvwprintw(pauseWin, 1, (menuWidth - 10) / 2, "GAME PAUSED");
+        
+        for (int i = 0; i < numOptions; i++) {
+            int y = 3 + i;
+            int x = (menuWidth - strlen(options[i])) / 2;
+            
+            if (highlight == i + 1) {
+                wattron(pauseWin, A_REVERSE);
+                mvwprintw(pauseWin, y, x, "%s", options[i]);
+                wattroff(pauseWin, A_REVERSE);
+            } else {
+                mvwprintw(pauseWin, y, x, "%s", options[i]);
+            }
+        }
+        wrefresh(pauseWin);
+        
+        int c = wgetch(pauseWin);
+        switch (c) {
+            case KEY_UP:
+                highlight = (highlight == 1) ? numOptions : highlight - 1;
+                break;
+            case KEY_DOWN:
+                highlight = (highlight == numOptions) ? 1 : highlight + 1;
+                break;
+            case 10: // Enter
+                choice = highlight;
+                break;
+            case 27: // ESC - resume game
+                choice = 1;
+                break;
+        }
+        
+        if (choice != 0) break;
+    }
+    
+    delwin(pauseWin);
+    
+    // Redraw the game window
+    wrefresh(gameWin);
+    
+    return (choice == 1); // true = resume, false = exit
 }
 
 

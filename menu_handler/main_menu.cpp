@@ -152,7 +152,6 @@ void Menu::start_menu() {
                 else if (c == -2) break;
             }
             
-
             wrefresh(insideBox);
             // wclear(menu_win);
             // wrefresh(menu_win);
