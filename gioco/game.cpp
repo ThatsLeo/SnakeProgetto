@@ -164,8 +164,8 @@ int start_game() {
             mvwprintw(win, Maxy/2, Maxx/2 - 10, "Level Completed!");
             mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Bonus: %d", bonusPoints);
             scoreSnake += bonusPoints;
-            getch();
             wrefresh(win);
+            getch();
         }
 
         serpent->display();
