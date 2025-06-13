@@ -175,7 +175,7 @@ int start_game() {
         }
     }
 
-    clock_t lastTime = clock();
+    lastTime = clock();
     clock_t startTimeFromGame = clock();
     lastMoveCheck = clock();
     

@@ -1,2 +1,6 @@
 Classifica
-iajodaj:100 
+miao:100 
+miao:300 
+miao:300 
+miao:300 
+miao:300 

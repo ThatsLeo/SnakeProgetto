@@ -73,7 +73,7 @@ void Classifica::start_classifica() {
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);  // Gold for 1st place
     init_pair(2, COLOR_CYAN, COLOR_BLACK);   // Silver for 2nd place  
     init_pair(3, COLOR_RED, COLOR_BLACK);     // Bronze for 3rd place
-    init_pair(4, COLOR_GREEN, COLOR_BLACK);   // Green for other entries
+    init_pair(4, COLOR_WHITE, COLOR_BLACK);   // Green for other entries
     init_pair(5, COLOR_WHITE, COLOR_BLACK);    // Cyan for header
     
     FileManager fileManager;
