@@ -99,7 +99,6 @@ int start_game() {
     if (firstKey == (char)27) {  // If ESC is pressed, show pause menu
         bool shouldResume = showPauseMenu(win);
         if (!shouldResume) {
-            endwin();
             return 0;
         }
     }
@@ -119,7 +118,8 @@ int start_game() {
 
     while (true) {
         
-        clock_t now = clock();        if(now - lastMoveCheck >= moveDelay){
+        clock_t now = clock();        
+        if(now - lastMoveCheck >= moveDelay){
             int key = serpent->getMove();
             if (key == (char)27) {
                 // Show pause menu instead of breaking
