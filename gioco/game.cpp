@@ -89,9 +89,10 @@ int start_game() {
 
     clock_t lastAppleCheck = clock();
     clock_t lastMoveCheck = clock();
-    clock_t lastLevelCheck = clock();    int appleDelay = CLOCKS_PER_SEC * 5;
+    clock_t lastLevelCheck = clock();    
+    int appleDelay = CLOCKS_PER_SEC;
     int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
-    int levelDelay = CLOCKS_PER_SEC * 90 / (levelChoosen); 
+    int levelDelay = 45; 
 
     displayStartMessage(win);
 
@@ -130,19 +131,6 @@ int start_game() {
                 // If resuming, continue the game loop
             }
             lastMoveCheck = now;
-        }
-        
-        if(!frutto->isOn()){
-            mvwprintw(stdscr, Maxy/2 + 2, Maxx/3, "         ");
-            mvwprintw(stdscr, Maxy/2 + 2, Maxx/3, "Mangiato!");
-            wrefresh(stdscr);
-        }
-        else {
-            mvprintw(Maxy/2 + 2, Maxx/3, "         ");
-            mvprintw(Maxy/2 + 2, Maxx/3, "%d %d", fruitX, fruitY);
-            mvprintw(Maxy/2 + 3, Maxx/3, "         ");
-            mvprintw(Maxy/2 + 3, Maxx/3, "%d %d", frutto->xPos(), frutto->yPos());
-            wrefresh(stdscr);
         }
 
         if(now - lastTime >= CLOCKS_PER_SEC){
