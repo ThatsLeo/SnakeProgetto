@@ -157,67 +157,68 @@ void Classifica::start_classifica() {
             maxNameLen = nameLen;
         }
     }
+      // Calculate window size - make it wider to ensure text fits
+    // Width: "10. " + max_name_length + ": " + max_score_digits + extra padding
+    // Assuming max score is 6 digits, plus generous padding
+    windowWidth = 4 + maxNameLen + 2 + 8 + 8; // "10. name: 999999" + extra padding
+    if (windowWidth < 35) windowWidth = 35; // Increased minimum width for header
+    if (windowWidth > 80) windowWidth = 80; // Increased maximum width for better display
     
-    // Calculate window size
-    // Width: "10. " + max_name_length + ": " + max_score_digits + padding
-    // Assuming max score is 6 digits, plus some padding
-    windowWidth = 4 + maxNameLen + 2 + 6 + 4; // "10. name: 999999" + padding
-    if (windowWidth < 25) windowWidth = 25; // Minimum width for header
-    if (windowWidth > 60) windowWidth = 60; // Maximum reasonable width
-    
-    // Height: header (3 lines) + entries + footer (2 lines) + borders (2)
+    // Height: header (3 lines) + entries + footer lines + borders (2)
     if (displayCount == 0) {
-        windowHeight = 3 + 1 + 2 + 2; // Header + "No scores" + footer + borders
+        windowHeight = 3 + 1 + 3 + 2; // Header + "No scores" + footer + borders
     } else {
-        windowHeight = 3 + displayCount + 2 + 2; // Header + entries + footer + borders
+        // Add extra height for potential overflow message and more spacing
+        int extraLines = (entryCount > 10) ? 2 : 1; // Extra line for overflow message
+        windowHeight = 3 + displayCount + 2 + extraLines + 2; // Header + entries + footer + borders
     }
     
-    // Get screen dimensions to center the window
+    // Get screen dimensions for positioning
     int screenHeight, screenWidth;
     getmaxyx(stdscr, screenHeight, screenWidth);
     
+    // Position window on the left side of the screen
     int startY = (screenHeight - windowHeight) / 2;
-    int startX = (screenWidth - windowWidth) / 2;
+    int startX = 2; // Fixed position on the left with small margin
     
     // Ensure window fits on screen
     if (startY < 0) startY = 0;
     if (startX < 0) startX = 0;
     if (windowHeight > screenHeight) windowHeight = screenHeight;
-    if (windowWidth > screenWidth) windowWidth = screenWidth;
-    
-    // Create display buffer
+    if (windowWidth > screenWidth - 4) windowWidth = screenWidth - 4; // Leave margin on right
+      // Create display buffer
     char displayBuffer[bufferSize];
     displayBuffer[0] = '\0';
     
-    // Add header
-    strcat(displayBuffer, "=== CLASSIFICA ===\n\n");
+    // Add header with better spacing
+    strcat(displayBuffer, "  === CLASSIFICA ===\n\n");
     
     if (displayCount == 0) {
-        strcat(displayBuffer, "Nessun punteggio registrato.\n");
+        strcat(displayBuffer, "  Nessun punteggio registrato.\n\n");
     } else {
         char lineBuffer[128];
         for (int i = 0; i < displayCount; i++) {
-            // Create formatted line: "Position. Name: Score"
-            sprintf(lineBuffer, "%d. %s: %d\n", i + 1, entries[i].name, entries[i].score);
+            // Create formatted line with better spacing: "  Position. Name: Score"
+            sprintf(lineBuffer, "  %d. %s: %d\n", i + 1, entries[i].name, entries[i].score);
             strcat(displayBuffer, lineBuffer);
         }
         
         // Add note if there are more than 10 entries
         if (entryCount > 10) {
-            strcat(displayBuffer, "\n(Mostrando i primi 10 punteggi)\n");
+            strcat(displayBuffer, "\n  (Mostrando i primi 10 punteggi)\n");
         }
     }
     
-    strcat(displayBuffer, "\nPremi un tasto per tornare al menu...");
-    
-    // Create dynamic window
+    strcat(displayBuffer, "\n  Premi un tasto per tornare\n  al menu...");
+      // Create dynamic window
     WINDOW* classWindow = newwin(windowHeight, windowWidth, startY, startX);
     if (classWindow) {
         // Draw border
         box(classWindow, 0, 0);
         
-        // Display content with some padding from borders
-        Utils::InlinedTextWindow(classWindow, 2, 1, displayBuffer);
+        // Display content with proper padding from borders
+        // Using x=1, y=1 to start right after the border
+        Utils::InlinedTextWindow(classWindow, 1, 1, displayBuffer);
         wrefresh(classWindow);
         
         // Wait for user input
@@ -226,10 +227,10 @@ void Classifica::start_classifica() {
         // Clean up
         delwin(classWindow);
     } else {
-        // Fallback display
+        // Fallback display - also positioned on the left
         clear();
         mvprintw(2, 2, "%s", displayBuffer);
         refresh();
         getch();
-    }    
+    }
 }

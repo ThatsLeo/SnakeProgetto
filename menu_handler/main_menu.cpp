@@ -146,8 +146,7 @@ void Menu::start_menu() {
             
         }else if (choice == 2) { 
             Utils::initColors();
-            Classifica::start_classifica();
-        }else if (choice == 3){
+            Classifica::start_classifica();        }else if (choice == 3){
             wclear(menu_win);
             wrefresh(menu_win);
             WINDOW * insideBox;
@@ -165,6 +164,7 @@ void Menu::start_menu() {
             }
             
             wrefresh(insideBox);
+            delwin(insideBox); // Clean up the window
         }
          else if (choice == 4) {
             break;

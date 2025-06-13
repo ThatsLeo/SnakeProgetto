@@ -94,12 +94,13 @@ int start_game() {
     int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
     int levelDelay = 45; 
 
-    displayStartMessage(win);
-
-    int firstKey = wgetch(win);
+    displayStartMessage(win);    int firstKey = wgetch(win);
     if (firstKey == (char)27) {  // If ESC is pressed, show pause menu
         bool shouldResume = showPauseMenu(win);
         if (!shouldResume) {
+            // Clean up windows before returning
+            delwin(win);
+            delwin(wrap);
             return 0;
         }
     }
@@ -122,11 +123,13 @@ int start_game() {
 
         clock_t now = clock();        
         if(now - lastMoveCheck >= moveDelay){
-            int key = serpent->getMove();
-            if (key == (char)27) {
+            int key = serpent->getMove();            if (key == (char)27) {
                 // Show pause menu instead of breaking
                 bool shouldResume = showPauseMenu(win);
                 if (!shouldResume) {
+                    // Clean up windows before returning
+                    delwin(win);
+                    delwin(wrap);
                     return 100; // Exit game if user chose "Exit Game"
                 }
                 // If resuming, continue the game loop
