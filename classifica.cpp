@@ -69,11 +69,12 @@ void Classifica::start_classifica() {
     curs_set(0);
     noecho();
     start_color();
-    
-    // Initialize color pairs
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    init_pair(3, COLOR_CYAN, COLOR_BLACK);
+      // Initialize color pairs
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);  // Gold for 1st place
+    init_pair(2, COLOR_CYAN, COLOR_BLACK);   // Silver for 2nd place  
+    init_pair(3, COLOR_RED, COLOR_BLACK);     // Bronze for 3rd place
+    init_pair(4, COLOR_GREEN, COLOR_BLACK);   // Green for other entries
+    init_pair(5, COLOR_WHITE, COLOR_BLACK);    // Cyan for header
     
     FileManager fileManager;
     
@@ -209,16 +210,54 @@ void Classifica::start_classifica() {
         }
     }
     
-    strcat(displayBuffer, "\n  Premi un tasto per tornare\n  al menu...");
-      // Create dynamic window
+    strcat(displayBuffer, "\n  Premi un tasto per tornare\n  al menu...");    // Create dynamic window
     WINDOW* classWindow = newwin(windowHeight, windowWidth, startY, startX);
     if (classWindow) {
         // Draw border
         box(classWindow, 0, 0);
         
-        // Display content with proper padding from borders
-        // Using x=1, y=1 to start right after the border
-        Utils::InlinedTextWindow(classWindow, 1, 1, displayBuffer);
+        // Display content with colors manually instead of using InlinedTextWindow
+        int currentY = 1;
+        
+        // Display header with cyan color
+        wattron(classWindow, COLOR_PAIR(5));
+        mvwprintw(classWindow, currentY++, 2, "=== CLASSIFICA ===");
+        wattroff(classWindow, COLOR_PAIR(5));
+        currentY++; // Empty line
+        
+        if (displayCount == 0) {
+            mvwprintw(classWindow, currentY, 2, "Nessun punteggio registrato.");
+        } else {
+            // Display each entry with appropriate color
+            for (int i = 0; i < displayCount; i++) {
+                int colorPair;
+                if (i == 0) {
+                    colorPair = 1; // Gold for 1st place
+                } else if (i == 1) {
+                    colorPair = 2; // Silver for 2nd place
+                } else if (i == 2) {
+                    colorPair = 3; // Bronze for 3rd place
+                } else {
+                    colorPair = 4; // Green for other entries
+                }
+                
+                wattron(classWindow, COLOR_PAIR(colorPair));
+                mvwprintw(classWindow, currentY++, 2, "%d. %s: %d", i + 1, entries[i].name, entries[i].score);
+                wattroff(classWindow, COLOR_PAIR(colorPair));
+            }
+            
+            // Add note if there are more than 10 entries
+            if (entryCount > 10) {
+                currentY++;
+                mvwprintw(classWindow, currentY++, 2, "(Mostrando i primi 10 punteggi)");
+            }
+        }
+        
+        // Add footer
+        currentY++;
+        mvwprintw(classWindow, currentY++, 2, "Premi un tasto per tornare");
+        mvwprintw(classWindow, currentY, 2, "al menu...");
+        
         wrefresh(classWindow);
         
         // Wait for user input
