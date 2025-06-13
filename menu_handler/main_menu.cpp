@@ -2,8 +2,60 @@
 #include "../gioco/game.cpp"
 #include "../classifica.cpp"
 #include "../gioco/Livelli.cpp"
+#include <cstring>  // For string functions
 
 int SkipInput = 0;
+char playerName[32] = "Guest"; // Global variable to store player name
+
+// Function to get player name input
+void getPlayerName() {
+    // Create a small centered window for name input
+    int nameWinHeight = 6;
+    int nameWinWidth = 40;
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+    int nameStartY = (yMax - nameWinHeight) / 2;
+    int nameStartX = (xMax - nameWinWidth) / 2;
+    
+    WINDOW* nameWin = newwin(nameWinHeight, nameWinWidth, nameStartY, nameStartX);
+    keypad(nameWin, TRUE);
+    
+    // Clear screen and draw the input window
+    clear();
+    refresh();
+    box(nameWin, 0, 0);
+    
+    // Display prompt
+    mvwprintw(nameWin, 1, 2, "Inserisci il tuo nome:");
+    mvwprintw(nameWin, 2, 2, "> ");
+    wrefresh(nameWin);
+    
+    // Enable input display and cursor
+    echo();
+    curs_set(1);
+    
+    // Get user input
+    char tempName[32];
+    mvwgetnstr(nameWin, 2, 4, tempName, 30); // Max 30 characters
+    
+    // Copy to global variable, ensuring null termination
+    strncpy(playerName, tempName, 31);
+    playerName[31] = '\0';
+    
+    // If empty name, use default
+    if (strlen(playerName) == 0) {
+        strcpy(playerName, "Guest");
+    }
+    
+    // Restore ncurses settings
+    noecho();
+    curs_set(0);
+    
+    // Clean up
+    delwin(nameWin);
+    clear();
+    refresh();
+}
 
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4), old_choice(0) {
@@ -35,9 +87,9 @@ Menu::~Menu() {
 void SalvaPunteggio(int score) {
     if(score <= 0) return; // Non salvare punteggi negativi
     FileManager fileManager = FileManager();
-    char ssssss[100];
-    sprintf(ssssss, "Guest:%d \n", score);
-    fileManager.writeFileAppend(ssssss);
+    char scoreEntry[100];
+    sprintf(scoreEntry, "%s:%d \n", playerName, score);
+    fileManager.writeFileAppend(scoreEntry);
 }
 
 void Menu::gameOver(int game_state){
@@ -118,6 +170,9 @@ bool pressed_exit = 0;
 int game_state;
 
 void Menu::start_menu() {
+    
+    // Get player name before showing menu
+    getPlayerName();
     
     FileManager fileManager = FileManager();
 
