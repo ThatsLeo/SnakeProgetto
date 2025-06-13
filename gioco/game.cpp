@@ -57,7 +57,7 @@ int start_game() {
     srand(time(NULL));
     initscr();
     curs_set(0);
-    
+    noecho();
 
     clock_t lastAppleCheck = clock();
     clock_t lastMoveCheck = clock();
