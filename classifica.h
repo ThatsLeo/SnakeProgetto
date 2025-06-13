@@ -3,17 +3,10 @@
 
 #pragma once
 #include "includes/include.h"
-#include "file_handler/file_manager.cpp"
-#include "utils/utils.cpp"
-
-
 
 class Classifica {
-    public:  // lasciamo usare solo chiudi ed apri menu
+    public:
         static void start_classifica();
-    
-    private:
-        
 };
 
-#endif // UTILS_H
+#endif // CLASSIFICA_H

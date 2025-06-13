@@ -1,217 +1,235 @@
 #pragma once
 #include "classifica.h"
 #include "utils/utils.h"
+#include "file_handler/file_manager.h"
+#include <cstring>  // For string functions
 
-#include <iostream> // Per std::cerr se necessario, ma cercheremo di evitarlo
-#include <fstream>  // Per FileManager
-#include <string>   // Per std::string, std::stoi
-#include <vector>   // Per std::vector
-#include <sstream>  // Per std::stringstream
-#include <algorithm>// Per std::sort
-#include <cstdlib>  // Per srand
-#include <ctime>    // Per time
-#include <cstring>  // Per strncpy, strlen, strtok_r (o strtok)
-
-// Struttura per i dati del giocatore
+// Simple structure for score entries using only basic C++ features
 struct ScoreEntry {
-    std::string name;
+    char name[64];
     int score;
-    std::string original_line_prefix; // Per mantenere "Nome:"
 };
 
-// Funzione di confronto per std::sort (ordina per punteggio decrescente)
-bool compareScores(const ScoreEntry& a, const ScoreEntry& b) {
-    return a.score > b.score;
+// Simple bubble sort function to sort scores in descending order
+void sortScores(ScoreEntry* entries, int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (entries[j].score < entries[j + 1].score) {
+                // Swap entries
+                ScoreEntry temp = entries[j];
+                entries[j] = entries[j + 1];
+                entries[j + 1] = temp;
+            }
+        }
+    }
 }
 
-void Classifica::start_classifica(){
-    srand(time(NULL));
+// Simple function to convert string to integer
+int stringToInt(const char* str) {
+    int result = 0;
+    int sign = 1;
+    int i = 0;
+    
+    // Skip whitespace
+    while (str[i] == ' ' || str[i] == '\t') i++;
+    
+    // Handle negative numbers
+    if (str[i] == '-') {
+        sign = -1;
+        i++;
+    }
+    
+    // Convert digits
+    while (str[i] >= '0' && str[i] <= '9') {
+        result = result * 10 + (str[i] - '0');
+        i++;
+    }
+    
+    return result * sign;
+}
+
+// Simple function to find character in string
+char* findChar(char* str, char ch) {
+    while (*str) {
+        if (*str == ch) return str;
+        str++;
+    }
+    return nullptr;
+}
+
+// Simple function to get string length
+int getStringLength(const char* str) {
+    int len = 0;
+    while (str[len]) len++;
+    return len;
+}
+
+void Classifica::start_classifica() {
     initscr();
     curs_set(0);
     noecho();
-    start_color(); // Necessario per usare COLOR_PAIR
-
-    // Inizializza le coppie di colori che userai in InlinedTextWindow
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Esempio per la prima riga (es. titolo)
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);  // Esempio per la seconda riga
-    init_pair(3, COLOR_CYAN, COLOR_BLACK);   // Esempio per la terza riga
-    // Puoi definire più coppie se necessario
-
+    start_color();
+    
+    // Initialize color pairs
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_CYAN, COLOR_BLACK);
+    
     FileManager fileManager;
-
-    const int bufferSize = 2048; // Aumentato per sicurezza con più righe
-    char original_buffer[bufferSize];
-    char sorted_display_buffer[bufferSize]; // Buffer per il testo ordinato da visualizzare
-
-    // Leggi il file originale
-    int chNumber = fileManager.readFile(original_buffer, bufferSize); // Usa il nome file corretto
-
-    if (chNumber == 0 || (chNumber > 0 && strncmp(original_buffer, "Errore:", 7) == 0) ) {
-        // Se il file è vuoto o c'è stato un errore di lettura, visualizza il messaggio e esci
-        mvprintw(0, 0, original_buffer[0] == '\0' ? "File classifica vuoto o non trovato." : original_buffer);
+    
+    const int bufferSize = 2048;
+    const int maxEntries = 50;
+    char buffer[bufferSize];
+    ScoreEntry entries[maxEntries];
+    int entryCount = 0;
+    
+    // Read the file
+    int charsRead = fileManager.readFile(buffer, bufferSize);
+      if (charsRead == 0) {
+        // Empty file or error
+        mvprintw(10, 10, "Classifica vuota o file non trovato.");
+        mvprintw(12, 10, "Premi un tasto per continuare...");
         refresh();
         getch();
         return;
     }
-
-    std::vector<ScoreEntry> scores;
-    std::string fileContent(original_buffer);
-    std::stringstream ss_parse(fileContent);
-    std::string line;
-    std::string header_line; // Per memorizzare la prima riga "Classifica"
-
-    // 1. Leggi l'intestazione (se presente)
-    if (std::getline(ss_parse, header_line)) {
-        // Controlla se è una riga di dati o un'intestazione
-        // Se non contiene ':', assumiamo sia un'intestazione
-        if (header_line.find(':') == std::string::npos) {
-            // È un'intestazione, la gestiremo separatamente
+    
+    // Parse the file content line by line
+    char* line = buffer;
+    char* nextLine;
+    
+    while (line && *line && entryCount < maxEntries) {
+        // Find next line
+        nextLine = line;
+        while (*nextLine && *nextLine != '\n') nextLine++;
+        if (*nextLine == '\n') {
+            *nextLine = '\0';
+            nextLine++;
         } else {
-            // Non c'era un'intestazione, la prima riga è già un dato
-            // Rimetti la riga nello stream per il parsing successivo
-            // Questo è un po' macchinoso; idealmente, la logica di parsing è più robusta
-            // Ma per semplicità, se la prima riga ha ':', la consideriamo dato.
-            // Per ora, assumiamo che la prima riga sia sempre un'intestazione se non ha ':'
-            // Se la prima riga è un dato, `header_line` sarà vuota dopo il prossimo blocco
-            // e la riga verrà processata nel ciclo while.
-            // Per questo esempio, rendiamo esplicito che se non è un dato, è l'header.
-            if (header_line.find(':') == std::string::npos) {
-                 // header_line già contiene l'intestazione
-            } else {
-                // La prima riga era un dato, la processeremo nel loop.
-                // Resetta lo stream e rileggi la prima riga come dato.
-                // Questa parte è complessa con char buffer, più facile con stringhe.
-                // Per ora, semplifichiamo: la prima riga è header se non ha ':'
-                // altrimenti, la processiamo come dato e non avremo un header separato.
-                // Se la prima riga è "Classifica", header_line la conterrà.
-                // Se è "Fra:200", il blocco if qui sotto non la considererà header.
-                // Quindi, dobbiamo rimettere `line` nello stream o processarla qui.
-                // Soluzione più semplice: se la prima riga non ha ':', è l'header.
-                // Altrimenti, non c'è header separato.
-                // Modifichiamo:
-                std::stringstream temp_ss_for_first_line(fileContent);
-                std::string first_line_check;
-                std::getline(temp_ss_for_first_line, first_line_check);
-                if (first_line_check.find(':') == std::string::npos) {
-                    // header_line è già corretta
-                } else {
-                    header_line.clear(); // Non c'è un header separato
-                    // Resettiamo ss_parse per rileggere tutto
-                    ss_parse.clear();
-                    ss_parse.str(fileContent);
-                }
+            nextLine = nullptr;
+        }
+        
+        // Skip empty lines and header
+        if (getStringLength(line) == 0 || !findChar(line, ':')) {
+            line = nextLine;
+            continue;
+        }
+        
+        // Find the colon separator
+        char* colonPos = findChar(line, ':');
+        if (colonPos && colonPos != line) {
+            // Extract name (everything before colon)
+            int nameLen = colonPos - line;
+            if (nameLen >= 64) nameLen = 63;
+            
+            int i;
+            for (i = 0; i < nameLen; i++) {
+                entries[entryCount].name[i] = line[i];
             }
+            entries[entryCount].name[i] = '\0';
+            
+            // Extract score (everything after colon)
+            entries[entryCount].score = stringToInt(colonPos + 1);
+            entryCount++;
+        }
+        
+        line = nextLine;
+    }
+      // Sort entries by score (descending)
+    if (entryCount > 0) {
+        sortScores(entries, entryCount);
+    }
+    
+    // Determine how many entries to display (max 10)
+    int displayCount = entryCount;
+    if (displayCount > 10) {
+        displayCount = 10;
+    }
+    
+    // Calculate window dimensions based on content
+    int windowHeight, windowWidth;
+    int maxNameLen = 0;
+    
+    // Find the longest name for width calculation
+    for (int i = 0; i < displayCount; i++) {
+        int nameLen = getStringLength(entries[i].name);
+        if (nameLen > maxNameLen) {
+            maxNameLen = nameLen;
         }
     }
-
-    // 2. Parsa le righe dei giocatori
-    while (std::getline(ss_parse, line)) {
-        if (line.empty() || line == header_line) continue; // Salta righe vuote o l'header già letto
-
-        size_t colon_pos = line.find(':');
-        if (colon_pos != std::string::npos && colon_pos + 1 < line.length()) {
-            ScoreEntry entry;
-            entry.original_line_prefix = line.substr(0, colon_pos + 1); // Include il ':'
-            // Pulisci il nome nel prefisso
-            entry.original_line_prefix.erase(0, entry.original_line_prefix.find_first_not_of(" \t"));
-            entry.original_line_prefix.erase(entry.original_line_prefix.find_last_not_of(" \t") + 1);
-
-            std::string score_str = line.substr(colon_pos + 1);
-            // Pulisci la stringa del punteggio
-            score_str.erase(0, score_str.find_first_not_of(" \t"));
-            score_str.erase(score_str.find_last_not_of(" \t") + 1);
-
-            try {
-                entry.score = std::stoi(score_str);
-                // Il nome vero e proprio è prima dei ':' nel prefisso
-                entry.name = entry.original_line_prefix.substr(0, entry.original_line_prefix.length() -1); // Rimuovi ':'
-                scores.push_back(entry);
-            } catch (const std::exception& e) {
-                // Ignora righe con punteggio non valido
-            }
+    
+    // Calculate window size
+    // Width: "10. " + max_name_length + ": " + max_score_digits + padding
+    // Assuming max score is 6 digits, plus some padding
+    windowWidth = 4 + maxNameLen + 2 + 6 + 4; // "10. name: 999999" + padding
+    if (windowWidth < 25) windowWidth = 25; // Minimum width for header
+    if (windowWidth > 60) windowWidth = 60; // Maximum reasonable width
+    
+    // Height: header (3 lines) + entries + footer (2 lines) + borders (2)
+    if (displayCount == 0) {
+        windowHeight = 3 + 1 + 2 + 2; // Header + "No scores" + footer + borders
+    } else {
+        windowHeight = 3 + displayCount + 2 + 2; // Header + entries + footer + borders
+    }
+    
+    // Get screen dimensions to center the window
+    int screenHeight, screenWidth;
+    getmaxyx(stdscr, screenHeight, screenWidth);
+    
+    int startY = (screenHeight - windowHeight) / 2;
+    int startX = (screenWidth - windowWidth) / 2;
+    
+    // Ensure window fits on screen
+    if (startY < 0) startY = 0;
+    if (startX < 0) startX = 0;
+    if (windowHeight > screenHeight) windowHeight = screenHeight;
+    if (windowWidth > screenWidth) windowWidth = screenWidth;
+    
+    // Create display buffer
+    char displayBuffer[bufferSize];
+    displayBuffer[0] = '\0';
+    
+    // Add header
+    strcat(displayBuffer, "=== CLASSIFICA ===\n\n");
+    
+    if (displayCount == 0) {
+        strcat(displayBuffer, "Nessun punteggio registrato.\n");
+    } else {
+        char lineBuffer[128];
+        for (int i = 0; i < displayCount; i++) {
+            // Create formatted line: "Position. Name: Score"
+            sprintf(lineBuffer, "%d. %s: %d\n", i + 1, entries[i].name, entries[i].score);
+            strcat(displayBuffer, lineBuffer);
+        }
+        
+        // Add note if there are more than 10 entries
+        if (entryCount > 10) {
+            strcat(displayBuffer, "\n(Mostrando i primi 10 punteggi)\n");
         }
     }
-
-    // 3. Ordina i giocatori
-    std::sort(scores.begin(), scores.end(), compareScores);
-
-    // 4. Ricostruisci il buffer per la visualizzazione
-    std::string sorted_content_str;
-    if (!header_line.empty()) {
-        sorted_content_str += header_line + "\n";
-    }
-    for (const auto& entry : scores) {
-        sorted_content_str += entry.name + ":" + std::to_string(entry.score) + "\n";
-    }
-
-    // Copia nel buffer di visualizzazione
-    strncpy(sorted_display_buffer, sorted_content_str.c_str(), bufferSize - 1);
-    sorted_display_buffer[bufferSize - 1] = '\0';
-    int display_chNumber = strlen(sorted_display_buffer);
-
-    // 5. Crea la finestra e visualizza
-    // Calcola dimensioni finestra in base al contenuto (semplificato)
-    int num_display_lines = 1; // Per l'header
-    for (const auto& entry : scores) num_display_lines++;
-    if (num_display_lines == 0 && !header_line.empty()) num_display_lines = 1; // Solo header
-    if (num_display_lines == 0 && scores.empty()) num_display_lines = 1; // Almeno una riga per "vuoto"
-
-    int max_width_display = header_line.length();
-    for(const auto& entry : scores) {
-        size_t current_len = entry.name.length() + 1 + std::to_string(entry.score).length();
-        if (current_len > max_width_display) {
-            max_width_display = current_len;
-        }
-    }
-    if (max_width_display == 0) max_width_display = 20; // Minima larghezza
-
-    // Usa le tue funzioni Utils per creare la finestra
-    // Le coordinate starty e startx per CreateTextBox sono fisse nel tuo codice originale.
-    // Se vuoi centrarla, dovrai modificare CreateTextBox o calcolare starty/startx qui.
-    // Per ora, uso i valori originali che hai passato.
-    // Nota: CreateTextBox prende `characters` che non sembra usato per l'altezza/larghezza della finestra.
-    // La tua CreateTextBox usa height=7, width=30 fissi.
-    // Per visualizzare più righe, dovrai rendere CreateTextBox più flessibile
-    // o usare un approccio diverso per la finestra.
-
-    // Adattiamo per usare CreateTextBox con dimensioni fisse, ma InlinedTextWindow stamperà.
-    // Se il testo è troppo lungo per 7x30, verrà troncato da InlinedTextWindow o non starà.
-    // Sarebbe meglio che CreateTextBox prendesse altezza e larghezza.
-    // Modifichiamo CreateTextBox per accettare altezza e larghezza:
-    // WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int height, int width, int starty, int startx){...}
-    // Per ora, assumo che Utils::CreateTextBox sia come l'hai data (7x30).
-    // Se hai molte voci, questo non basterà.
-
-    WINDOW * insideBox = nullptr; // Inizializza a nullptr
-    // insideBox = Utils::CreateTextBox(insideBox, display_chNumber, 6, 4); // Vecchia chiamata
-
-    // Calcoliamo la posizione centrale per la finestra
-    int win_h = num_display_lines + 2; // +2 per i bordi
-    int win_w = max_width_display + 4; // +2 per i bordi, +2 per padding interno
-    int screen_h_ncurses, screen_w_ncurses;
-    getmaxyx(stdscr, screen_h_ncurses, screen_w_ncurses);
-    int start_y_ncurses = (screen_h_ncurses - win_h) / 2;
-    int start_x_ncurses = (screen_w_ncurses - win_w) / 2;
-    if (start_y_ncurses < 0) start_y_ncurses = 0;
-    if (start_x_ncurses < 0) start_x_ncurses = 0;
-    if (win_h > screen_h_ncurses) win_h = screen_h_ncurses;
-    if (win_w > screen_w_ncurses) win_w = screen_w_ncurses;
-
-    // insideBox = Utils::CreateTextBox(insideBox, display_chNumber, 6, 4); // La tua chiamata originale
-    // Usiamo una finestra con dimensioni calcolate:
-    insideBox = newwin(win_h, win_w, 8, 5);
-    box(insideBox, 0, 0);
-    refresh(); // Aggiorna stdscr
-    wrefresh(insideBox); // Aggiorna la nuova finestra
-
-    // Stampa il contenuto ordinato usando la tua Utils::InlinedTextWindow
-    // Nota: InlinedTextWindow ha bisogno di sapere le dimensioni del box per il wrapping corretto.
-    // La tua InlinedTextWindow attuale non prende le dimensioni del box come input per il wrapping,
-    // ma le ottiene con getmaxyx(insideBox, ...). Questo va bene.
-    Utils::InlinedTextWindow(insideBox, 2, 1, sorted_display_buffer); // x=1, y=1 per iniziare dentro i bordi
-    fileManager.writeFile(sorted_display_buffer); // Scrive il file ordinato
-
-    wrefresh(insideBox);
-
-    delwin(insideBox);
+    
+    strcat(displayBuffer, "\nPremi un tasto per tornare al menu...");
+    
+    // Create dynamic window
+    WINDOW* classWindow = newwin(windowHeight, windowWidth, startY, startX);
+    if (classWindow) {
+        // Draw border
+        box(classWindow, 0, 0);
+        
+        // Display content with some padding from borders
+        Utils::InlinedTextWindow(classWindow, 2, 1, displayBuffer);
+        wrefresh(classWindow);
+        
+        // Wait for user input
+        getch();
+        
+        // Clean up
+        delwin(classWindow);
+    } else {
+        // Fallback display
+        clear();
+        mvprintw(2, 2, "%s", displayBuffer);
+        refresh();
+        getch();
+    }    
 }
