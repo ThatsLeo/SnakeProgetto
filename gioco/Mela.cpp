@@ -30,6 +30,9 @@ void Mela::Spawn(int x, int y){
     mvwaddch(this->win, y, x, character);
 }
 
+
+
+
 // Controlla se la posizione della mela e' la stessa della testa del serpente, se true disattiva la mela dalla griglia.
 bool Mela::check(Serpente *serp){
     body temp = *serp->getHeadPos();
