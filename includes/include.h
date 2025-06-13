@@ -1,14 +1,11 @@
-#ifndef INCLUDE_H
-#define INCLUDE_H
+// ----------------- IMPORTANTE ---------------------------------------------
+// usate sto file per aggiungere tutte le librerie che vi servono in tutti i file
+// in modo da non doverle aggiungere ogni volta
 
-/**
- * @brief Global includes and definitions
- * 
- * This file contains all common library includes, global constants,
- * and shared definitions used throughout the Snake game project.
- */
+// Also make global variables here and global functions
+// --------------------------------------------------------------
+#pragma once
 
-// ========== LIBRARY INCLUDES ==========
 #include <ncurses/ncurses.h>
 #include <iostream>
 #include <ctime>

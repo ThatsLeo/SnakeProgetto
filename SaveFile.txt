@@ -1,7 +1,3 @@
 Classifica
 Fra:200 
 leo:100 
-<<<<<<< HEAD
-Guest:12938 
-=======
->>>>>>> 218bb841d4d534c71f7fc2c2572ce8b56b2c39e1

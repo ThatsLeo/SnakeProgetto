@@ -31,7 +31,14 @@ void Mela::Spawn(int x, int y){
 }
 
 
+inline void Mela::wait(int milliseconds){
+    clock_t start_time = clock();
+    clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
 
+    while (clock() < end_time) {
+        
+    }
+}
 
 // Controlla se la posizione della mela e' la stessa della testa del serpente, se true disattiva la mela dalla griglia.
 bool Mela::check(Serpente *serp){

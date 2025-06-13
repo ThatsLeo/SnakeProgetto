@@ -27,7 +27,7 @@ void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& live
     serpent = new Serpente(win, 'o', 7);
     frutto = new Mela(win, -1, -1, '$');
     livello = new level();
-    livello->setLevel(levelChosen);
+    livello->setLevel(levelChoosen);
 }
 
 // ========== DISPLAY FUNCTIONS ==========

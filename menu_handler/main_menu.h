@@ -1,76 +1,29 @@
-#ifndef MAIN_MENU_H
-#define MAIN_MENU_H
-
 #include "../includes/include.h"
 #include "../utils/utils.cpp"
 #include "../file_handler/file_manager.cpp"
+#pragma once
 
-/**
- * @brief Menu class - handles main menu functionality
- * 
- * This class manages the main menu interface, including navigation,
- * game launching, leaderboard display, and level selection.
- */
 class Menu {
-public:
-    // ========== CONSTRUCTORS & DESTRUCTORS ==========
-    /**
-     * @brief Construct a new Menu object
-     */
-    Menu();
+    public:  // lasciamo usare solo chiudi ed apri menu
+        Menu();
+        ~Menu();
+        void close_menu();
+        void start_menu();
+    
+    private:
+        void print_menu();
+        void process_input(int c);
+        int handle_user_input();
+        void gameOver(int game_state);
 
-    /**
-     * @brief Destroy the Menu object
-     */
-    ~Menu();
+        WINDOW *menu_win;
+        int highlight;
+        int choice;
+        int old_choice;
+        int n_choices;
+        const char *choices[4];
 
-    // ========== PUBLIC INTERFACE ==========
-    /**
-     * @brief Close the menu (cleanup)
-     */
-    void close_menu();
-
-    /**
-     * @brief Start the main menu loop
-     */
-    void start_menu();
-
-private:
-    // ========== PRIVATE METHODS ==========
-    /**
-     * @brief Print menu options to screen
-     */
-    void print_menu();
-
-    /**
-     * @brief Process user input for menu navigation
-     * @param c Input character/key code
-     */
-    void process_input(int c);
-
-    /**
-     * @brief Handle user input and return selection
-     * @return Selected menu option
-     */
-    int handle_user_input();
-
-    /**
-     * @brief Handle game over scenarios
-     * @param game_state Game ending state code
-     */
-    void gameOver(int game_state);
-
-    // ========== PRIVATE MEMBERS ==========
-    WINDOW* menu_win;           // Menu window pointer
-    int highlight;              // Currently highlighted option
-    int choice;                 // Current user choice
-    int old_choice;             // Previous choice for refresh
-    int n_choices;              // Total number of menu options
-    const char* choices[4];     // Menu option strings
-
-    int starty;                 // Window start Y coordinate
-    int startx;                 // Window start X coordinate
-};
-
-#endif // MAIN_MENU_H
+        int starty;
+        int startx; // per centrare la finestra
+    };
     

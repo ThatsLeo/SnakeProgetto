@@ -1,5 +1,6 @@
 #include "main.h"
 
+
 // non scrivete niente nel main.
 
 int main() {
@@ -9,6 +10,5 @@ int main() {
     Menu menu = Menu();
     menu.start_menu();
 
-    endwin(); // Close ncurses window
     return 0;
 }
