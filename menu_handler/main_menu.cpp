@@ -18,7 +18,7 @@ void getPlayerName() {
     int nameStartX = (xMax - nameWinWidth) / 2;
     
     WINDOW* nameWin = newwin(nameWinHeight, nameWinWidth, nameStartY, nameStartX);
-    keypad(nameWin, TRUE);
+    keypad(nameWin, FALSE);
     
     // Clear screen and draw the input window
     clear();
