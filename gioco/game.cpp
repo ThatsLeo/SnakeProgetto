@@ -271,6 +271,7 @@ int start_game() {
             lastAppleCheck = clock();
             frutto->off();
             scoreSnake += bonusPoints;
+            punteggioFinale = scoreSnake;  // Update global score for saving
         }
 
         // Spawn new fruit if needed
@@ -280,7 +281,7 @@ int start_game() {
 
         // === LEVEL COMPLETION CHECK ===
         if(tempoPassato >= levelDelay){
-            Utils::wait(1000);
+            Utils::wait(500);
             levelCompleted = true;
             
             // Show level completion screen
@@ -290,6 +291,7 @@ int start_game() {
             mvwprintw(win, Maxy/2, Maxx/2 - 10, "Bonus: %d", bonusPoints);
             mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Press ESC to continue");
             scoreSnake += bonusPoints;
+            punteggioFinale = scoreSnake;  // Update global score for saving
             wrefresh(win);
             
             // Wait for ESC or ENTER to continue

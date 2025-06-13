@@ -103,6 +103,7 @@ void SalvaPunteggio(int score) {
 void Menu::gameOver(int game_state) {
     if(game_state == 0) {
         // Game ended due to collision
+        SalvaPunteggio(punteggioFinale);
         mvprintw(2, startx + 3, "Game Over\n");
         mvprintw(3, startx + 3, "Press esc to return to menu\n");
     } 
