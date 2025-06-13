@@ -176,10 +176,12 @@ void Menu::start_menu() {
         clrtoeol();
         refresh();
         int c;
+
         if(!SkipInput){
             c = getch();
         }
         SkipInput = !SkipInput;
+        
         if (c == 27 ) {   // 27 ovvero esc 
             pressed_exit = !pressed_exit;
             clear();
