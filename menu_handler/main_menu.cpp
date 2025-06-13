@@ -28,7 +28,22 @@ Menu::Menu()
 
 Menu::~Menu() {
     delwin(menu_win);
-    endwin();
+}
+
+void Menu::gameOver(int game_state){
+    if(game_state == 0){
+                mvprintw(2, startx +3, "Game Over\n");
+                mvprintw(3, startx +3, "Press esc to return to menu\n");
+                
+            }else{
+                mvprintw(0, startx, "Game Over\n");
+                mvprintw(1, startx, "New Record!\n");
+                mvprintw(2, startx, "Press esc to return to menu\n");
+                FileManager fileManager = FileManager();
+                char  ssssss[100];
+                sprintf(ssssss, "Guest:%d \n",game_state);
+                fileManager.writeFileAppend(ssssss);
+            }
 }
 
 
@@ -90,8 +105,7 @@ bool pressed_exit = 0;
 int game_state;
 
 void Menu::start_menu() {
-
-    //Mosso creazione file iniziale dal main
+    
     FileManager fileManager = FileManager();
 
     fileManager.writeFile("Classifica\n");
@@ -116,20 +130,8 @@ void Menu::start_menu() {
         // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
             game_state = start_game();
+            gameOver(game_state);
             
-            if(game_state == 0){
-                mvprintw(2, startx +3, "Game Over\n");
-                mvprintw(3, startx +3, "Press esc to return to menu\n");
-                
-            }else{
-                mvprintw(0, startx, "Game Over\n");
-                mvprintw(1, startx, "New Record!\n");
-                mvprintw(2, startx, "Press esc to return to menu\n");
-                FileManager fileManager = FileManager();
-                char  ssssss[100];
-                sprintf(ssssss, "Guest:%d \n",game_state);
-                fileManager.writeFileAppend(ssssss);
-            }
         }else if (choice == 2) { 
             Utils::initColors();
             Classifica::start_classifica();
@@ -138,7 +140,18 @@ void Menu::start_menu() {
             wrefresh(menu_win);
             WINDOW * insideBox;
             insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
-            levelMenu.PrintLevels(insideBox);
+            keypad(insideBox, TRUE);
+            while(true){
+                levelMenu.PrintLevels(insideBox);
+                int c = levelMenu.processInput(wgetch(insideBox));
+                if (c > 0){
+                    game_state = start_game();
+                    gameOver(game_state);
+                    break;
+                }
+                else if (c == -2) break;
+            }
+            
 
             wrefresh(insideBox);
             // wclear(menu_win);
@@ -182,5 +195,4 @@ void Menu::start_menu() {
         } 
     }
     
-    endwin();
 }

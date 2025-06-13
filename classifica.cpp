@@ -51,7 +51,6 @@ void Classifica::start_classifica(){
         mvprintw(0, 0, original_buffer[0] == '\0' ? "File classifica vuoto o non trovato." : original_buffer);
         refresh();
         getch();
-        endwin();
         return;
     }
 
@@ -215,5 +214,4 @@ void Classifica::start_classifica(){
     wrefresh(insideBox);
 
     delwin(insideBox);
-    endwin();
 }
