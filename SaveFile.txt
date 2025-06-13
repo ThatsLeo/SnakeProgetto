@@ -1,4 +1,1 @@
 Classifica
-ciao:100 
-ciao:300 
-ciao:300 

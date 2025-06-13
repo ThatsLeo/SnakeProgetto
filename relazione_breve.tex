@@ -1,0 +1,180 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,                 
+    breakatwhitespace=true,
+    columns=flexible,
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Relazione Tecnica: Principali Scelte Implementative\\del Progetto Snake}
+\author{Studenti:\\ 
+\texttt{matteo.terzi8@studio.unibo.it}\\ 
+\texttt{francesco.pignanelli@studio.unibo.it}\\ 
+\texttt{leonardorocco.monaco@studio.unibo.it}
+}
+\date{}
+
+\begin{document}
+\sloppy
+
+\maketitle
+
+\section{Introduzione}
+
+Il progetto Snake è stato sviluppato in C++ usando la libreria ncurses per creare l'interfaccia utente. Il gioco è organizzato in moduli separati: uno per la logica di gioco, uno per i menu, uno per salvare i dati e uno per le funzioni di supporto. Questa relazione spiega le scelte più importanti fatte durante lo sviluppo.
+
+\section{Architettura del Sistema}
+
+\subsection{Organizzazione Modulare}
+
+Il progetto è diviso in cartelle diverse, ognuna con un compito specifico:
+
+\begin{itemize}
+    \item \texttt{gioco/}: contiene tutto quello che serve per far funzionare il gioco (\texttt{game.cpp}), il serpente (\texttt{Serpente.cpp/hpp}), la mela (\texttt{Mela.cpp/hpp}) e i livelli (\texttt{Livelli.cpp/hpp})
+    \item \texttt{menu\_handler/}: gestisce il menu principale del gioco (\texttt{main\_menu.cpp/h})
+    \item \texttt{file\_handler/}: si occupa di salvare e leggere i punteggi dal file (\texttt{file\_manager.cpp/h})
+    \item \texttt{utils/}: contiene funzioni utili usate in tutto il progetto (\texttt{utils.cpp/h})
+    \item \texttt{includes/}: raccoglie tutte le librerie e le costanti comuni (\texttt{include.h/cpp})
+\end{itemize}
+
+\subsection{Scelte Architetturali Fondamentali}
+
+\textbf{Pattern Utility Class}: La classe \texttt{Utils} contiene funzioni statiche per operazioni comuni (timing, gestione finestre, colori). Questo evita di scrivere lo stesso codice più volte.
+
+\textbf{Variabili Globali}: Usiamo variabili condivise (\texttt{levelChoosen}, \texttt{punteggioFinale}) per far comunicare i diversi moduli. È una soluzione semplice anche se crea dipendenze tra i moduli.
+
+\textbf{Gestione Manuale della Memoria}: Controlliamo direttamente quando allocare e liberare la memoria per oggetti e finestre ncurses. Questo ci dà controllo preciso sulle risorse del sistema.
+
+\section{Implementazione del Game Loop}
+
+\subsection{Architettura Temporizzata}
+
+Il centro del gioco è la funzione \texttt{start\_game()} che crea un ciclo di gioco basato su timing preciso:
+
+\begin{lstlisting}[language=C++]
+double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChoosen - 1) * 0.666);
+int levelDelay = 45; // secondi per livello
+int bonusPoints = 100 * livello->getId();
+\end{lstlisting}
+
+\textbf{Timer Separati}: Usiamo tre timer diversi per il movimento del serpente, per far apparire le mele e per la durata del livello. Questo ci permette di controllare bene il gioco.
+
+\textbf{Input Non-Bloccante}: \texttt{nodelay(win, TRUE)} fa sì che il gioco non si fermi mentre aspetta che l'utente prema un tasto.
+
+\subsection{Sistema di Input Responsivo}
+
+Il sistema per gestire i tasti premuti usa diverse strategie:
+
+\begin{itemize}
+    \item \textbf{Pulizia Buffer}: \texttt{flushinp()} cancella i tasti premuti in precedenza prima di operazioni importanti
+    \item \textbf{Ultimo Tasto}: Consideriamo solo l'ultimo tasto premuto, ignorando quelli bufferizzati
+    \item \textbf{Controllo Direzione}: Evitiamo che il serpente vada nella direzione opposta subito, per non causare collisioni accidentali
+\end{itemize}
+
+\section{Strutture Dati e Algoritmi}
+
+\subsection{Implementazione del Serpente}
+
+La classe \texttt{Serpente} usa una lista collegata per rappresentare il corpo del serpente:
+
+\begin{lstlisting}[language=C++]
+struct body {
+    int y, x;
+    body* next;
+};
+\end{lstlisting}
+
+\textbf{Movimento Efficiente}: Aggiungiamo un nuovo pezzo in testa e togliamo quello in coda.
+
+\textbf{Attraversamento Bordi}: Quando il serpente esce da un lato dello schermo, riappare dal lato opposto. Questo rende il gioco più dinamico.
+
+\textbf{Controllo Collisioni}: Un algoritmo semplice che controlla se la testa del serpente tocca qualche pezzo del suo corpo.
+
+\subsection{Gestione Intelligente delle Mele}
+
+La classe \texttt{Mela} fa apparire le mele solo in posti liberi:
+
+\begin{lstlisting}[language=C++]
+bool isCellEmpty(WINDOW* win, int y, int x) {
+    chtype ch = mvwinch(win, y, x);
+    char currentChar = ch & A_CHARTEXT;
+    return (currentChar == ' ');
+}
+\end{lstlisting}
+
+Le mele vengono create solo dove non c'è il serpente, controllando direttamente cosa c'è scritto in ogni posizione dello schermo.
+
+\section{Sistema di Persistenza e Classifiche}
+
+\subsection{File-Based Storage}
+
+Per salvare i dati usiamo file di testo semplici, che sono facili da usare e funzionano su tutti i sistemi:
+
+\begin{lstlisting}[language=C++]
+void FileManager::writeFileAppend(const std::string toWrite) {
+    std::ofstream outputFile; 
+    outputFile.open("SaveFile.txt", std::ios_base::app);
+    outputFile << toWrite;
+    outputFile.close();
+}
+\end{lstlisting}
+
+\textbf{Formato Strutturato}: I dati sono salvati nel formato \texttt{"Nome:Punteggio"} che è facile da leggere e interpretare.
+
+\textbf{Solo Aggiunte}: I nuovi punteggi vengono sempre aggiunti in fondo al file, senza cancellare quelli vecchi.
+
+\subsection{Sistema di Classifiche}
+
+Per creare la classifica usiamo algoritmi semplici che funzionano sempre:
+
+\begin{itemize}
+    \item \textbf{Bubble Sort}: Un algoritmo di ordinamento semplice che lavora direttamente sui dati in memoria
+    \item \textbf{Parsing Personalizzato}: Leggiamo il file riga per riga senza usare librerie esterne
+    \item \textbf{Colori}: I primi tre posti nella classifica sono evidenziati con colori diversi usando ncurses
+\end{itemize}
+
+\section{Gestione Errori e Robustezza}
+
+\subsection{Memory Safety}
+
+Il progetto usa diverse strategie per essere più robusto:
+
+\textbf{Controllo Dimensioni Buffer}: Controlliamo sempre che i buffer per leggere file e input utente non superino le dimensioni massime.
+
+\textbf{Pulizia Risorse}: Le finestre ncurses vengono sempre chiuse correttamente, anche se il gioco si chiude in modo inaspettato.
+
+\subsection{Input Validation}
+
+\begin{itemize}
+    \item \textbf{Controllo Esistenza File}: Verifichiamo che il file esista con \texttt{is\_open()} prima di leggerlo
+    \item \textbf{Controllo Punteggio}: Salviamo solo punteggi maggiori di zero
+    \item \textbf{Sicurezza Stringhe}: Aggiungiamo sempre il carattere di fine stringa e usiamo \texttt{strncpy()} per evitare overflow
+\end{itemize}
+
+\end{document}
