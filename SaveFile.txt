@@ -1,6 +1,2 @@
 Classifica
-miao:100 
-miao:300 
-miao:300 
-miao:300 
-miao:300 
+ciaoadMadw:400 
