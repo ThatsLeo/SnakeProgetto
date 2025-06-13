@@ -1,5 +1,40 @@
-.vs
-.idea
+# ========== IDE AND EDITOR FILES ==========
+.vs/
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ========== COMPILED EXECUTABLES ==========
 *.exe
+*.o
+*.obj
+*.out
+main
+main.exe
+
+# ========== GAME DATA FILES ==========
+SaveFile.txt
+*.sav
+*.dat
+
+# ========== TEMPORARY AND CACHE FILES ==========
+*.tmp
+*.cache
+*.log
+
+# ========== BUILD FILES ==========
 *.suo
-*.txt
+*.user
+
+# ========== DOCUMENTATION OUTPUT ==========
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+
+# ========== OS SPECIFIC ==========
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,6 +1,4 @@
 #include "main.h"
-
-
 // non scrivete niente nel main.
 
 int main() {
