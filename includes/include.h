@@ -20,6 +20,6 @@
 #define Maxx 50                 // Game area width
 
 // ========== GLOBAL VARIABLES ==========
-static int levelChoosen = 1;    // Currently selected level (default: 1)
+static int levelChosen = 1;    // Currently selected level (default: 1)
 
 #endif // INCLUDE_H
