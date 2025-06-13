@@ -3,7 +3,7 @@
 #pragma once
 #include "../includes/include.h"
 
-
+extern int punteggioFinale;
 
 // same here fiocane
 class Utils {
@@ -16,4 +16,6 @@ public:
 
 
 #endif // UTILS_H
+
+
 

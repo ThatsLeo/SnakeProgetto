@@ -118,6 +118,7 @@ int start_game() {
     int bonusPoints = 100 * livello->getId();
 
     while (true) {
+        punteggioFinale = scoreSnake;
         
         clock_t now = clock();        
         if(now - lastMoveCheck >= moveDelay){
@@ -126,7 +127,7 @@ int start_game() {
                 // Show pause menu instead of breaking
                 bool shouldResume = showPauseMenu(win);
                 if (!shouldResume) {
-                    break; // Exit game if user chose "Exit Game"
+                    return 100; // Exit game if user chose "Exit Game"
                 }
                 // If resuming, continue the game loop
             }
@@ -182,6 +183,7 @@ int start_game() {
     delwin(win);
     delwin(wrap);
     if(tempoPassato > 0){
+        
         return scoreSnake;
     }
     return 0;
