@@ -32,6 +32,14 @@ Menu::~Menu() {
     delwin(menu_win);
 }
 
+void SalvaPunteggio(int score) {
+    if(score <= 0) return; // Non salvare punteggi negativi
+    FileManager fileManager = FileManager();
+    char ssssss[100];
+    sprintf(ssssss, "Guest:%d \n", score);
+    fileManager.writeFileAppend(ssssss);
+}
+
 void Menu::gameOver(int game_state){
     
     if(game_state == 0){
@@ -39,21 +47,16 @@ void Menu::gameOver(int game_state){
                 mvprintw(3, startx +3, "Press esc to return to menu\n");
                 
             }else if(game_state == 100){
-                FileManager fileManager = FileManager();
-                char  ssssss[100];
-                sprintf(ssssss, "Guest:%d \n",punteggioFinale);
-                fileManager.writeFileAppend(ssssss);
+                SalvaPunteggio(punteggioFinale);
 
-                refresh();
-                SkipInput = 1; // Imposta SkipInput a 1 per evitare input non voluti
+                SkipInput = 1; // Imposta SkipInput a 1 o true per andare direttamente al menu
+
             }else{
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(1, startx, "New Record!\n");
                 mvprintw(2, startx, "Press esc to return to menu\n");
-                FileManager fileManager = FileManager();
-                char  ssssss[100];
-                sprintf(ssssss, "Guest:%d \n",game_state);
-                fileManager.writeFileAppend(ssssss);
+
+                SalvaPunteggio(game_state);
             }
 }
 
@@ -117,6 +120,8 @@ int game_state;
 void Menu::start_menu() {
     
     FileManager fileManager = FileManager();
+
+    fileManager.writeFile("Classifica\n"); // lascio questa cosi ogni volta resetta la classifica
     
     while (true) {
         curs_set(0); // Nascondi il cursore

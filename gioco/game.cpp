@@ -119,7 +119,7 @@ int start_game() {
 
     while (true) {
         punteggioFinale = scoreSnake;
-        
+
         clock_t now = clock();        
         if(now - lastMoveCheck >= moveDelay){
             int key = serpent->getMove();
@@ -201,7 +201,7 @@ bool showPauseMenu(WINDOW* gameWin) {
     WINDOW* pauseWin = newwin(menuHeight, menuWidth, startY, startX);
     keypad(pauseWin, TRUE);
     
-    const char* options[] = {"Resume", "Exit Game"};
+    const char* options[] = {"Ritorna al gioco", "Torna al menu"};
     int numOptions = 2;
     int highlight = 1;
     int choice = 0;
@@ -210,7 +210,7 @@ bool showPauseMenu(WINDOW* gameWin) {
         // Draw pause menu
         werase(pauseWin);
         box(pauseWin, 0, 0);
-        mvwprintw(pauseWin, 1, (menuWidth - 10) / 2, "GAME PAUSED");
+        mvwprintw(pauseWin, 1, (menuWidth - 13) / 2, "GIOCO IN PAUSA");
         
         for (int i = 0; i < numOptions; i++) {
             int y = 3 + i;
