@@ -117,10 +117,6 @@ int game_state;
 void Menu::start_menu() {
     
     FileManager fileManager = FileManager();
-
-    fileManager.writeFile("Classifica\n");
-    fileManager.writeFileAppend("Fra:200 \n");
-    fileManager.writeFileAppend("leo:100 \n");
     
     while (true) {
         curs_set(0); // Nascondi il cursore
@@ -181,7 +177,7 @@ void Menu::start_menu() {
             c = getch();
         }
         SkipInput = !SkipInput;
-        
+
         if (c == 27 ) {   // 27 ovvero esc 
             pressed_exit = !pressed_exit;
             clear();
