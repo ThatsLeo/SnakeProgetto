@@ -3,3 +3,6 @@
 *.exe
 *.suo
 *.txt
+.txt
+.tex
+*.tex
