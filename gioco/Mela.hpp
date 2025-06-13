@@ -77,12 +77,6 @@ private:
     char character;     // Display character
     bool active;        // Active state flag
     
-    // ========== PRIVATE METHODS ==========
-    /**
-     * @brief Wait for specified milliseconds
-     * @param milliseconds Time to wait in milliseconds
-     */
-    void wait(int milliseconds);
 };
 
 #endif // MELA_HPP
