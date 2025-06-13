@@ -6,7 +6,6 @@
 
 int SkipInput = 0;
 char playerName[32] = "Guest"; // Global variable to store player name
-
 // Function to get player name input
 void getPlayerName() {
     // Create a small centered window for name input
@@ -97,10 +96,11 @@ void Menu::gameOver(int game_state){
     if(game_state == 0){
                 mvprintw(2, startx +3, "Game Over\n");
                 mvprintw(3, startx +3, "Press esc to return to menu\n");
-                
-            }else if(game_state == 100){
-                SalvaPunteggio(punteggioFinale);
+                // Utils::wait(2000); // Aspetta un secondo prima di mostrare il messaggio
+                // SkipInput = 1;
 
+            }else if(game_state == 12938){
+                SalvaPunteggio(punteggioFinale);
                 SkipInput = 1; // Imposta SkipInput a 1 o true per andare direttamente al menu
 
             }else{
@@ -228,7 +228,7 @@ void Menu::start_menu() {
                 return; // Exit the menu loop
                 
             default:
-                mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
+                mvprintw(0, 0, "Per la scelta n: %d o %s out of bound bug \n", choice, choices[choice - 1]);
                 break;        }
 
         // Clear and refresh for next iteration

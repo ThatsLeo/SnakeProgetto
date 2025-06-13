@@ -11,7 +11,7 @@ void initialize_ncurses() {
     cbreak();             
 }
 
-inline void wait(int milliseconds){
+void Utils::wait(int milliseconds){
     clock_t start_time = clock();
     clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
 

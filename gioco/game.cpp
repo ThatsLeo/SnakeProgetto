@@ -95,8 +95,6 @@ bool processInput(WINDOW* win, WINDOW* wrap, Serpente* serpent, int moveDelay, c
     if (lastKey == (char)27) {
         bool shouldResume = showPauseMenu(win);
         if (!shouldResume) {
-            delwin(win);
-            delwin(wrap);
             return true; // Signal to exit
         }
     } else if (lastKey != ERR) {
@@ -172,7 +170,7 @@ int start_game() {
             // Clean up windows before returning
             delwin(win);
             delwin(wrap);
-            return 0;
+            return 12938;
         }
     }
 
@@ -192,10 +190,11 @@ int start_game() {
     bool levelCompleted = false;
     int bonusPoints = 100 * livello->getId();    while (true) {
         punteggioFinale = scoreSnake;
-        clock_t now = clock();
-
-        if (processInput(win, wrap, serpent, moveDelay, lastMoveCheck, now)) {
-            return 100;
+        clock_t now = clock();        if (processInput(win, wrap, serpent, moveDelay, lastMoveCheck, now)) {
+            // Player chose to exit from pause menu
+            delwin(win);
+            delwin(wrap);
+            return 12938;
         }
 
         if (now - lastTime >= CLOCKS_PER_SEC) {
@@ -223,8 +222,8 @@ int start_game() {
         }
 
         if(tempoPassato >= levelDelay){
-            Utils:wait(1000);
-            gameOver = true;
+            Utils::wait(1000);
+            levelCompleted = true;
             werase(win);
             box(win, 0, 0);
             mvwprintw(win, Maxy/2 - 1, Maxx/2 - 10, "Level Completed!");
@@ -234,7 +233,12 @@ int start_game() {
             wrefresh(win);
             while(1){
                 int c = wgetch(win);
-                if (c == (char)27 || c == (char)10)break;
+                if (c == (char)27 || c == (char)10)
+                {
+                    delwin(win);
+                    delwin(wrap);
+                    return 12938;
+                }
             }
         }
 
@@ -242,11 +246,14 @@ int start_game() {
         box(win, 0, 0);
         wrefresh(win);
 
-        if (gameOver){
+        if (gameOver || levelCompleted) {
             delete serpent;
             delete frutto;
             delete livello;
-            break;
+
+            delwin(win);
+            delwin(wrap);
+            return 0;
         }
     }
 
