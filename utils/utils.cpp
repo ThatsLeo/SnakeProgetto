@@ -1,6 +1,9 @@
 #include "utils.h"
 #pragma once
 
+// Define the global variable
+int punteggioFinale = 0;
+
 void initialize_ncurses() {
     initscr();            
     clear();

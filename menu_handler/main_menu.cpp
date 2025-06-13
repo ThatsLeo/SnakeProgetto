@@ -36,6 +36,11 @@ void Menu::gameOver(int game_state){
                 mvprintw(3, startx +3, "Press esc to return to menu\n");
                 
             }else if(game_state == 100){
+                FileManager fileManager = FileManager();
+                char  ssssss[100];
+                sprintf(ssssss, "Guest:%d \n",punteggioFinale);
+                fileManager.writeFileAppend(ssssss);
+
                 refresh();
             }else{
                 mvprintw(0, startx, "Game Over\n");
