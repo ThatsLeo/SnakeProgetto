@@ -8,7 +8,7 @@ Menu::Menu()
     choices[0] = "Gioca";
     choices[1] = "Classifica";
     choices[2] = "Livelli";
-    choices[3] = "Exit";
+    choices[3] = "Esci";
 
     //initialize_ncurses();
     
