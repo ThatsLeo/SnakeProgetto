@@ -18,9 +18,7 @@ struct body{
 class Serpente { 
     public:
         Direction dir;
-
         Serpente(WINDOW * win, char c, int lenght);
-
         body *getHeadPos();
 
         void defaultMove();

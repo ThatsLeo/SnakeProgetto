@@ -1,3 +1,2 @@
 Classifica
-PLeonardo:200 
-PLeonardo:2700 
+caio:400 
