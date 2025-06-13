@@ -12,6 +12,7 @@ public:
     static WINDOW* CreateTextBox(WINDOW* boxForFile, int characters, int starty, int startx);
     static void InlinedTextWindow( WINDOW* insideBox, int x, int y, char* buffer);
     static void initColors();
+    inline void wait(int milliseconds);
 };
 
 

@@ -23,8 +23,6 @@ class Serpente {
 
         body *getHeadPos();
 
-        inline void wait(int milliseconds);
-
         void defaultMove();
 
         void blank();

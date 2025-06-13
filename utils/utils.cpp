@@ -11,6 +11,17 @@ void initialize_ncurses() {
     cbreak();             
 }
 
+inline void wait(int milliseconds){
+    clock_t start_time = clock();
+    clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
+
+
+    while (clock() < end_time) {
+        
+    }
+
+}
+
 // Initialize colors for ncurses.
 void Utils::initColors() {
     start_color();

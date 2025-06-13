@@ -221,6 +221,7 @@ int start_game() {
         }
 
         if(tempoPassato >= levelDelay){
+            Utils:wait(1000);
             gameOver = true;
             werase(win);
             box(win, 0, 0);

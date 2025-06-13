@@ -234,18 +234,6 @@ body *Serpente::getHeadPos(){
     return temp;
 }
 
-// Una funzione sleep() in millisecondi con ctime.
-inline void Serpente::wait(int milliseconds){
-    clock_t start_time = clock();
-    clock_t end_time = start_time + milliseconds * CLOCKS_PER_SEC / 1000;
-
-
-    while (clock() < end_time) {
-        
-    }
-
-}
-
 
 bool Serpente::firstMove(){
     body *corpo = head->next;
@@ -259,7 +247,10 @@ bool Serpente::firstMove(){
 bool Serpente::autoCollision() {
     body *corpo = head->next;
     while (corpo != nullptr) {
-        if (headX == corpo->x && headY == corpo->y) return true;
+        if (headX == corpo->x && headY == corpo->y) {
+            Utils:wait(1000); // Pause for 1 second before returning true
+            return true;
+        }
         corpo = corpo->next;
     }
     return false;
