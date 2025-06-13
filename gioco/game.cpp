@@ -92,9 +92,9 @@ int start_game() {
     clock_t lastLevelCheck = clock();    
     int appleDelay = CLOCKS_PER_SEC;
     int moveDelay = ((CLOCKS_PER_SEC / 4) / levelChoosen);
-    int levelDelay = 45; 
+    int levelDelay = 45;     displayStartMessage(win);
 
-    displayStartMessage(win);    int firstKey = wgetch(win);
+    int firstKey = wgetch(win);
     if (firstKey == (char)27) {  // If ESC is pressed, show pause menu
         bool shouldResume = showPauseMenu(win);
         if (!shouldResume) {
@@ -108,32 +108,51 @@ int start_game() {
     clock_t lastTime = clock();
     clock_t startTimeFromGame = clock();
     lastMoveCheck = clock();
-    nodelay(win, true);  // Abilita input non bloccante
     
+    // Clear any buffered input and set up for responsive input
+    flushinp();  // Clear input buffer
+    nodelay(win, TRUE);  // Enable non-blocking input
     
     // Pulisci il messaggio iniziale
     mvwprintw(win, 1, 10, "                          ");
     wrefresh(win);
 
     bool gameOver = false;
-    int bonusPoints = 100 * livello->getId();
-
-    while (true) {
+    int bonusPoints = 100 * livello->getId();    while (true) {
         punteggioFinale = scoreSnake;
 
         clock_t now = clock();        
+        
         if(now - lastMoveCheck >= moveDelay){
-            int key = serpent->getMove();            if (key == (char)27) {
-                // Show pause menu instead of breaking
-                bool shouldResume = showPauseMenu(win);
-                if (!shouldResume) {
-                    // Clean up windows before returning
-                    delwin(win);
-                    delwin(wrap);
-                    return 100; // Exit game if user chose "Exit Game"
-                }
-                // If resuming, continue the game loop
+            // Only check for input when it's time to move
+            int key = ERR;
+            int lastKey = ERR;
+            
+            // Read all available input and keep only the last one
+            while ((key = wgetch(win)) != ERR) {
+                lastKey = key;
             }
+            
+            // Process the most recent key press
+            if (lastKey != ERR) {
+                if (lastKey == (char)27) {
+                    // Show pause menu instead of breaking
+                    bool shouldResume = showPauseMenu(win);
+                    if (!shouldResume) {
+                        // Clean up windows before returning
+                        delwin(win);
+                        delwin(wrap);
+                        return 100; // Exit game if user chose "Exit Game"
+                    }
+                    // If resuming, continue the game loop
+                } else {
+                    // Set the movement direction based on the key
+                    serpent->setMove(lastKey);
+                }
+            }
+            
+            // Always move the serpent (either in new direction or continue current direction)
+            serpent->move();
             lastMoveCheck = now;
         }
 
@@ -193,6 +212,9 @@ int start_game() {
 }
 
 bool showPauseMenu(WINDOW* gameWin) {
+    // Clear any buffered input before showing menu
+    flushinp();
+    
     // Create pause menu window
     int menuHeight = 8;
     int menuWidth = 20;
@@ -203,6 +225,7 @@ bool showPauseMenu(WINDOW* gameWin) {
     
     WINDOW* pauseWin = newwin(menuHeight, menuWidth, startY, startX);
     keypad(pauseWin, TRUE);
+    nodelay(pauseWin, FALSE); // Make input blocking for menu navigation
     
     const char* options[] = {"Ritorna al gioco", "Torna al menu"};
     int numOptions = 2;
@@ -229,7 +252,10 @@ bool showPauseMenu(WINDOW* gameWin) {
         }
         wrefresh(pauseWin);
         
+        // Clear any buffered input and get a single key
+        flushinp();
         int c = wgetch(pauseWin);
+        
         switch (c) {
             case KEY_UP:
                 highlight = (highlight == 1) ? numOptions : highlight - 1;
@@ -249,6 +275,9 @@ bool showPauseMenu(WINDOW* gameWin) {
     }
     
     delwin(pauseWin);
+    
+    // Clear input buffer before returning to game
+    flushinp();
     
     // Redraw the game window
     wrefresh(gameWin);

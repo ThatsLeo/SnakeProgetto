@@ -45,6 +45,10 @@ class Serpente {
         
         int getMove();
         
+        void setMove(int key);
+        
+        void move();
+        
         void display();
 
         int getSleepTime(){

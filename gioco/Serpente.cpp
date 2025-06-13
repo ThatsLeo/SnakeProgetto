@@ -9,6 +9,10 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     head = new body{Maxx/2, Maxy/2, nullptr};
     headX = Maxx/2;
     headY = Maxy/2;
+    
+    // Set initial direction to RIGHT
+    dir = RIGHT;
+    
     body* current = head;
     // Il serpente ha inizialmente ogni pezzo alle stesse coordinate.
     for (int i = 1; i < lenght; i++) {
@@ -160,6 +164,20 @@ int Serpente::getMove(){
         defaultMove();
     }
     return moveKey;
+}
+
+// Set movement direction based on key input (more responsive)
+void Serpente::setMove(int key) {
+    // Only change direction, don't move yet
+    Direction desiredDir = getDesiredDirection(key, this->dir);
+    if (desiredDir != this->dir) {
+        this->dir = desiredDir;
+    }
+}
+
+// Move the serpent in current direction without getting input
+void Serpente::move() {
+    defaultMove();
 }
 
 // Aggiorna le coordinate del serpente sulla matrice del display

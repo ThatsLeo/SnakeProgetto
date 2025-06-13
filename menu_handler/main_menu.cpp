@@ -136,44 +136,47 @@ void Menu::start_menu() {
         int choice = handle_user_input(); // usate la scelta
         // Fate qualcosa con la scelta per esempio se fai gioca (1)
         // aggiungete la vostra classe con la griglia e snake etc.
-        old_choice = choice; // Salva la scelta precedente per il refresh del menu
-
-        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
-        if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
-            game_state = start_game();
-            gameOver(game_state);
-            
-            
-        }else if (choice == 2) { 
-            Utils::initColors();
-            Classifica::start_classifica();        }else if (choice == 3){
-            wclear(menu_win);
-            wrefresh(menu_win);
-            WINDOW * insideBox;
-            insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
-            keypad(insideBox, TRUE);
-            while(true){
-                levelMenu.PrintLevels(insideBox);
-                int c = levelMenu.processInput(wgetch(insideBox));
-                if (c > 0){
-                    game_state = start_game();
-                    gameOver(game_state);
-                    break;
+        old_choice = choice; // Salva la scelta precedente per il refresh del menu        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
+        switch (choice) {
+            case 1:
+                game_state = start_game();
+                gameOver(game_state);
+                break;
+                
+            case 2:
+                Utils::initColors();
+                Classifica::start_classifica();
+                break;
+                
+            case 3:
+                wclear(menu_win);
+                wrefresh(menu_win);
+                WINDOW * insideBox;
+                insideBox = Utils::CreateBoxWindowCentered(insideBox, 2, 4); 
+                keypad(insideBox, TRUE);
+                while(true){
+                    levelMenu.PrintLevels(insideBox);
+                    int c = levelMenu.processInput(wgetch(insideBox));
+                    if (c > 0){
+                        game_state = start_game();
+                        gameOver(game_state);
+                        break;
+                    }
+                    else if (c == -2) break;
                 }
-                else if (c == -2) break;
-            }
-            
-            wrefresh(insideBox);
-            delwin(insideBox); // Clean up the window
-        }
-         else if (choice == 4) {
-            break;
-        }else{
-            mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
-        }
+                
+                wrefresh(insideBox);
+                delwin(insideBox); // Clean up the window
+                break;
+                
+            case 4:
+                return; // Exit the menu loop
+                
+            default:
+                mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
+                break;        }
 
-        // invece che printare sta linea usate il vostro.
-
+        // Clear and refresh for next iteration
         clrtoeol();
         refresh();
         int c;
