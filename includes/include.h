@@ -15,4 +15,4 @@
 // Grandezza della matrice del display.
 #define Maxy 20
 #define Maxx 50
-static int levelChoosen = 1;
+static int levelChosen = 1;

@@ -71,7 +71,7 @@ int level::processInput(int c) {
             nextLevel();
             return 0;
         case (char)10:  // Enter 
-            levelChoosen = currentlvl->id;  // Imposta il livello scelto
+            levelChosen = currentlvl->id;  // Imposta il livello scelto
             return currentlvl->id;
         case (char)27:  // ESC
             return -2;
