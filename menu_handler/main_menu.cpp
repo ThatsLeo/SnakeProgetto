@@ -35,6 +35,8 @@ void Menu::gameOver(int game_state){
                 mvprintw(2, startx +3, "Game Over\n");
                 mvprintw(3, startx +3, "Press esc to return to menu\n");
                 
+            }else if(game_state == 100){
+                refresh();
             }else{
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(1, startx, "New Record!\n");
@@ -66,19 +68,18 @@ void Menu::print_menu() {
     wrefresh(menu_win);
 }
 
-void Menu::process_input(int c) {
+void Menu::process_input(int c) {  // abbiamo sisteamato il metodo process_input per gestire l'input dell'utente
+    // prima poteva andare out of bounds, ora no
     switch(c) {
         case KEY_UP:
-            if(highlight == 1)
+            highlight--;
+            if(highlight < 1)
                 highlight = n_choices;
-            else
-                --highlight;
             break;
         case KEY_DOWN:
-            if(highlight == n_choices)
+            highlight++;
+            if(highlight > n_choices)
                 highlight = 1;
-            else 
-                ++highlight;
             break;
         case 10: 
             choice = highlight;
@@ -153,22 +154,6 @@ void Menu::start_menu() {
             }
             
             wrefresh(insideBox);
-            // wclear(menu_win);
-            // wrefresh(menu_win);
-            // levelMenu.PrintLevels();
-            // int c;
-            // while (true) {
-            //     c = wgetch(menu_win);
-            //     if (c == KEY_UP) {
-            //         levelMenu.prevLevel();
-            //     } else if (c == KEY_DOWN) {
-            //         levelMenu.nextLevel();
-            //     } else if (c == 10) { // Enter key
-            //         break; // Exit the loop to return to the menu
-            //     }
-            //     clear();
-            //     levelMenu.PrintLevels();
-            // }
         }
          else if (choice == 4) {
             break;
