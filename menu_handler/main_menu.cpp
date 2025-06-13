@@ -4,11 +4,14 @@
 #include "../gioco/Livelli.cpp"
 #include <cstring>  // For string functions
 
-int SkipInput = 0;
-char playerName[32] = "Guest"; // Global variable to store player name
-// Function to get player name input
+// ========== GLOBAL VARIABLES ==========
+int SkipInput = 0;                  // Flag to skip menu input processing
+char playerName[32] = "Guest";      // Global variable to store player name
+
+// ========== PLAYER NAME INPUT FUNCTION ==========
+// Get player name at the start of the program
 void getPlayerName() {
-    // Create a small centered window for name input
+    // === WINDOW SETUP ===
     int nameWinHeight = 6;
     int nameWinWidth = 40;
     int yMax, xMax;
@@ -19,35 +22,36 @@ void getPlayerName() {
     WINDOW* nameWin = newwin(nameWinHeight, nameWinWidth, nameStartY, nameStartX);
     keypad(nameWin, FALSE);
     
-    // Clear screen and draw the input window
+    // === DISPLAY SETUP ===
     clear();
     refresh();
     box(nameWin, 0, 0);
     
-    // Display prompt
+    // Display input prompt
     mvwprintw(nameWin, 1, 2, "Inserisci il tuo nome:");
     mvwprintw(nameWin, 2, 2, "> ");
     wrefresh(nameWin);
     
-    // Enable input display and cursor
-    echo();
-    curs_set(1);
+    // === INPUT HANDLING ===
+    echo();      // Show typed characters
+    curs_set(1); // Show cursor
     
-    // Get user input
+    // Get user input (max 30 characters)
     char tempName[32];
-    mvwgetnstr(nameWin, 2, 4, tempName, 30); // Max 30 characters
+    mvwgetnstr(nameWin, 2, 4, tempName, 30);
     
-    // Copy to global variable, ensuring null termination
+    // Copy to global variable with safety checks
     strncpy(playerName, tempName, 31);
-    playerName[31] = '\0';
+    playerName[31] = '\0';  // Ensure null termination
     
-    // If empty name, use default
+    // Use default name if input is empty
     if (strlen(playerName) == 0) {
         strcpy(playerName, "Guest");
     }
     
-    // Restore ncurses settings
-    noecho();
+    // === CLEANUP ===
+    noecho();    // Hide typed characters
+    curs_set(0); // Hide cursor
     curs_set(0);
     
     // Clean up
@@ -83,33 +87,37 @@ Menu::~Menu() {
     delwin(menu_win);
 }
 
+// ========== SCORE SAVING FUNCTION ==========
+// Save player score to file (only if score is positive)
 void SalvaPunteggio(int score) {
-    if(score <= 0) return; // Non salvare punteggi negativi
+    if(score <= 0) return; // Don't save non-positive scores
+    
     FileManager fileManager = FileManager();
     char scoreEntry[100];
     sprintf(scoreEntry, "%s:%d \n", playerName, score);
     fileManager.writeFileAppend(scoreEntry);
 }
 
-void Menu::gameOver(int game_state){
-    
-    if(game_state == 0){
-                mvprintw(2, startx +3, "Game Over\n");
-                mvprintw(3, startx +3, "Press esc to return to menu\n");
-                // Utils::wait(2000); // Aspetta un secondo prima di mostrare il messaggio
-                // SkipInput = 1;
-
-            }else if(game_state == BYPASSGAMEOVER){
-                SalvaPunteggio(punteggioFinale);
-                SkipInput = 1; // Imposta SkipInput a 1 o true per andare direttamente al menu
-
-            }else{
-                mvprintw(0, startx, "Game Over\n");
-                mvprintw(1, startx, "New Record!\n");
-                mvprintw(2, startx, "Press esc to return to menu\n");
-
-                SalvaPunteggio(game_state);
-            }
+// ========== GAME OVER HANDLING ==========
+// Handle different game ending scenarios and display appropriate messages
+void Menu::gameOver(int game_state) {
+    if(game_state == 0) {
+        // Game ended due to collision
+        mvprintw(2, startx + 3, "Game Over\n");
+        mvprintw(3, startx + 3, "Press esc to return to menu\n");
+    } 
+    else if(game_state == BYPASSGAMEOVER) {
+        // Player returned to menu or completed level - save score
+        SalvaPunteggio(punteggioFinale);
+        SkipInput = 1; // Skip menu input to return directly to menu
+    } 
+    else {
+        // New high score achieved
+        mvprintw(0, startx, "Game Over\n");
+        mvprintw(1, startx, "New Record!\n");
+        mvprintw(2, startx, "Press esc to return to menu\n");
+        SalvaPunteggio(game_state);
+    }
 }
 
 

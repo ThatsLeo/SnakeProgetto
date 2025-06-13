@@ -248,7 +248,7 @@ bool Serpente::autoCollision() {
     body *corpo = head->next;
     while (corpo != nullptr) {
         if (headX == corpo->x && headY == corpo->y) {
-            Utils::wait(1000); // Pause for 1 second before returning true
+            Utils::wait(400); // Pause for 1 second before returning true
             return true;
         }
         corpo = corpo->next;
