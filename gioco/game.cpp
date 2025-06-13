@@ -170,7 +170,7 @@ int start_game() {
             // Clean up windows before returning
             delwin(win);
             delwin(wrap);
-            return 12938;
+            return BYPASSGAMEOVER;
         }
     }
 
@@ -194,7 +194,7 @@ int start_game() {
             // Player chose to exit from pause menu
             delwin(win);
             delwin(wrap);
-            return 12938;
+            return BYPASSGAMEOVER;
         }
 
         if (now - lastTime >= CLOCKS_PER_SEC) {
@@ -237,7 +237,7 @@ int start_game() {
                 {
                     delwin(win);
                     delwin(wrap);
-                    return 12938;
+                    return BYPASSGAMEOVER;
                 }
             }
         }

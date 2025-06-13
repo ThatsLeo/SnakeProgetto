@@ -3,6 +3,8 @@
 #pragma once
 #include "../includes/include.h"
 
+#define BYPASSGAMEOVER 12938
+
 extern int punteggioFinale;
 
 // same here fiocane

@@ -99,7 +99,7 @@ void Menu::gameOver(int game_state){
                 // Utils::wait(2000); // Aspetta un secondo prima di mostrare il messaggio
                 // SkipInput = 1;
 
-            }else if(game_state == 12938){
+            }else if(game_state == BYPASSGAMEOVER){
                 SalvaPunteggio(punteggioFinale);
                 SkipInput = 1; // Imposta SkipInput a 1 o true per andare direttamente al menu
 
