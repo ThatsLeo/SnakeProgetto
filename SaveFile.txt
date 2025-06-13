@@ -1,4 +1,8 @@
 Classifica
+Guest:600
 Fra:200
 leo:100
-Guest:100
+Guest:0
+Guest:0
+Guest:0
+Guest:0 

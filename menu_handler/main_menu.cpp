@@ -3,6 +3,8 @@
 #include "../classifica.cpp"
 #include "../gioco/Livelli.cpp"
 
+int SkipInput = 0;
+
 Menu::Menu() 
     : highlight(1), choice(0), n_choices(4), old_choice(0) {
     choices[0] = "Gioca";
@@ -31,6 +33,7 @@ Menu::~Menu() {
 }
 
 void Menu::gameOver(int game_state){
+    
     if(game_state == 0){
                 mvprintw(2, startx +3, "Game Over\n");
                 mvprintw(3, startx +3, "Press esc to return to menu\n");
@@ -42,6 +45,7 @@ void Menu::gameOver(int game_state){
                 fileManager.writeFileAppend(ssssss);
 
                 refresh();
+                SkipInput = 1; // Imposta SkipInput a 1 per evitare input non voluti
             }else{
                 mvprintw(0, startx, "Game Over\n");
                 mvprintw(1, startx, "New Record!\n");
@@ -117,7 +121,7 @@ void Menu::start_menu() {
     fileManager.writeFile("Classifica\n");
     fileManager.writeFileAppend("Fra:200 \n");
     fileManager.writeFileAppend("leo:100 \n");
-
+    
     while (true) {
         curs_set(0); // Nascondi il cursore
         noecho(); // Non mostrare l'input dell'utente
@@ -137,6 +141,7 @@ void Menu::start_menu() {
         if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
             game_state = start_game();
             gameOver(game_state);
+            
             
         }else if (choice == 2) { 
             Utils::initColors();
@@ -171,9 +176,10 @@ void Menu::start_menu() {
         clrtoeol();
         refresh();
         int c;
-        
-        c = getch();
-        
+        if(!SkipInput){
+            c = getch();
+        }
+        SkipInput = !SkipInput;
         if (c == 27 ) {   // 27 ovvero esc 
             pressed_exit = !pressed_exit;
             clear();
