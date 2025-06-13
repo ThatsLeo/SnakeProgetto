@@ -123,11 +123,8 @@ void Menu::start_menu() {
         wrefresh(menu_win); 
 
         int choice = handle_user_input(); // usate la scelta
-        // Fate qualcosa con la scelta per esempio se fai gioca (1)
-        // aggiungete la vostra classe con la griglia e snake etc.
         old_choice = choice; // Salva la scelta precedente per il refresh del menu
 
-        // Ex. if (choice == 1) { Game game = Game(); game.start_game(); } 
         if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
             game_state = start_game();
             gameOver(game_state);
@@ -153,30 +150,12 @@ void Menu::start_menu() {
             }
             
             wrefresh(insideBox);
-            // wclear(menu_win);
-            // wrefresh(menu_win);
-            // levelMenu.PrintLevels();
-            // int c;
-            // while (true) {
-            //     c = wgetch(menu_win);
-            //     if (c == KEY_UP) {
-            //         levelMenu.prevLevel();
-            //     } else if (c == KEY_DOWN) {
-            //         levelMenu.nextLevel();
-            //     } else if (c == 10) { // Enter key
-            //         break; // Exit the loop to return to the menu
-            //     }
-            //     clear();
-            //     levelMenu.PrintLevels();
-            // }
         }
          else if (choice == 4) {
             break;
         }else{
             mvprintw(0, 0, "Per la scelta n: %d o %s dovete ancora fare sta schermata\n", choice, choices[choice - 1]);
         }
-
-        // invece che printare sta linea usate il vostro.
 
         clrtoeol();
         refresh();
