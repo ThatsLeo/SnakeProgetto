@@ -6,6 +6,7 @@
 
 // ========== GLOBAL VARIABLES ==========                  // Flag to skip menu input processing
 char playerName[32] = "Guest";      // Global variable to store player name
+WINDOW* titleWin = nullptr; // Pointer for title window
 
 // ========== PLAYER NAME INPUT FUNCTION ==========
 // Get player name at the start of the program
@@ -126,28 +127,55 @@ void Menu::gameOver(int game_state) {
 }
 
 
+// ========== TITLE DISPLAY FUNCTION ==========
+// Display the SNAKE title in its own window above the main menu
+void Menu::displayTitle() {
+    // Calculate title window dimensions and position
+    int titleHeight = 7;
+    int titleWidth = 32;
+    
+    int titleStartY = 0; // Position above main menu
+    int titleStartX = (COLS - titleWidth) / 2;  // Center horizontally
+    
+    // Clean up existing title window if it exists
+    if (titleWin != nullptr) {
+        delwin(titleWin);
+    }
+    
+    // Create title window
+    titleWin = newwin(titleHeight, titleWidth, titleStartY, titleStartX);
+    box(titleWin, 0, 0);
+    
+    // Display ASCII art SNAKE title
+    mvwprintw(titleWin, 1, 2, " SSS  S  S  SSSS  S  S SSSSS");
+    mvwprintw(titleWin, 2, 2, "S     SS S S   S  S S  S    ");
+    mvwprintw(titleWin, 3, 2, " SSS  S SS SSSSS  SS   SSSS ");
+    mvwprintw(titleWin, 4, 2, "    S S  S S   S  S S  S    ");
+    mvwprintw(titleWin, 5, 2, " SSS  S  S S   S  S  S SSSSS");
+    
+    wrefresh(titleWin);
+}
+
+// ========== TITLE CLEANUP FUNCTION ==========
+// Remove the title window from screen
+void Menu::removeTitle() {
+    if (titleWin != nullptr) {
+        wclear(titleWin);
+        wrefresh(titleWin);
+        delwin(titleWin);
+        titleWin = nullptr;
+    }
+    clear();
+    refresh();
+}
+
 void Menu::print_menu() {
     box(menu_win, 0, 0);
-    
-    // ========== DISPLAY GAME TITLE ==========
-    // Big "SNAKE" title
-    int titleStartY = 3;
-    int titleCenterX = getmaxx(menu_win) / 2;
-    
-    // Simple but effective ASCII title
-    mvwprintw(menu_win, titleStartY, titleCenterX - 6, "  ███  █  █  ████  █  █ █████");
-    mvwprintw(menu_win, titleStartY + 1, titleCenterX - 6, " █   █ ██ █ █   █  █ █  █    ");
-    mvwprintw(menu_win, titleStartY + 2, titleCenterX - 6, "  ███  █ ██ █████  ██   ████ ");
-    mvwprintw(menu_win, titleStartY + 3, titleCenterX - 6, "     █ █  █ █   █  █ █  █    ");
-    mvwprintw(menu_win, titleStartY + 4, titleCenterX - 6, "  ███  █  █ █   █  █  █ █████");
-    
-    // Add some spacing after title
-    int menuStartY = titleStartY + 8;
     
     // ========== DISPLAY MENU OPTIONS ==========
     for(int i = 0; i < n_choices; ++i) {
         int x = getmaxx(menu_win) /2 - std::strlen(choices[i]) / 2;
-        int y = menuStartY + i;
+        int y = getmaxy(menu_win)/ 2 + i - n_choices /2;
         
         if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
@@ -183,10 +211,12 @@ void Menu::process_input(int c) {  // abbiamo sisteamato il metodo process_input
 
 int Menu::handle_user_input() {
     int c;
+    displayTitle();  // Display title in its own box
     print_menu();
     while(1) {
         c = wgetch(menu_win);
         process_input(c);
+        displayTitle();  // Redraw title
         print_menu();
         if(choice != 0) 
             break;
@@ -214,12 +244,11 @@ void Menu::start_menu() {
         clear(); 
         refresh(); 
         wclear(menu_win); 
-        wrefresh(menu_win); 
-
-        int choice = handle_user_input(); 
+        wrefresh(menu_win);        int choice = handle_user_input(); 
         old_choice = choice; // Salva la scelta precedente per il refresh del menu
-
-        if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
+        
+        if (choice == 1) {   // Start Game
+            removeTitle();  // Remove title before starting game
             game_state = start_game();
             gameOver(game_state);
             

@@ -37,10 +37,19 @@ public:
 
 private:
     // ========== PRIVATE METHODS ==========
+    
     /**
      * @brief Print menu options to screen
      */
-    void print_menu();
+    void print_menu();    /**
+     * @brief Display the SNAKE title in its own window
+     */
+    void displayTitle();
+
+    /**
+     * @brief Remove the title window from screen
+     */
+    void removeTitle();
 
     /**
      * @brief Process user input for menu navigation
