@@ -4,8 +4,7 @@
 #include "../gioco/Livelli.cpp"
 #include <cstring>  // For string functions
 
-// ========== GLOBAL VARIABLES ==========
-int SkipInput = 0;                  // Flag to skip menu input processing
+// ========== GLOBAL VARIABLES ==========                  // Flag to skip menu input processing
 char playerName[32] = "Guest";      // Global variable to store player name
 
 // ========== PLAYER NAME INPUT FUNCTION ==========
@@ -101,22 +100,28 @@ void SalvaPunteggio(int score) {
 // ========== GAME OVER HANDLING ==========
 // Handle different game ending scenarios and display appropriate messages
 void Menu::gameOver(int game_state) {
-    if(game_state == 0) {
+    if(game_state == GAME_OVER_COLLISION) {
         // Game ended due to collision
+        Utils::wait(200);
         SalvaPunteggio(punteggioFinale);
         mvprintw(2, startx + 3, "Game Over\n");
         mvprintw(3, startx + 3, "Press esc to return to menu\n");
+        refresh();
+        int c;
+            while(c = wgetch(menu_win)){
+                if (c == (char)27 || c == (char)10) break;
+            }
     } 
     else if(game_state == BYPASSGAMEOVER) {
         // Player returned to menu or completed level - save score
         SalvaPunteggio(punteggioFinale);
-        SkipInput = 1; // Skip menu input to return directly to menu
     } 
     else {
         // New high score achieved
         mvprintw(0, startx, "Game Over\n");
         mvprintw(1, startx, "New Record!\n");
-        mvprintw(2, startx, "Press esc to return to menu\n");        SalvaPunteggio(game_state);
+        mvprintw(2, startx, "Press esc to return to menu\n");        
+        SalvaPunteggio(game_state);
     }
 }
 
@@ -203,10 +208,12 @@ void Menu::start_menu() {
             game_state = start_game();
             gameOver(game_state);
             
-        }else if (choice == 2) { 
+        }else if (choice == 2) {
+             
             Utils::initColors();
             Classifica::start_classifica();
         }else if (choice == 3){
+            
             wclear(menu_win);
             wrefresh(menu_win);
             WINDOW * insideBox;
@@ -220,11 +227,12 @@ void Menu::start_menu() {
                     gameOver(game_state);
                     break;
                 }
-                else if (c == -2) break;
-            }
-            
+                else if (c == -2){
+                    break;
+                }   
+        }
             wrefresh(insideBox);
-            
+            refresh();
         }
          else if (choice == 4) {
             break;
@@ -235,22 +243,8 @@ void Menu::start_menu() {
         // invece che printare sta linea usate il vostro.
 
         clrtoeol();
+        
         refresh();
-        int c;
-
-        if(!SkipInput){
-            c = getch();
-        }
-        SkipInput = !SkipInput;
-
-        if (c == 27 ) {   // 27 ovvero esc 
-            pressed_exit = !pressed_exit;
-            clear();
-            refresh();
-            wclear(menu_win); 
-            wrefresh(menu_win);
-            continue; 
-        } 
     }
     
 }

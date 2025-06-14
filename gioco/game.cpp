@@ -24,10 +24,10 @@ bool showPauseMenu(WINDOW* gameWin);
 
 // Initialize all game objects (snake, apple, level)
 void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& livello) {
-    serpent = new Serpente(win, 'o', 7);
+    serpent = new Serpente(win, 'o', 9);
     frutto = new Mela(win, -1, -1, '$');
     livello = new level();
-    livello->setLevel(levelChoosen);
+    livello->setLevel(levelChosen);
 }
 
 // ========== DISPLAY FUNCTIONS ==========
@@ -46,7 +46,7 @@ void displayTime(WINDOW* win) {
 
 // Display current level in the wrapper window
 void displayLevel(WINDOW *win, level* livello) {
-    mvwprintw(win, 0, 2, "Livello: %d", levelChoosen);
+    mvwprintw(win, 0, 2, "Livello: %d", levelChosen);
     wrefresh(win);
 }
 
@@ -204,8 +204,8 @@ int start_game() {
     
     // Game configuration
     int appleDelay = CLOCKS_PER_SEC;  // 1 second between apple spawns
-    double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChoosen - 1) * 0.666);  // Snake speed
-    int levelDelay = 45;  // Level duration in seconds
+    double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);  // Snake speed
+    int levelDelay = 10;  // Level duration in seconds
     int bonusPoints = 100 * livello->getId();  // Points per apple/level
     
     // Show start message and handle initial input
@@ -235,7 +235,7 @@ int start_game() {
 
     // Game state flags
     bool gameOver = false;
-    bool levelCompleted = false;    // ========== MAIN GAME LOOP ==========
+    // ========== MAIN GAME LOOP ==========
     while (true) {
         punteggioFinale = scoreSnake;  // Update global score for saving
         clock_t now = clock();
@@ -282,7 +282,6 @@ int start_game() {
         // === LEVEL COMPLETION CHECK ===
         if(tempoPassato >= levelDelay){
             Utils::wait(500);
-            levelCompleted = true;
             
             // Show level completion screen
             werase(win);
@@ -292,6 +291,7 @@ int start_game() {
             mvwprintw(win, Maxy/2 + 1, Maxx/2 - 10, "Press ESC to continue");
             scoreSnake += bonusPoints;
             punteggioFinale = scoreSnake;  // Update global score for saving
+            displayScore(wrap);
             wrefresh(win);
             
             // Wait for ESC or ENTER to continue
@@ -300,9 +300,10 @@ int start_game() {
                 if (c == ESC_KEY || c == ENTER_KEY) {
                     delwin(win);
                     delwin(wrap);
-                    return BYPASSGAMEOVER;
-                }
+                    break;
+                }  
             }
+            return BYPASSGAMEOVER;
         }
 
         // === RENDERING ===
@@ -311,7 +312,7 @@ int start_game() {
         wrefresh(win);       // Refresh display
 
         // === GAME END CONDITIONS ===
-        if (gameOver || levelCompleted) {
+        if (gameOver) {
             // Cleanup game objects
             delete serpent;
             delete frutto;
