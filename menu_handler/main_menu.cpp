@@ -190,7 +190,7 @@ void Menu::gameOver(int game_state) {
 void Menu::displayTitle() {
     // Calculate title window dimensions and position
     int titleHeight = 7;
-    int titleWidth = 32;
+    int titleWidth = 38;
     
     int titleStartY = 0; // Position above main menu
     int titleStartX = (COLS - titleWidth) / 2;  // Center horizontally
@@ -205,11 +205,11 @@ void Menu::displayTitle() {
     box(titleWin, 0, 0);
     
     // Display ASCII art SNAKE title
-    mvwprintw(titleWin, 1, 2, " SSS  S  S  SSSS  S  S SSSSS");
-    mvwprintw(titleWin, 2, 2, "S     SS S S   S  S S  S    ");
-    mvwprintw(titleWin, 3, 2, " SSS  S SS SSSSS  SS   SSSS ");
-    mvwprintw(titleWin, 4, 2, "    S S  S S   S  S S  S    ");
-    mvwprintw(titleWin, 5, 2, " SSS  S  S S   S  S  S SSSSS");
+    mvwprintw(titleWin, 1, 2, " SSS   S  S   SSSSS   S  S   SSSSS");
+    mvwprintw(titleWin, 2, 2, "S      SS S   S   S   S S    S    ");
+    mvwprintw(titleWin, 3, 2, " SSS   S SS   SSSSS   SS     SSSS ");
+    mvwprintw(titleWin, 4, 2, "    S  S  S   S   S   S S    S    ");
+    mvwprintw(titleWin, 5, 2, " SSS   S  S   S   S   S  S   SSSSS");
     
     wrefresh(titleWin);
 }
@@ -325,6 +325,7 @@ void Menu::start_menu() {
                 levelMenu.PrintLevels(insideBox);
                 int c = levelMenu.processInput(wgetch(insideBox));
                 if (c > 0){
+                    removeTitle();
                     game_state = start_game();
                     gameOver(game_state);
                     break;

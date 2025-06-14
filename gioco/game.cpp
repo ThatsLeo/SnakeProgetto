@@ -160,7 +160,7 @@ int start_game() {
       // Game configuration
     int appleDelay = CLOCKS_PER_SEC;  // 1 second between apple spawns
     double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);  // Snake speed
-    int levelDelay = 10;  // Level duration in seconds
+    int levelDelay = 45;  // Level duration in seconds
     int bonusPoints = 100 * livello->getId();  // Points per apple/level
     
     // Handle initial game start
