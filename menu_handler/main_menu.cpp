@@ -4,13 +4,14 @@
 #include "../gioco/Livelli.cpp"
 #include <cstring>  // For string functions
 
-// ========== GLOBAL VARIABLES ==========
-int SkipInput = 0;                  // Flag to skip menu input processing
+// ========== GLOBAL VARIABLES ==========                  // Flag to skip menu input processing
 char playerName[32] = "Guest";      // Global variable to store player name
+WINDOW* titleWin = nullptr; // Pointer for title window
 
 // ========== PLAYER NAME INPUT FUNCTION ==========
 // Get player name at the start of the program
-void getPlayerName() {
+void getPlayerName()
+{
     // === WINDOW SETUP ===
     int nameWinHeight = 6;
     int nameWinWidth = 40;
@@ -18,42 +19,99 @@ void getPlayerName() {
     getmaxyx(stdscr, yMax, xMax);
     int nameStartY = (yMax - nameWinHeight) / 2;
     int nameStartX = (xMax - nameWinWidth) / 2;
-    
-    WINDOW* nameWin = newwin(nameWinHeight, nameWinWidth, nameStartY, nameStartX);
-    keypad(nameWin, FALSE);
-    
+
+    WINDOW *nameWin = newwin(nameWinHeight, nameWinWidth, nameStartY, nameStartX);
+    keypad(nameWin, TRUE);
+
     // === DISPLAY SETUP ===
     clear();
     refresh();
     box(nameWin, 0, 0);
-    
-    // Display input prompt
+
+    // === INPUT HANDLING ===
+    noecho();    // We'll handle display manually
+    curs_set(1); // Show cursor
+
+    // Get user input (max 30 characters)
+    char tempName[32] = ""; // Initialize empty
+    int nameIndex = 0;      // Track position in name
+
     mvwprintw(nameWin, 1, 2, "Inserisci il tuo nome:");
     mvwprintw(nameWin, 2, 2, "> ");
-    wrefresh(nameWin);
-    
-    // === INPUT HANDLING ===
-    echo();      // Show typed characters
-    curs_set(1); // Show cursor
-    
-    // Get user input (max 30 characters)
-    char tempName[32];
-    mvwgetnstr(nameWin, 2, 4, tempName, 30);
-    
+    wrefresh(nameWin); // Make sure prompt is displayed
+
+    wmove(nameWin, 2, 4); // Position cursor after "> "
+
+    // Input loop - handle each character manually
+    int c;
+    while ((c = wgetch(nameWin)))
+    {
+        if (c == 10 || c == 13 || c == KEY_ENTER)
+        { // Enter key
+            break;
+        }
+        else if (c == KEY_BACKSPACE || c == 127 || c == 8)
+        { // Backspace
+            if (nameIndex > 0)
+            {
+                nameIndex--;
+                tempName[nameIndex] = '\0';
+                // Move cursor back and clear character
+                int curX = getcurx(nameWin);
+                if (curX > 4)
+                {
+                    mvwprintw(nameWin, 2, curX - 1, " ");
+                    wmove(nameWin, 2, curX - 1);
+                    wrefresh(nameWin);
+                }
+            }
+        }
+        else if (c >= 32 && c <= 126 && nameIndex < 30)
+        { // Printable characters
+            tempName[nameIndex] = c;
+            tempName[nameIndex + 1] = '\0';
+            nameIndex++;
+            // Display the character manually
+            wprintw(nameWin, "%c", c);
+            wrefresh(nameWin);
+        }
+        // Handle arrow keys if needed
+        else if (c == KEY_LEFT)
+        {
+            int curX = getcurx(nameWin);
+            if (curX > 4)
+            {
+                wmove(nameWin, 2, curX - 1);
+            }
+        }
+        else if (c == KEY_RIGHT)
+        {
+            int curX = getcurx(nameWin);
+            if (curX < 4 + nameIndex && curX < nameWinWidth - 2)
+            {
+                wmove(nameWin, 2, curX + 1);
+            }
+        }
+
+        wrefresh(nameWin); // Update display
+    }
+
+    // REMOVE THIS LINE - it was causing the problem:
+    // mvwgetnstr(nameWin, 2, 4, tempName, 30);
+
     // Copy to global variable with safety checks
     strncpy(playerName, tempName, 31);
-    playerName[31] = '\0';  // Ensure null termination
-    
+    playerName[31] = '\0'; // Ensure null termination
+
     // Use default name if input is empty
-    if (strlen(playerName) == 0) {
+    if (strlen(playerName) == 0)
+    {
         strcpy(playerName, "Guest");
     }
-    
+
     // === CLEANUP ===
-    noecho();    // Hide typed characters
     curs_set(0); // Hide cursor
-    curs_set(0);
-    
+
     // Clean up
     delwin(nameWin);
     clear();
@@ -101,30 +159,79 @@ void SalvaPunteggio(int score) {
 // ========== GAME OVER HANDLING ==========
 // Handle different game ending scenarios and display appropriate messages
 void Menu::gameOver(int game_state) {
-    if(game_state == 0) {
+    if(game_state == GAME_OVER_COLLISION) {
         // Game ended due to collision
+        Utils::wait(200);
         SalvaPunteggio(punteggioFinale);
         mvprintw(2, startx + 3, "Game Over\n");
         mvprintw(3, startx + 3, "Press esc to return to menu\n");
+        refresh();
+        int c;
+            while(c = wgetch(menu_win)){
+                if (c == (char)27 || c == (char)10) break;
+            }
     } 
     else if(game_state == BYPASSGAMEOVER) {
         // Player returned to menu or completed level - save score
         SalvaPunteggio(punteggioFinale);
-        SkipInput = 1; // Skip menu input to return directly to menu
     } 
     else {
         // New high score achieved
         mvprintw(0, startx, "Game Over\n");
         mvprintw(1, startx, "New Record!\n");
-        mvprintw(2, startx, "Press esc to return to menu\n");        SalvaPunteggio(game_state);
+        mvprintw(2, startx, "Press esc to return to menu\n");        
+        SalvaPunteggio(game_state);
     }
 }
 
 
+// ========== TITLE DISPLAY FUNCTION ==========
+// Display the SNAKE title in its own window above the main menu
+void Menu::displayTitle() {
+    // Calculate title window dimensions and position
+    int titleHeight = 7;
+    int titleWidth = 32;
+    
+    int titleStartY = 0; // Position above main menu
+    int titleStartX = (COLS - titleWidth) / 2;  // Center horizontally
+    
+    // Clean up existing title window if it exists
+    if (titleWin != nullptr) {
+        delwin(titleWin);
+    }
+    
+    // Create title window
+    titleWin = newwin(titleHeight, titleWidth, titleStartY, titleStartX);
+    box(titleWin, 0, 0);
+    
+    // Display ASCII art SNAKE title
+    mvwprintw(titleWin, 1, 2, " SSS  S  S  SSSS  S  S SSSSS");
+    mvwprintw(titleWin, 2, 2, "S     SS S S   S  S S  S    ");
+    mvwprintw(titleWin, 3, 2, " SSS  S SS SSSSS  SS   SSSS ");
+    mvwprintw(titleWin, 4, 2, "    S S  S S   S  S S  S    ");
+    mvwprintw(titleWin, 5, 2, " SSS  S  S S   S  S  S SSSSS");
+    
+    wrefresh(titleWin);
+}
+
+// ========== TITLE CLEANUP FUNCTION ==========
+// Remove the title window from screen
+void Menu::removeTitle() {
+    if (titleWin != nullptr) {
+        wclear(titleWin);
+        wrefresh(titleWin);
+        delwin(titleWin);
+        titleWin = nullptr;
+    }
+    clear();
+    refresh();
+}
+
 void Menu::print_menu() {
     box(menu_win, 0, 0);
+    
+    // ========== DISPLAY MENU OPTIONS ==========
     for(int i = 0; i < n_choices; ++i) {
-        
         int x = getmaxx(menu_win) /2 - std::strlen(choices[i]) / 2;
         int y = getmaxy(menu_win)/ 2 + i - n_choices /2;
         
@@ -135,7 +242,6 @@ void Menu::print_menu() {
         } else {
             mvwprintw(menu_win, y, x, "%s", choices[i]); // senza effetto highlight
         }
-        ++y;
     }
     wrefresh(menu_win);
 }
@@ -163,10 +269,12 @@ void Menu::process_input(int c) {  // abbiamo sisteamato il metodo process_input
 
 int Menu::handle_user_input() {
     int c;
+    displayTitle();  // Display title in its own box
     print_menu();
     while(1) {
         c = wgetch(menu_win);
         process_input(c);
+        displayTitle();  // Redraw title
         print_menu();
         if(choice != 0) 
             break;
@@ -194,19 +302,20 @@ void Menu::start_menu() {
         clear(); 
         refresh(); 
         wclear(menu_win); 
-        wrefresh(menu_win); 
-
-        int choice = handle_user_input(); 
+        wrefresh(menu_win);        int choice = handle_user_input(); 
         old_choice = choice; // Salva la scelta precedente per il refresh del menu
-
-        if (choice == 1) {   // Usiamo uno switch per gestire le scelte appena le abbiamo tutte
+        
+        if (choice == 1) {   // Start Game
+            removeTitle();  // Remove title before starting game
             game_state = start_game();
             gameOver(game_state);
             
-        }else if (choice == 2) { 
+        }else if (choice == 2) {
+             
             Utils::initColors();
             Classifica::start_classifica();
         }else if (choice == 3){
+            
             wclear(menu_win);
             wrefresh(menu_win);
             WINDOW * insideBox;
@@ -220,11 +329,12 @@ void Menu::start_menu() {
                     gameOver(game_state);
                     break;
                 }
-                else if (c == -2) break;
-            }
-            
+                else if (c == -2){
+                    break;
+                }   
+        }
             wrefresh(insideBox);
-            
+            refresh();
         }
          else if (choice == 4) {
             break;
@@ -235,22 +345,8 @@ void Menu::start_menu() {
         // invece che printare sta linea usate il vostro.
 
         clrtoeol();
+        
         refresh();
-        int c;
-
-        if(!SkipInput){
-            c = getch();
-        }
-        SkipInput = !SkipInput;
-
-        if (c == 27 ) {   // 27 ovvero esc 
-            pressed_exit = !pressed_exit;
-            clear();
-            refresh();
-            wclear(menu_win); 
-            wrefresh(menu_win);
-            continue; 
-        } 
     }
     
 }

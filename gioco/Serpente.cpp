@@ -10,7 +10,7 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     headX = Maxx/2;
     headY = Maxy/2;
     
-    // Set initial direction to RIGHT
+    // Set initial direction to UP
     dir = UP;
     
     body* current = head;
