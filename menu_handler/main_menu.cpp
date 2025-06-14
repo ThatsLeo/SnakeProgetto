@@ -128,10 +128,26 @@ void Menu::gameOver(int game_state) {
 
 void Menu::print_menu() {
     box(menu_win, 0, 0);
+    
+    // ========== DISPLAY GAME TITLE ==========
+    // Big "SNAKE" title
+    int titleStartY = 3;
+    int titleCenterX = getmaxx(menu_win) / 2;
+    
+    // Simple but effective ASCII title
+    mvwprintw(menu_win, titleStartY, titleCenterX - 6, "  ███  █  █  ████  █  █ █████");
+    mvwprintw(menu_win, titleStartY + 1, titleCenterX - 6, " █   █ ██ █ █   █  █ █  █    ");
+    mvwprintw(menu_win, titleStartY + 2, titleCenterX - 6, "  ███  █ ██ █████  ██   ████ ");
+    mvwprintw(menu_win, titleStartY + 3, titleCenterX - 6, "     █ █  █ █   █  █ █  █    ");
+    mvwprintw(menu_win, titleStartY + 4, titleCenterX - 6, "  ███  █  █ █   █  █  █ █████");
+    
+    // Add some spacing after title
+    int menuStartY = titleStartY + 8;
+    
+    // ========== DISPLAY MENU OPTIONS ==========
     for(int i = 0; i < n_choices; ++i) {
-        
         int x = getmaxx(menu_win) /2 - std::strlen(choices[i]) / 2;
-        int y = getmaxy(menu_win)/ 2 + i - n_choices /2;
+        int y = menuStartY + i;
         
         if(highlight == i + 1) { 
             wattron(menu_win, A_REVERSE);
@@ -140,7 +156,6 @@ void Menu::print_menu() {
         } else {
             mvwprintw(menu_win, y, x, "%s", choices[i]); // senza effetto highlight
         }
-        ++y;
     }
     wrefresh(menu_win);
 }
