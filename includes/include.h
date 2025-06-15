@@ -1,21 +1,5 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
-
-/**
- * @brief Global includes and definitions
- * 
- * This file contains all common library includes, global constants,
- * and shared definitions used throughout the Snake game project.
- */
-
-
-// ========== LIBRARY INCLUDES ==========
-// ----------------- IMPORTANTE ---------------------------------------------
-// usate sto file per aggiungere tutte le librerie che vi servono in tutti i file
-// in modo da non doverle aggiungere ogni volta
-
-// Also make global variables here and global functions
-// --------------------------------------------------------------
 #pragma once
 
 #include <ncurses/ncurses.h>
@@ -24,12 +8,11 @@
 #include <fstream>
 #include <string>
 
-// ========== GAME CONSTANTS ==========
-#define Maxy 20                 // Game area height
-#define Maxx 50                 // Game area width
+#define Maxy 20                 // altezza griglia
+#define Maxx 50                 // larghezza griglia
+#define BYPASSGAMEOVER 12938 
 
-// ========== GLOBAL VARIABLES ==========
-static int levelChosen = 1;    // Currently selected level (default: 1)
+static int levelChosen = 1;    
+extern int punteggioFinale; 
 
-#endif // INCLUDE_H
-
+#endif

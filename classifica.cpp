@@ -2,20 +2,19 @@
 #include "classifica.h"
 #include "utils/utils.h"
 #include "file_handler/file_manager.h"
-#include <cstring>  // For string functions
+#include <cstring>  
 
-// Simple structure for score entries using only basic C++ features
 struct ScoreEntry {
     char name[64];
     int score;
 };
 
-// Simple bubble sort function to sort scores in descending order
+// bubble sort per la classifica
 void sortScores(ScoreEntry* entries, int count) {
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - i - 1; j++) {
             if (entries[j].score < entries[j + 1].score) {
-                // Swap entries
+                
                 ScoreEntry temp = entries[j];
                 entries[j] = entries[j + 1];
                 entries[j + 1] = temp;
@@ -24,22 +23,19 @@ void sortScores(ScoreEntry* entries, int count) {
     }
 }
 
-// Simple function to convert string to integer
+// da punteggio in caratteri ad intero
 int stringToInt(const char* str) {
     int result = 0;
     int sign = 1;
     int i = 0;
     
-    // Skip whitespace
     while (str[i] == ' ' || str[i] == '\t') i++;
-    
-    // Handle negative numbers
+
     if (str[i] == '-') {
         sign = -1;
         i++;
     }
-    
-    // Convert digits
+
     while (str[i] >= '0' && str[i] <= '9') {
         result = result * 10 + (str[i] - '0');
         i++;
@@ -48,7 +44,6 @@ int stringToInt(const char* str) {
     return result * sign;
 }
 
-// Simple function to find character in string
 char* findChar(char* str, char ch) {
     while (*str) {
         if (*str == ch) return str;
@@ -57,7 +52,6 @@ char* findChar(char* str, char ch) {
     return nullptr;
 }
 
-// Simple function to get string length
 int getStringLength(const char* str) {
     int len = 0;
     while (str[len]) len++;
@@ -69,12 +63,12 @@ void Classifica::start_classifica() {
     curs_set(0);
     noecho();
     start_color();
-      // Initialize color pairs
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK);  // Gold for 1st place
-    init_pair(2, COLOR_CYAN, COLOR_BLACK);   // Silver for 2nd place  
-    init_pair(3, COLOR_RED, COLOR_BLACK);     // Bronze for 3rd place
-    init_pair(4, COLOR_WHITE, COLOR_BLACK);   // Green for other entries
-    init_pair(5, COLOR_WHITE, COLOR_BLACK);    // Cyan for header
+
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Gold primo posto
+    init_pair(2, COLOR_CYAN, COLOR_BLACK);   // Silver secondo posto  
+    init_pair(3, COLOR_RED, COLOR_BLACK);    // Bronze terzo posto
+    init_pair(4, COLOR_WHITE, COLOR_BLACK);    
+    init_pair(5, COLOR_WHITE, COLOR_BLACK);    
     
     FileManager fileManager;
     

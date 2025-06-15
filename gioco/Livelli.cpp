@@ -1,8 +1,16 @@
 #include "Livelli.hpp"
 #include "../includes/include.h"
 #pragma once
+// Crea una lista bidirezionale di 10 livelli
 
-level::level(){          // Crea una lista bidirezionale di 10 livelli
+
+level::level(int id, level* next, level* prev){
+        this->id = id;
+        this->next = next;
+        this->prev = prev;
+    }
+
+level::level(){          
     n_levels = 10;
 
     head = new level{1, NULL, NULL};

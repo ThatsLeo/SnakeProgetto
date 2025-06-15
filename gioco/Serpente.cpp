@@ -10,7 +10,6 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     headX = Maxx/2;
     headY = Maxy/2;
     
-    // Set initial direction to UP
     dir = UP;
     
     body* current = head;
@@ -29,21 +28,18 @@ void Serpente::moveBy(int dx, int dy) {
     headX += dx;
     headY += dy;
     
-    // Wrap-around horizontal boundaries.
     if (headX < 1) {
         headX = Maxx - 2;
     } else if (headX > Maxx - 2) {
         headX = 1;
     }
     
-    // Wrap-around vertical boundaries.
     if (headY < 1) {
         headY = Maxy - 2;
     } else if (headY > Maxy - 2) {
         headY = 1;
     }
     
-    // Update the body.
     head = addBody(headY, headX);
     body *delTail = tail();
     body *newTail = prevTail();
@@ -51,7 +47,6 @@ void Serpente::moveBy(int dx, int dy) {
     newTail->next = nullptr;
 }
 
-// Movimento in alto.
 void Serpente::moveUp(){
     moveBy(0, -1);
 }
@@ -104,7 +99,6 @@ static Direction getDesiredDirection(int key, Direction current) {
         Direction opposite;
     };
 
-    // Lookup table for keys and their associated direction and opposite.
     static const Mapping mappings[] = {
         { KEY_UP,    UP,    DOWN },
         { KEY_DOWN,  DOWN,  UP },
@@ -112,7 +106,6 @@ static Direction getDesiredDirection(int key, Direction current) {
         { KEY_RIGHT, RIGHT, LEFT }
     };
 
-    // Iterate through the mappings and if the key matches, check for a reversal.
     for (const auto& m : mappings) {
         if (m.key == key) {
             return (current == m.opposite) ? current : m.newDir;
@@ -121,7 +114,6 @@ static Direction getDesiredDirection(int key, Direction current) {
     return current;
 }
 
-// Helper function that executes the move corresponding to the new direction.
 static void performMove(Serpente* self, Direction newDir) {
     switch(newDir) {
         case UP:
@@ -155,29 +147,12 @@ static bool updateDirection(Serpente* self, int key) {
 }
 
 
-// Funzione che prende da tastiera (KEY UP, KEY DOWN, KEY LEFT, KEY RIGHT).
-int Serpente::getMove(){
-    int moveKey = wgetch(this->win);
-    // If updateDirection returns false, then no valid change occurred.
-    if (!updateDirection(this, moveKey)) {
-        
-        defaultMove();
-    }
-    return moveKey;
-}
-
-// Set movement direction based on key input (more responsive)
 void Serpente::setMove(int key) {
-    // Only change direction, don't move yet
+    
     Direction desiredDir = getDesiredDirection(key, this->dir);
     if (desiredDir != this->dir) {
         this->dir = desiredDir;
     }
-}
-
-// Move the serpent in current direction without getting input
-void Serpente::move() {
-    defaultMove();
 }
 
 // Aggiorna le coordinate del serpente sulla matrice del display

@@ -2,6 +2,7 @@
 #include "Mela.hpp"
 
 Mela::Mela(WINDOW * win, int x, int y, char c){
+    Utils::initColors();
     this->x = x;
     this->y = y;
     this->win = win;
@@ -27,7 +28,10 @@ bool Mela::isOn(){
 
 void Mela::Spawn(int x, int y){
     randPos(x,y);
+    Utils::initColors();
+    wattron(this->win, COLOR_PAIR(3));
     mvwaddch(this->win, y, x, character);
+    wattroff(this->win, COLOR_PAIR(3));
 }
 
 
