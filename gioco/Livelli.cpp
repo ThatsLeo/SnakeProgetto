@@ -27,10 +27,16 @@ void level::nextLevel(){
     if (currentlvl->next != NULL){
         currentlvl = currentlvl->next;
     }
+    else {
+        level::setLevel(1);
+    }
 }
 void level::prevLevel(){
     if (currentlvl->prev != NULL){
         currentlvl = currentlvl->prev;
+    }
+    else {
+        level::setLevel(n_levels);
     }
 }
 void level::setLevel(int id){         // Cerca il livello con id specificato e lo imposta come currentlvl
