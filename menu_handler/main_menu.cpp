@@ -303,6 +303,7 @@ void Menu::start_menu() {
         }
          else if (choice == 4) {
             break;
+        }
 
         clrtoeol();
         
