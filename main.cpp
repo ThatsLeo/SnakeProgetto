@@ -8,5 +8,6 @@ int main() {
     Menu menu = Menu();
     menu.start_menu();
 
+    endwin();
     return 0;
 }

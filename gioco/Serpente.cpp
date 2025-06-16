@@ -219,11 +219,12 @@ bool Serpente::firstMove(){
     return true;
 }
 
+// Rileva se il serpente collide con il suo corpo.
 bool Serpente::autoCollision() {
     body *corpo = head->next;
     while (corpo != nullptr) {
         if (headX == corpo->x && headY == corpo->y) {
-            Utils::wait(400); // Pause for 1 second before returning true
+            Utils::wait(400);
             return true;
         }
         corpo = corpo->next;

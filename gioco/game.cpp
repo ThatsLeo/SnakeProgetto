@@ -4,9 +4,6 @@
 #include "Livelli.cpp"
 #include <cstring>
 
-#define ESC_KEY 27
-#define ENTER_KEY 10
-#define GAME_OVER_COLLISION 0
 
 // wrap box per punteggio e tempo
 int wrapY = Maxy + 2;

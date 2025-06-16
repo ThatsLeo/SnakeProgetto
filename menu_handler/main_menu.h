@@ -12,8 +12,6 @@ public:
 
     ~Menu();
 
-    void close_menu();
-
     void start_menu();
 
 private:

@@ -66,7 +66,7 @@ void Classifica::start_classifica() {
 
     init_pair(1, COLOR_YELLOW, COLOR_BLACK); // Gold primo posto
     init_pair(2, COLOR_CYAN, COLOR_BLACK);   // Silver secondo posto  
-    init_pair(3, COLOR_RED, COLOR_BLACK);    // Bronze terzo posto
+    init_pair(3, COLOR_RED, COLOR_BLACK);    // Bronzo terzo posto
     init_pair(4, COLOR_WHITE, COLOR_BLACK);    
     init_pair(5, COLOR_WHITE, COLOR_BLACK);    
     
