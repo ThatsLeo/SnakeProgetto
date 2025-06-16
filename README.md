@@ -1,6 +1,6 @@
 # 🐍 Snake Game in C++ with ncurses
 
-Un'implementazione moderna e completa del classico gioco Snake realizzata in C++ utilizzando la libreria ncurses per l'interfaccia testuale.
+Un'implementazione del classico gioco Snake realizzata in C++ utilizzando la libreria ncurses per l'interfaccia testuale.
 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
 ![ncurses](https://img.shields.io/badge/ncurses-6.0%2B-green.svg)
@@ -8,37 +8,37 @@ Un'implementazione moderna e completa del classico gioco Snake realizzata in C++
 
 ## 📋 Indice
 
-- [🎮 Caratteristiche](#-caratteristiche)
-- [🛠 Prerequisiti](#-prerequisiti)
-- [🚀 Installazione](#-installazione)
-- [🎯 Come Giocare](#-come-giocare)
-- [📁 Struttura del Progetto](#-struttura-del-progetto)
-- [⚙️ Configurazione](#-configurazione)
-- [👥 Autori](#-autori)
+- [Caratteristiche](#-caratteristiche)
+- [Prerequisiti](#-prerequisiti)
+- [Installazione](#-installazione)
+- [Come Giocare](#-come-giocare)
+- [Struttura del Progetto](#-struttura-del-progetto)
+- [Configurazione](#-configurazione)
+- [Autori](#-autori)
 
-## 🎮 Caratteristiche
+## Caratteristiche
 
-### ✨ Funzionalità Principali
+### Funzionalità Principali
 - **Menu interattivo** con navigazione a frecce
 - **Sistema di livelli** con difficoltà progressiva (1-10)
 - **Classifica persistente** con salvataggio automatico dei punteggi
 - **Attraversamento bordi** - il serpente può passare attraverso i muri
 - **Sistema di pausa** durante il gioco
 
-### 🎨 Interfaccia Utente
+### Interfaccia Utente
 - Menu principale con 4 opzioni:
   - **Gioca** - Avvia il gioco con il livello selezionato
   - **Classifica** - Visualizza i migliori 10 punteggi
   - **Livelli** - Selezione della difficoltà (1-10)
   - **Esci** - Termina il programma
 
-### 🏅 Sistema di Punteggio Avanzato
+### Sistema di Punteggio Avanzato
 - Punti base per ogni mela mangiata
 - **Bonus temporali** basati sul livello
 - **Moltiplicatori di difficoltà** per livelli superiori
 - **Classifica colorata** con podio (oro, argento, bronzo)
 
-## 🛠 Prerequisiti
+## Prerequisiti
 
 ### Librerie Richieste
 - **ncurses** (versione 6.0 o superiore)
@@ -47,23 +47,23 @@ Un'implementazione moderna e completa del classico gioco Snake realizzata in C++
 
 ### Installazione ncurses
 
-#### 🐧 Linux (Ubuntu/Debian)
+#### Linux (Ubuntu/Debian)
 ```bash
 sudo apt-get update
 sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 
-#### 🍎 macOS
+#### macOS
 ```bash
 brew install ncurses
 ```
 
-#### 🪟 Windows (MinGW)
+#### Windows (MinGW)
 1. Installa [MinGW-w64](https://www.mingw-w64.org/)
 2. Scarica ncurses per MinGW
 3. Aggiungi le directory `bin` e `include` alle variabili d'ambiente
 
-## 🚀 Installazione
+## Installazione
 
 ### 1. Clona il Repository
 ```bash
@@ -95,57 +95,54 @@ g++ -I/mingw64/include/ncurses -o main.exe main.cpp -lncurses -L/mingw64/bin -st
 main.exe
 ```
 
-## 🎯 Come Giocare
+## Come Giocare
 
-### 🎮 Controlli di Base
+### Controlli di Base
 | Tasto | Azione |
 |-------|--------|
 | `↑` `↓` `←` `→` | Movimento del serpente |
 | `ESC` | Menu pausa |
 | `Enter` | Conferma selezione menu |
 
-### 🎯 Obiettivo
-- Mangia le **mele rosse** (🍎) per crescere e guadagnare punti
+### Obiettivo
+- Mangia le **mele rosse** ($) e guadagnare punti
 - Evita di collidere con il tuo stesso corpo
 - Sopravvivi il più a lungo possibile per massimizzare il punteggio
 - Completa i livelli per bonus aggiuntivi
 
-### 📊 Sistema di Livelli
-- **Livello 1-3**: Velocità base, ideale per principianti
-- **Livello 4-6**: Velocità media, sfida moderata  
-- **Livello 7-10**: Velocità alta, per giocatori esperti
+### Sistema di Livelli
+- La velocità del serpente aumenta ad ogni livello dall'1 al 10
 
-## 📁 Struttura del Progetto
+## Struttura del Progetto
 
 ```
 SnakeProgetto/
-├── 📂 gioco/                    # Core game logic
-│   ├── 🐍 Serpente.cpp/hpp      # Implementazione serpente
-│   ├── 🍎 Mela.cpp/hpp          # Gestione mele/cibo
-│   ├── 📶 Livelli.cpp/hpp       # Sistema livelli
-│   └── 🎮 game.cpp              # Game loop principale
-├── 📂 menu_handler/             # Gestione interfaccia
-│   └── 📋 main_menu.cpp/h       # Menu principale
-├── 📂 file_handler/             # Persistenza dati
-│   └── 💾 file_manager.cpp/h    # Gestione file punteggi
-├── 📂 utils/                    # Funzioni utility
-│   └── 🛠 utils.cpp/h           # Utilità comuni
-├── 📂 includes/                 # Headers globali
-│   └── 📚 include.h/cpp         # Include centralizzati
-├── 📊 classifica.cpp/h          # Sistema classifica
-├── 🏁 main.cpp                  # Entry point
-└── 📝 SaveFile.txt              # File punteggi (auto-generato)
+├── gioco/                    # Core game logic
+│   ├── Serpente.cpp/hpp      # Implementazione serpente
+│   ├── Mela.cpp/hpp          # Gestione mele/cibo
+│   ├── Livelli.cpp/hpp       # Sistema livelli
+│   └── game.cpp              # Game loop principale
+├── menu_handler/             # Gestione interfaccia
+│   └── main_menu.cpp/h       # Menu principale
+├── file_handler/             # Persistenza dati
+│   └── file_manager.cpp/h    # Gestione file punteggi
+├── utils/                    # Funzioni utility
+│   └── utils.cpp/h           # Utilità comuni
+├── includes/                 # Headers globali
+│   └── include.h/cpp         # Include centralizzati
+├── classifica.cpp/h          # Sistema classifica
+├── main.cpp                  # Entry point
+└── SaveFile.txt              # File punteggi (auto-generato)
 ```
 
-### 🏗 Architettura Modulare
-- **Separazione delle responsabilità** tra moduli
-- **Classi specializzate** per ogni componente
-- **Design pattern** implementati (Singleton, State)
-- **Gestione memoria** con RAII
+### Architettura Modulare
+- **Separazione delle responsabilità** 
+- **Classi specializzate** 
+- **Design pattern** 
 
-## ⚙️ Configurazione
+## Configurazione
 
-### 🎛 Parametri Personalizzabili
+### Parametri Personalizzabili
 Modifica i valori in `includes/include.h`:
 
 ```cpp
@@ -163,7 +160,7 @@ Modifica i valori in `includes/include.h`:
 #define LEVEL_DURATION 45
 ```
 
-### 🎨 Personalizzazione Colori
+### Personalizzazione Colori
 I colori possono essere modificati in `utils/utils.cpp`:
 
 ```cpp
@@ -172,16 +169,16 @@ init_pair(2, COLOR_RED, COLOR_BLACK);    // Bordi
 init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Mele
 ```
 
-### 🥇 Classifica
-- **🥇 1° posto**: Visualizzato in **oro**
-- **🥈 2° posto**: Visualizzato in **argento**  
-- **🥉 3° posto**: Visualizzato in **bronzo**
+### Classifica
+- ** 1° posto**: Visualizzato in **oro**
+- ** 2° posto**: Visualizzato in **argento**  
+- ** 3° posto**: Visualizzato in **bronzo**
 - Salvataggio automatico in `SaveFile.txt`
 - Formato: `NomeGiocatore:Punteggio`
 
-## 🔧 Risoluzione Problemi
+## Risoluzione Problemi
 
-### ❗ Errori Comuni
+### Errori Comuni
 
 #### "ncurses.h not found"
 ```bash
@@ -201,15 +198,15 @@ sudo apt-get install libncurses5-dev
 - Controlla che ncurses sia installato correttamente
 - Usa il comando di compilazione specifico per Windows
 
-### 🐛 Debug
+### Debug
 Per abilitare output di debug, aggiungi `-DDEBUG` durante la compilazione:
 ```bash
 g++ -DDEBUG -std=c++11 -o snake main.cpp -lncurses
 ```
 
-## 👥 Autori
+## Autori
 
-### 👨‍💻 Team di Sviluppo
+### Team di Sviluppo
 - **Matteo Terzi**  [matteo.terzi8@studio.unibo.it](mailto:matteo.terzi8@studio.unibo.it)
 - **Francesco Pignanelli**  [francesco.pignanelli@studio.unibo.it](mailto:francesco.pignanelli@studio.unibo.it)  
 - **Leonardo Rocco Monaco**  [leonardorocco.monaco@studio.unibo.it](mailto:leonardorocco.monaco@studio.unibo.it)
@@ -221,10 +218,6 @@ Progetto sviluppato per il corso di **Programmazione** presso l'**Università di
 
 <div align="center">
 
-**⭐ Se ti piace questo progetto, lascia una stella! ⭐**
-
-Realizzato con ❤️ da studenti di Informatica UNIBO
-
-[🔝 Torna all'inizio](#-snake-game-in-c-with-ncurses)
+[Torna all'inizio](#-snake-game-in-c-with-ncurses)
 
 </div>
