@@ -56,21 +56,20 @@ WINDOW* Utils::CreateTextBox(WINDOW* boxForFile, int characters, int starty, int
 }
 
 void Utils::InlinedTextWindow(WINDOW* insideBox, int x, int y, char* buffer) {
-    int initY = y;      
-    int origX = x;    
-
-    auto getColorPair = [initY](int currentY) -> int {
-        int relLine = currentY - initY;
-        return (relLine < 3) ? (relLine + 1) : 0;
-    };
+    int initY = y;       // Save initial y coordinate.
+    int origX = x;       // Save original x coordinate.
 
     for (int i = 0; buffer[i] != '\0'; ++i) {
         if (buffer[i] == '\n') {
             y++;
-            x = origX;
+            x = origX; // Reset x to the starting value for each new line.
             continue;
         }
-        int cp = getColorPair(y);
+        
+        // Calculate color pair based on current line position
+        int relLine = y - initY;
+        int cp = (relLine < 3) ? (relLine + 1) : 0;  // Color pairs 1, 2, 3 for first three lines.
+        
         if (cp != 0)
             wattron(insideBox, COLOR_PAIR(cp));
         mvwaddch(insideBox, y, x++, buffer[i]);
