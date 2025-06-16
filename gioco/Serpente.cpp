@@ -166,10 +166,12 @@ void Serpente::display(){
     current = current->next;
 
     // Corpo
+    wattron(win, COLOR_PAIR(4));
     while(current != nullptr) {
             mvwaddch(win, current->y, current->x, character); 
             current = current->next;
     }
+    wattroff(win, COLOR_PAIR(4));
 }
 
 // Ritorna un puntatore al blocco precedente alla coda.

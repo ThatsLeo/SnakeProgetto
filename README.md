@@ -4,7 +4,6 @@ Un'implementazione moderna e completa del classico gioco Snake realizzata in C++
 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
 ![ncurses](https://img.shields.io/badge/ncurses-6.0%2B-green.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
 
 ## 📋 Indice
@@ -15,9 +14,7 @@ Un'implementazione moderna e completa del classico gioco Snake realizzata in C++
 - [🎯 Come Giocare](#-come-giocare)
 - [📁 Struttura del Progetto](#-struttura-del-progetto)
 - [⚙️ Configurazione](#-configurazione)
-- [🏆 Sistema di Punteggio](#-sistema-di-punteggio)
 - [👥 Autori](#-autori)
-- [📄 Licenza](#-licenza)
 
 ## 🎮 Caratteristiche
 
@@ -106,9 +103,7 @@ main.exe
 | Tasto | Azione |
 |-------|--------|
 | `↑` `↓` `←` `→` | Movimento del serpente |
-| `p` / `P` | Pausa/Riprendi gioco |
 | `ESC` | Menu pausa |
-| `q` / `Q` | Esci dal gioco |
 | `Enter` | Conferma selezione menu |
 
 ### 🎯 Obiettivo
@@ -179,13 +174,6 @@ init_pair(2, COLOR_RED, COLOR_BLACK);    // Bordi
 init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Mele
 ```
 
-## 🏆 Sistema di Punteggio
-
-### 📈 Calcolo Punteggio
-```
-Punteggio Finale = (Mele × 10) + (Bonus Livello × ID_Livello) + Bonus Tempo
-```
-
 ### 🥇 Classifica
 - **🥇 1° posto**: Visualizzato in **oro**
 - **🥈 2° posto**: Visualizzato in **argento**  
@@ -221,17 +209,6 @@ Per abilitare output di debug, aggiungi `-DDEBUG` durante la compilazione:
 g++ -DDEBUG -std=c++11 -o snake main.cpp -lncurses
 ```
 
-## 🚀 Sviluppi Futuri
-
-### 📋 Roadmap
-- [ ] **Multiplayer locale** (2 giocatori)
-- [ ] **Power-ups** speciali (velocità, invincibilità)
-- [ ] **Temi grafici** personalizzabili
-- [ ] **Suoni ed effetti** audio
-- [ ] **Modalità sfida** con obiettivi specifici
-- [ ] **Sistema achievement** e statistiche avanzate
-- [ ] **Replay system** per le migliori partite
-
 ### 🤝 Contributi
 I contributi sono benvenuti! Per contribuire:
 
@@ -260,11 +237,6 @@ Progetto sviluppato per il corso di **Programmazione** presso l'**Università di
 - 🐛 **Bug Report**: Apri una issue su GitHub
 - 💡 **Feature Request**: Proponi nuove funzionalità
 - 📖 **Documentazione**: Leggi la relazione tecnica in `relazione_breve.tex`
-
-### 🙏 Ringraziamenti
-- Ringraziamo la **comunità ncurses** per l'eccellente documentazione
-- **Università di Bologna** per il supporto accademico
-- Tutti i **beta tester** che hanno contribuito al miglioramento del gioco
 
 ---
 
