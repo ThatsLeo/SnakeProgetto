@@ -47,43 +47,46 @@
 
 \section{Introduzione}
 
-Il progetto Snake è stato sviluppato in C++ usando la libreria ncurses per creare l'interfaccia utente. Il gioco è organizzato in moduli separati: uno per la logica di gioco, uno per i menu, uno per salvare i dati e uno per le funzioni di supporto. Questa relazione spiega le scelte più importanti fatte durante lo sviluppo.
+Il progetto Snake è stato sviluppato in C++ usando la libreria ncurses. Il gioco è organizzato in moduli separati: uno per la logica di gioco, uno per i menu, uno per salvare i dati e uno per le funzioni di supporto.
 
 \section{Architettura del Sistema}
 
-\subsection{Organizzazione Modulare}
+\subsection{Organizzazione Del Progetto}
 
 Il progetto è diviso in cartelle diverse, ognuna con un compito specifico:
 
 \begin{itemize}
-    \item \texttt{gioco/}: contiene tutto quello che serve per far funzionare il gioco (\texttt{game.cpp}), il serpente (\texttt{Serpente.cpp/hpp}), la mela (\texttt{Mela.cpp/hpp}) e i livelli (\texttt{Livelli.cpp/hpp})
-    \item \texttt{menu\_handler/}: gestisce il menu principale del gioco (\texttt{main\_menu.cpp/h})
+    \item \texttt{gioco/}: contiene tutto quello che serve per far funzionare il gioco, il serpente in (\texttt{Serpente.cpp/hpp}), la mela in (\texttt{Mela.cpp/hpp}) e i livelli in (\texttt{Livelli.cpp/hpp}). In (\texttt{game.cpp}) viene gestita la logica vera e propria del gioco con i relativi tempi, punteggi e collisioni tra oggetti.
+    
+    \item \texttt{menu\_handler/}: gestisce il menu principale del gioco (\texttt{main\_menu.cpp/h}): Contiene 4 scelte ovvero 'Gioca', 'Classifica', 'Livelli' ed 'Esci'. Premendo 'Gioca' si avvierà l'ultimo livello selezionato tramite la sezione 'Livelli' del menu.
+    
     \item \texttt{file\_handler/}: si occupa di salvare e leggere i punteggi dal file (\texttt{file\_manager.cpp/h})
+    
     \item \texttt{utils/}: contiene funzioni utili usate in tutto il progetto (\texttt{utils.cpp/h})
-    \item \texttt{includes/}: raccoglie tutte le librerie e le costanti comuni (\texttt{include.h/cpp})
+    \item \texttt{includes/}: raccoglie tutte le librerie e le costanti comuni che vengono incluse in ogni file del progetto(\texttt{include.h/cpp})
 \end{itemize}
 
-\subsection{Scelte Architetturali Fondamentali}
+\subsection{Scelte Fondamentali}
 
-\textbf{Pattern Utility Class}: La classe \texttt{Utils} contiene funzioni statiche per operazioni comuni (timing, gestione finestre, colori). Questo evita di scrivere lo stesso codice più volte.
+\textbf{Utility Class}: La classe \texttt{Utils} contiene funzioni statiche per operazioni comuni (timing, gestione finestre, colori).
 
-\textbf{Variabili Globali}: Usiamo variabili condivise (\texttt{levelChoosen}, \texttt{punteggioFinale}) per far comunicare i diversi moduli. È una soluzione semplice anche se crea dipendenze tra i moduli.
+\textbf{Variabili Globali}: Usiamo variabili globali (\texttt{levelChosen}, \texttt{punteggioFinale}) per tenere sempre traccia delle variabili importanti.
 
-\textbf{Gestione Manuale della Memoria}: Controlliamo direttamente quando allocare e liberare la memoria per oggetti e finestre ncurses. Questo ci dà controllo preciso sulle risorse del sistema.
+\textbf{Gestione Manuale della Memoria}: Controlliamo direttamente quando allocare e liberare la memoria per oggetti e finestre ncurses, quando avviene un gameOver viene deallocata la memoria di ogni oggetto di gioco.
 
 \section{Implementazione del Game Loop}
 
 \subsection{Architettura Temporizzata}
 
-Il centro del gioco è la funzione \texttt{start\_game()} che crea un ciclo di gioco basato su timing preciso:
+Il centro del gioco è la funzione \texttt{start\_game()}:
 
 \begin{lstlisting}[language=C++]
-double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChoosen - 1) * 0.666);
+double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);
 int levelDelay = 45; // secondi per livello
 int bonusPoints = 100 * livello->getId();
 \end{lstlisting}
 
-\textbf{Timer Separati}: Usiamo tre timer diversi per il movimento del serpente, per far apparire le mele e per la durata del livello. Questo ci permette di controllare bene il gioco.
+\textbf{Timer Separati}: Usiamo tre timer diversi per il movimento del serpente, per far apparire le mele e per la durata del livello.
 
 \textbf{Input Non-Bloccante}: \texttt{nodelay(win, TRUE)} fa sì che il gioco non si fermi mentre aspetta che l'utente prema un tasto.
 
@@ -97,7 +100,7 @@ Il sistema per gestire i tasti premuti usa diverse strategie:
     \item \textbf{Controllo Direzione}: Evitiamo che il serpente vada nella direzione opposta subito, per non causare collisioni accidentali
 \end{itemize}
 
-\section{Strutture Dati e Algoritmi}
+\section{Strutture Del Progetto}
 
 \subsection{Implementazione del Serpente}
 
@@ -110,13 +113,13 @@ struct body {
 };
 \end{lstlisting}
 
-\textbf{Movimento Efficiente}: Aggiungiamo un nuovo pezzo in testa e togliamo quello in coda.
+\textbf{Movimento}: Aggiungiamo un nuovo pezzo in testa e togliamo quello in coda.
 
-\textbf{Attraversamento Bordi}: Quando il serpente esce da un lato dello schermo, riappare dal lato opposto. Questo rende il gioco più dinamico.
+\textbf{Attraversamento Bordi}: Quando il serpente esce da un lato dello schermo, riappare dal lato opposto.
 
-\textbf{Controllo Collisioni}: Un algoritmo semplice che controlla se la testa del serpente tocca qualche pezzo del suo corpo.
+\textbf{Controllo Collisioni}: Un algoritmo che controlla se la testa del serpente tocca qualche pezzo del suo corpo.
 
-\subsection{Gestione Intelligente delle Mele}
+\subsection{Gestione delle Mele}
 
 La classe \texttt{Mela} fa apparire le mele solo in posti liberi:
 
@@ -128,13 +131,18 @@ bool isCellEmpty(WINDOW* win, int y, int x) {
 }
 \end{lstlisting}
 
-Le mele vengono create solo dove non c'è il serpente, controllando direttamente cosa c'è scritto in ogni posizione dello schermo.
+Le mele vengono create solo dove non c'è il serpente, ogni volta che una mela viene mangiata viene generata una nuova posizione casuale, fin quando la posizione generata è occupata un ciclo while continuerà a generarne di nuove.
 
-\section{Sistema di Persistenza e Classifiche}
+\subsection{Implementazione Livelli}
+
+I livelli sono implementati tramite lista bidirezionale, ogni livello ha un proprio ID tramite il quale vengono gestiti i tempi del movimento, i punteggi delle mele e dei punti bonus.
+
+
+\section{Sistema Di Classifica}
 
 \subsection{File-Based Storage}
 
-Per salvare i dati usiamo file di testo semplici, che sono facili da usare e funzionano su tutti i sistemi:
+Per salvare i dati usiamo un semplice file di testo:
 
 \begin{lstlisting}[language=C++]
 void FileManager::writeFileAppend(const std::string toWrite) {
@@ -147,27 +155,9 @@ void FileManager::writeFileAppend(const std::string toWrite) {
 
 \textbf{Formato Strutturato}: I dati sono salvati nel formato \texttt{"Nome:Punteggio"} che è facile da leggere e interpretare.
 
-\textbf{Solo Aggiunte}: I nuovi punteggi vengono sempre aggiunti in fondo al file, senza cancellare quelli vecchi.
-
-\subsection{Sistema di Classifiche}
-
-Per creare la classifica usiamo algoritmi semplici che funzionano sempre:
-
-\begin{itemize}
-    \item \textbf{Bubble Sort}: Un algoritmo di ordinamento semplice che lavora direttamente sui dati in memoria
-    \item \textbf{Parsing Personalizzato}: Leggiamo il file riga per riga senza usare librerie esterne
-    \item \textbf{Colori}: I primi tre posti nella classifica sono evidenziati con colori diversi usando ncurses
-\end{itemize}
+\textbf{Solo Aggiunte}: I nuovi punteggi vengono sempre aggiunti in fondo al file, senza cancellare quelli vecchi ma nella classifica del gioco vengono mostrati solo i primi 10 evidenziando i primi 3, per ordinare i punteggi usiamo un bubble sort.
 
 \section{Gestione Errori e Robustezza}
-
-\subsection{Memory Safety}
-
-Il progetto usa diverse strategie per essere più robusto:
-
-\textbf{Controllo Dimensioni Buffer}: Controlliamo sempre che i buffer per leggere file e input utente non superino le dimensioni massime.
-
-\textbf{Pulizia Risorse}: Le finestre ncurses vengono sempre chiuse correttamente, anche se il gioco si chiude in modo inaspettato.
 
 \subsection{Input Validation}
 
