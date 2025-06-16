@@ -22,8 +22,6 @@ Un'implementazione moderna e completa del classico gioco Snake realizzata in C++
 - **Menu interattivo** con navigazione a frecce
 - **Sistema di livelli** con difficoltà progressiva (1-10)
 - **Classifica persistente** con salvataggio automatico dei punteggi
-- **Colori e grafica ASCII** per un'esperienza visiva migliorata
-- **Controlli responsivi** con input non bloccante
 - **Attraversamento bordi** - il serpente può passare attraverso i muri
 - **Sistema di pausa** durante il gioco
 
@@ -209,34 +207,15 @@ Per abilitare output di debug, aggiungi `-DDEBUG` durante la compilazione:
 g++ -DDEBUG -std=c++11 -o snake main.cpp -lncurses
 ```
 
-### 🤝 Contributi
-I contributi sono benvenuti! Per contribuire:
-
-1. Fai un fork del progetto
-2. Crea un branch feature (`git checkout -b feature/AmazingFeature`)
-3. Commit le modifiche (`git commit -m 'Add AmazingFeature'`)
-4. Push al branch (`git push origin feature/AmazingFeature`)
-5. Apri una Pull Request
-
 ## 👥 Autori
 
 ### 👨‍💻 Team di Sviluppo
-- **Matteo Terzi** - *Lead Developer* - [matteo.terzi8@studio.unibo.it](mailto:matteo.terzi8@studio.unibo.it)
-- **Francesco Pignanelli** - *Game Logic Specialist* - [francesco.pignanelli@studio.unibo.it](mailto:francesco.pignanelli@studio.unibo.it)  
-- **Leonardo Rocco Monaco** - *UI/UX Developer* - [leonardorocco.monaco@studio.unibo.it](mailto:leonardorocco.monaco@studio.unibo.it)
+- **Matteo Terzi**  [matteo.terzi8@studio.unibo.it](mailto:matteo.terzi8@studio.unibo.it)
+- **Francesco Pignanelli**  [francesco.pignanelli@studio.unibo.it](mailto:francesco.pignanelli@studio.unibo.it)  
+- **Leonardo Rocco Monaco**  [leonardorocco.monaco@studio.unibo.it](mailto:leonardorocco.monaco@studio.unibo.it)
 
 ### 🎓 Contesto Accademico
 Progetto sviluppato per il corso di **Programmazione** presso l'**Università di Bologna** - Corso di Laurea in Informatica.
-
----
-
-## 📞 Supporto
-
-### 🆘 Hai Bisogno di Aiuto?
-- 📧 **Email**: Contatta uno degli autori
-- 🐛 **Bug Report**: Apri una issue su GitHub
-- 💡 **Feature Request**: Proponi nuove funzionalità
-- 📖 **Documentazione**: Leggi la relazione tecnica in `relazione_breve.tex`
 
 ---
 
