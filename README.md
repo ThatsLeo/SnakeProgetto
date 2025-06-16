@@ -1,7 +1,7 @@
 # 🐍 Snake Game in C++ with ncurses
 
 Un'implementazione moderna e completa del classico gioco Snake realizzata in C++ utilizzando la libreria ncurses per l'interfaccia testuale.
-
+ 
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
 ![ncurses](https://img.shields.io/badge/ncurses-6.0%2B-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
