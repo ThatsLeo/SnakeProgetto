@@ -32,9 +32,9 @@ Un'implementazione del classico gioco Snake realizzata in C++ utilizzando la lib
   - **Livelli** - Selezione della difficoltà (1-10)
   - **Esci** - Termina il programma
 
-### Sistema di Punteggio Avanzato
+### Sistema di Punteggio
 - Punti base per ogni mela mangiata
-- **Bonus temporali** basati sul livello
+- **Bonus fine livello** basati sul livello
 - **Moltiplicatori di difficoltà** per livelli superiori
 - **Classifica colorata** con podio (oro, argento, bronzo)
 
@@ -210,9 +210,6 @@ g++ -DDEBUG -std=c++11 -o snake main.cpp -lncurses
 - **Matteo Terzi**  [matteo.terzi8@studio.unibo.it](mailto:matteo.terzi8@studio.unibo.it)
 - **Francesco Pignanelli**  [francesco.pignanelli@studio.unibo.it](mailto:francesco.pignanelli@studio.unibo.it)  
 - **Leonardo Rocco Monaco**  [leonardorocco.monaco@studio.unibo.it](mailto:leonardorocco.monaco@studio.unibo.it)
-
-### 🎓 Contesto Accademico
-Progetto sviluppato per il corso di **Programmazione** presso l'**Università di Bologna** - Corso di Laurea in Informatica.
 
 ---
 
