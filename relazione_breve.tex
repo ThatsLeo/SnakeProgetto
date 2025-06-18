@@ -58,7 +58,7 @@ Il progetto è diviso in cartelle diverse, ognuna con un compito specifico:
 \begin{itemize}
     \item \texttt{gioco/}: contiene tutto quello che serve per far funzionare il gioco, il serpente in (\texttt{Serpente.cpp/hpp}), la mela in (\texttt{Mela.cpp/hpp}) e i livelli in (\texttt{Livelli.cpp/hpp}). In (\texttt{game.cpp}) viene gestita la logica vera e propria del gioco con i relativi tempi, punteggi e collisioni tra oggetti.
     
-    \item \texttt{menu\_handler/}: gestisce il menu principale del gioco (\texttt{main\_menu.cpp/h}): Contiene 4 scelte ovvero 'Gioca', 'Classifica', 'Livelli' ed 'Esci'. Premendo 'Gioca' si avvierà l'ultimo livello selezionato tramite la sezione 'Livelli' del menu.
+    \item \texttt{menu\_handler/}: gestisce il menu principale del gioco (\texttt{main\_menu.cpp/h}): Contiene 4 scelte ovvero 'Gioca', 'Classifica', 'Livelli' ed 'Esci'. Premendo 'Gioca' si avvierà l'ultimo livello selezionato tramite la sezione 'Livelli' del menu, il livello di default selezionato è il primo.
     
     \item \texttt{file\_handler/}: si occupa di salvare e leggere i punteggi dal file (\texttt{file\_manager.cpp/h})
     
@@ -82,8 +82,8 @@ Il centro del gioco è la funzione \texttt{start\_game()}:
 
 \begin{lstlisting}[language=C++]
 double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);
+int appleDelay = CLOCKS_PER_SEC;
 int levelDelay = 45; // secondi per livello
-int bonusPoints = 100 * livello->getId();
 \end{lstlisting}
 
 \textbf{Timer Separati}: Usiamo tre timer diversi per il movimento del serpente, per far apparire le mele e per la durata del livello.
@@ -97,7 +97,7 @@ Il sistema per gestire i tasti premuti usa diverse strategie:
 \begin{itemize}
     \item \textbf{Pulizia Buffer}: \texttt{flushinp()} cancella i tasti premuti in precedenza prima di operazioni importanti
     \item \textbf{Ultimo Tasto}: Consideriamo solo l'ultimo tasto premuto, ignorando quelli bufferizzati
-    \item \textbf{Controllo Direzione}: Evitiamo che il serpente vada nella direzione opposta subito, per non causare collisioni accidentali
+    \item \textbf{Controllo Direzione}: Evitiamo che il serpente prenda la sua direzione opposta e la sua direzione corrente come nuova direzione tramite la struttura \texttt{Mapping} per evitare comportamenti inaspettati. 
 \end{itemize}
 
 \section{Strutture Del Progetto}
@@ -140,7 +140,7 @@ I livelli sono implementati tramite lista bidirezionale, ogni livello ha un prop
 
 \section{Sistema Di Classifica}
 
-\subsection{File-Based Storage}
+\subsection{Scrittura Su File}
 
 Per salvare i dati usiamo un semplice file di testo:
 
@@ -153,13 +153,11 @@ void FileManager::writeFileAppend(const std::string toWrite) {
 }
 \end{lstlisting}
 
-\textbf{Formato Strutturato}: I dati sono salvati nel formato \texttt{"Nome:Punteggio"} che è facile da leggere e interpretare.
+\textbf{Formato Del Salvataggio}: I dati sono salvati nel formato \texttt{"Nome:Punteggio"} che è facile da leggere e interpretare.
 
 \textbf{Solo Aggiunte}: I nuovi punteggi vengono sempre aggiunti in fondo al file, senza cancellare quelli vecchi ma nella classifica del gioco vengono mostrati solo i primi 10 evidenziando i primi 3, per ordinare i punteggi usiamo un bubble sort.
 
-\section{Gestione Errori e Robustezza}
-
-\subsection{Input Validation}
+\subsection{Controlli E Validità}
 
 \begin{itemize}
     \item \textbf{Controllo Esistenza File}: Verifichiamo che il file esista con \texttt{is\_open()} prima di leggerlo

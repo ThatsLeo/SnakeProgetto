@@ -10,7 +10,7 @@ void FileManager::writeFile(std::string toWrite) {
 
 void FileManager::writeFileAppend(const std::string toWrite) {
     std::ofstream outputFile; 
-    outputFile.open("SaveFile.txt", std::ios_base::app); // Open in append mode
+    outputFile.open("SaveFile.txt", std::ios_base::app);
     outputFile << toWrite;
     outputFile.close();
 }
@@ -22,7 +22,7 @@ int FileManager::readFile(char* buffer, int bufferSize) {
         buffer[0] = '\0'; 
         return 0;
     }
-    inputFile.read(buffer, bufferSize - 1); // Read up to bufferSize - 1 characters (null-terminator)
+    inputFile.read(buffer, bufferSize - 1);
     buffer[inputFile.gcount()] = '\0'; 
     inputFile.close();
 
