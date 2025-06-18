@@ -172,11 +172,11 @@ void Menu::displayTitle() {
     box(titleWin, 0, 0);
     Utils::initColors();
     wattron(titleWin, COLOR_PAIR(4));
-    mvwprintw(titleWin, 1, 2, " SSS   S  S   SSSSS   S  S   SSSSS");
-    mvwprintw(titleWin, 2, 2, "S      SS S   S   S   S S    S    ");
-    mvwprintw(titleWin, 3, 2, " SSS   S SS   SSSSS   SS     SSSS ");
-    mvwprintw(titleWin, 4, 2, "    S  S  S   S   S   S S    S    ");
-    mvwprintw(titleWin, 5, 2, " SSS   S  S   S   S   S  S   SSSSS");
+    mvwprintw(titleWin, 1, 2, " SSS   S   S  SSSSS   S  S  SSSSS");
+    mvwprintw(titleWin, 2, 2, "S      SS  S  S   S   S S   S    ");
+    mvwprintw(titleWin, 3, 2, " SSS   S S S  SSSSS   SS    SSSS ");
+    mvwprintw(titleWin, 4, 2, "    S  S  SS  S   S   S S   S    ");
+    mvwprintw(titleWin, 5, 2, " SSS   S   S  S   S   S  S  SSSSS");
     wattroff(titleWin, COLOR_PAIR(4));
     
     wrefresh(titleWin);
