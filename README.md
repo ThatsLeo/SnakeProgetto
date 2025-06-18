@@ -164,9 +164,9 @@ Modifica i valori in `includes/include.h`:
 I colori possono essere modificati in `utils/utils.cpp`:
 
 ```cpp
-init_pair(1, COLOR_GREEN, COLOR_BLACK);  // Serpente
-init_pair(2, COLOR_RED, COLOR_BLACK);    // Bordi
-init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Mele
+init_pair(1, COLOR_GREEN, COLOR_BLACK);  // Corpo Serpente
+init_pair(2, COLOR_RED, COLOR_BLACK);    // Mele
+init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Testa Del Serpente
 ```
 
 ### Classifica
