@@ -5,18 +5,15 @@
 #include <cstring>
 
 
-// wrap box per punteggio e tempo
+
 int wrapY = Maxy + 2;
 int wrapX = Maxx + 3;
 
-// variabili di stato
-int tempoPassato = 0;  // tempo in secondi
-int scoreSnake = 0;    // punteggio
+int tempoPassato = 0;  
+int scoreSnake = 0;    
 
-// ========== FUNCTION DECLARATIONS ==========
 bool showPauseMenu(WINDOW* gameWin);
 
-// inizializza gli oggetti del gioco
 void initializeGame(WINDOW* win, Serpente*& serpent, Mela*& frutto, level*& livello) {
     serpent = new Serpente(win, 'o', 9);
     frutto = new Mela(win, -1, -1, '$');
@@ -46,20 +43,17 @@ void displayStartMessage(WINDOW* win) {
 }
 
 
-// controlla se una coordinata e' vuota
 bool isCellEmpty(WINDOW* win, int y, int x) {
     chtype ch = mvwinch(win, y, x);
     char currentChar = ch & A_CHARTEXT;
     return (currentChar == ' ');
 }
 
-// spawn della mela in una posizione casuale
 void spawnFruit(WINDOW* win, Mela* frutto, int &fruitX, int &fruitY) {
     
     fruitX = (rand() % (Maxx - 3)) + 1;
     fruitY = (rand() % (Maxy - 3)) + 1;
     
-    // Se le coordinate generate sono occupate ne vengono generate di nuove
     while (!isCellEmpty(win, fruitY, fruitX)) {
         fruitX = rand() % (Maxx - 3) + 1;
         fruitY = (rand() % (Maxy - 3)) + 1;
@@ -80,13 +74,12 @@ void setupGameWindows(WINDOW*& win, WINDOW*& wrap, int& xMax, int& yMax) {
 }
 
 
-// Returns true if player wants to exit game, false otherwise
 bool processUserInput(WINDOW* win, Serpente* serpent, 
                      
     int moveDelay, clock_t& lastMoveCheck, clock_t now) {
     if (now - lastMoveCheck < moveDelay) return false;
     
-    // elimina buffer di input
+    
     int lastKey = ERR;
     int key;
     while ((key = wgetch(win)) != ERR) {
@@ -109,7 +102,6 @@ bool processUserInput(WINDOW* win, Serpente* serpent,
 }
 
 
-// ritorna 0 per autoCollision, BYPASSGAMEOVER per uscita via menu/livelllo completato
 int start_game() {
     srand(time(NULL));
     initscr();
@@ -133,10 +125,10 @@ int start_game() {
     clock_t lastMoveCheck = clock();
     clock_t lastTime = clock();
     
-    int appleDelay = CLOCKS_PER_SEC;  // una mela al secondo
-    double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);  // velocità del serpente
-    int levelDelay = 45;  // durata livelli
-    int bonusPoints = 100 * livello->getId();  // punti per ogni mela
+    int appleDelay = CLOCKS_PER_SEC;  
+    double moveDelay = CLOCKS_PER_SEC / (7.0 + (levelChosen - 1) * 0.666);  
+    int levelDelay = 45;  
+    int bonusPoints = 100 * livello->getId();
     
     displayStartMessage(win);
     int firstKey = wgetch(win);
@@ -158,13 +150,12 @@ int start_game() {
     flushinp();          
     nodelay(win, TRUE);  
     
-    // pulisce il messaggio iniziale
+    
     mvwprintw(win, 1, 10, "                          ");
     wrefresh(win);
 
-    
     bool gameOver = false;
-    // ciclo principale del gioco
+    
     while (true) {
         punteggioFinale = scoreSnake;  
         clock_t now = clock();
@@ -249,7 +240,6 @@ int start_game() {
 }
 
 
-// menu di pausa in-game
 bool showPauseMenu(WINDOW* gameWin) {
     flushinp();
     

@@ -34,8 +34,6 @@ void Mela::Spawn(int x, int y){
     wattroff(this->win, COLOR_PAIR(3));
 }
 
-
-// Controlla se la posizione della mela e' la stessa della testa del serpente, se true disattiva la mela dalla griglia.
 bool Mela::check(Serpente *serp){
     body temp = *serp->getHeadPos();
     if(this->x == temp.x && this->y == temp.y){ 

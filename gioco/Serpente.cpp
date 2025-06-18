@@ -1,7 +1,7 @@
 #include "../utils/utils.h"
 #include "Serpente.hpp"
 
-// Costruttore base del serpente(finestra di stampa, coordinate di inizio e carattere di stampa).
+
 Serpente::Serpente(WINDOW * win, char c, int lenght){
     
     this->win = win; 
@@ -13,7 +13,7 @@ Serpente::Serpente(WINDOW * win, char c, int lenght){
     dir = UP;
     
     body* current = head;
-    // Il serpente ha inizialmente ogni pezzo alle stesse coordinate.
+
     for (int i = 1; i < lenght; i++) {
         body* newbody = new body{Maxy/2, Maxx/2, nullptr};
         current->next = newbody;
@@ -133,8 +133,7 @@ static void performMove(Serpente* self, Direction newDir) {
     }
 }
 
-// Refactored updateDirection: it tries to update the direction based on key press,
-// and if a valid change is found it updates the state and performs the proper move.
+
 static bool updateDirection(Serpente* self, int key) {
     Direction desiredDir = getDesiredDirection(key, self->dir);
     if (desiredDir != self->dir) {
@@ -155,17 +154,16 @@ void Serpente::setMove(int key) {
     }
 }
 
-// Aggiorna le coordinate del serpente sulla matrice del display
+
 void Serpente::display(){
     body *current = head;
     Utils::initColors();
     wattron(win, COLOR_PAIR(1));
-    mvwaddch(win, headY, headX, '@');  // Testa = '@'
+    mvwaddch(win, headY, headX, '@');  
     wattroff(win, COLOR_PAIR(1));
 
     current = current->next;
 
-    // Corpo
     wattron(win, COLOR_PAIR(4));
     while(current != nullptr) {
             mvwaddch(win, current->y, current->x, character); 
@@ -174,7 +172,6 @@ void Serpente::display(){
     wattroff(win, COLOR_PAIR(4));
 }
 
-// Ritorna un puntatore al blocco precedente alla coda.
 body *Serpente::prevTail(){
     body *temp = head;
     while(temp->next != nullptr && temp->next->next != nullptr){
@@ -183,7 +180,6 @@ body *Serpente::prevTail(){
     return temp;
 }
 
-// Ritorna un puntatore alla coda del serpente
 body* Serpente::tail(){
     body *temp = head;
     while(temp->next != nullptr){
@@ -192,20 +188,17 @@ body* Serpente::tail(){
     return temp;
 }
 
-// Aggiunge un blocco in testa al serpente. 
 body * Serpente::addBody(int y, int x){
     body *temp = new body{y, x, nullptr};
     temp->next = head;
     return temp;
 }
 
-// Sovrascrive un carattere nel display con uno spazio vuoto(ci elimino la vecchia coda).
 void Serpente::blank(){
     body *tempTail = tail();
     mvwaddch(win, tempTail->y, tempTail->x, ' ');
 }
 
-// Ritorna la struttura della testa del serpente.
 body *Serpente::getHeadPos(){
     body *temp = head;
     return temp;
@@ -221,7 +214,6 @@ bool Serpente::firstMove(){
     return true;
 }
 
-// Rileva se il serpente collide con il suo corpo.
 bool Serpente::autoCollision() {
     body *corpo = head->next;
     while (corpo != nullptr) {

@@ -1,8 +1,6 @@
 #include "Livelli.hpp"
 #include "../includes/include.h"
 #pragma once
-// Crea una lista bidirezionale di 10 livelli
-
 
 level::level(int id, level* next, level* prev){
         this->id = id;
@@ -39,7 +37,7 @@ void level::prevLevel(){
         level::setLevel(n_levels);
     }
 }
-void level::setLevel(int id){         // Cerca il livello con id specificato e lo imposta come currentlvl
+void level::setLevel(int id){
     level *tmp = head;              
     while (tmp != NULL){
         if (tmp->id == id){
@@ -50,13 +48,13 @@ void level::setLevel(int id){         // Cerca il livello con id specificato e l
     }
 }
 void level::PrintLevels(WINDOW *win){
-    werase(win);         // Stampa i livelli nel menu
+    werase(win);         
     level *tmp = head;
     int row = 0;
-    // Stampa tutti i livelli, evidenziando quello selezionato
+    
         while (tmp != NULL) {
             if (tmp->id == currentlvl->id) {
-                wattron(win, A_REVERSE);  // Evidenzia il livello selezionato
+                wattron(win, A_REVERSE);  
                 mvwprintw(win, getmaxy(win) / 2 - n_levels / 2 + row,
                          getmaxx(win) / 2 - (9 + std::to_string(tmp->id).length()) / 2,
                          "Livello %d", tmp->id);
@@ -85,10 +83,10 @@ int level::processInput(int c) {
         case KEY_DOWN:
             nextLevel();
             return 0;
-        case (char)10:  // Enter 
-            levelChosen = currentlvl->id;  // Imposta il livello scelto
+        case (char)10:   
+            levelChosen = currentlvl->id; 
             return currentlvl->id;
-        case (char)27:  // ESC
+        case (char)27:  
             return -2;
         default:
             return 0;
