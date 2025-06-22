@@ -14,7 +14,6 @@ Un'implementazione del classico gioco Snake realizzata in C++ utilizzando la lib
 - [Come Giocare](#-come-giocare)
 - [Struttura del Progetto](#-struttura-del-progetto)
 - [Configurazione](#-configurazione)
-- [Autori](#-autori)
 
 ## Caratteristiche
 
