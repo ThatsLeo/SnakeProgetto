@@ -254,9 +254,11 @@ void Menu::start_menu() {
     getPlayerName();
     
     FileManager fileManager = FileManager();
-
-    fileManager.writeFile("Classifica\n");
-    
+    std::ifstream inputFile;
+    inputFile.open("SaveFile.txt");
+    if (!inputFile.is_open()){
+        fileManager.writeFile("Classifica\n");
+    }
     while (true) {
         curs_set(0); 
         noecho(); 
