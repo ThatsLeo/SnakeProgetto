@@ -14,7 +14,6 @@ Un'implementazione del classico gioco Snake realizzata in C++ utilizzando la lib
 - [Come Giocare](#-come-giocare)
 - [Struttura del Progetto](#-struttura-del-progetto)
 - [Configurazione](#-configurazione)
-- [Autori](#-autori)
 
 ## Caratteristiche
 
@@ -204,12 +203,7 @@ Per abilitare output di debug, aggiungi `-DDEBUG` durante la compilazione:
 g++ -DDEBUG -std=c++11 -o snake main.cpp -lncurses
 ```
 
-## Autori
-
-### Team di Sviluppo
-- **Matteo Terzi**  [matteo.terzi8@studio.unibo.it](mailto:matteo.terzi8@studio.unibo.it)
-- **Francesco Pignanelli**  [francesco.pignanelli@studio.unibo.it](mailto:francesco.pignanelli@studio.unibo.it)  
-- **Leonardo Rocco Monaco**  [leonardorocco.monaco@studio.unibo.it](mailto:leonardorocco.monaco@studio.unibo.it)
+## Diobestia
 
 ---
 
